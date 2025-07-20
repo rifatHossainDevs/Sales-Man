@@ -6,18 +6,22 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.navigation.fragment.findNavController
+import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.base.BaseFragment
 import com.wevx.dealershipmanagement.databinding.FragmentHomeBinding
 import com.wevx.dealershipmanagement.models.Customers
 import com.wevx.dealershipmanagement.recyclerView.CustomerAdapter
 
-class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
+class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate),
+    CustomerAdapter.HandleCustomerClickListener {
 
     private lateinit var adapter: CustomerAdapter
 
 
     val customers = listOf(
         Customers(
+            "1",
             "M/s Malik Store",
             "Md Malik Hasan",
             "Rd: 12, Block-D, Section: 13, Mirpur, Dhaka",
@@ -27,6 +31,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             "Mirpur-10"
         ),
         Customers(
+            "2",
             "M/s Rahman Mart",
             "Abdul Rahman",
             "House: 22, Road: 3, Block-B, Uttara, Dhaka",
@@ -36,6 +41,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             "Uttara-3"
         ),
         Customers(
+            "3",
             "M/s City Traders",
             "Nayeem Islam",
             "Shop: 12A, Level: 2, Bashundhara City, Panthapath",
@@ -45,6 +51,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             "Bashundhara"
         ),
         Customers(
+            "4",
             "M/s Digital Point",
             "Tareq Zaman",
             "Holding: 45, Block-E, Section-2, Pallabi, Dhaka",
@@ -54,6 +61,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             "Pallabi-2"
         ),
         Customers(
+            "5",
             "M/s Arif Telecom",
             "Arif Hossain",
             "Road: 8, Block-F, Banani, Dhaka",
@@ -63,6 +71,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             "Banani-8"
         ),
         Customers(
+            "6",
             "M/s New Look Fashion",
             "Sumaiya Akter",
             "Shop 102, Level 3, Jamuna Future Park",
@@ -72,6 +81,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             "JFP"
         ),
         Customers(
+            "7",
             "M/s Sajjad Superstore",
             "Sajjad Hossain",
             "Holding: 11, Road: 2, Block-C, Mohammadpur",
@@ -81,6 +91,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             "Mohammadpur-C2"
         ),
         Customers(
+            "8",
             "M/s Prime Electronics",
             "Tanvir Ahmed",
             "Shop 9B, Level 1, Eastern Plaza, Hatirpool",
@@ -90,6 +101,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             "Eastern-Plaza"
         ),
         Customers(
+            "9",
             "M/s Bismillah Pharma",
             "Jamal Uddin",
             "House 7, Road 4, Dhanmondi R/A",
@@ -99,6 +111,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             "Dhanmondi-4"
         ),
         Customers(
+            "10",
             "M/s Shapla Stores",
             "Mehedi Hasan",
             "Holding 120, Block-G, Section-10, Mirpur",
@@ -110,7 +123,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     )
 
     override fun setAllClickListener() {
-        adapter = CustomerAdapter(customers)
+        adapter = CustomerAdapter(customers, this)
         binding.rvAllCustomer.adapter = adapter
     }
 
@@ -283,6 +296,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             .rotation(toDegrees)
             .setDuration(300)
             .start()
+    }
+
+    override fun selectCustomer(customerId: String) {
+        findNavController().navigate(R.id.action_homeFragment_to_productsFragment)
+    }
+
+    override fun editClickListener(customer: Customers) {
+
+    }
+
+    override fun deleteClickListener(customers: Customers) {
+
     }
 
 
