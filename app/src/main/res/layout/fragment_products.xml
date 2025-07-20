@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:paddingHorizontal="@dimen/_8sdp"
-    tools:context=".ProductsFragment">
+    tools:context=".product.ProductsFragment">
 
     <TextView
         android:id="@+id/tv_select_products"
