@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:gravity="center"
     android:paddingHorizontal="@dimen/_8sdp"
     tools:context=".home.HomeFragment">
 
@@ -26,7 +26,8 @@
         android:layout_height="@dimen/_24sdp"
         android:src="@drawable/ic_filter_24"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_select_a_customer" />
+        app:layout_constraintTop_toBottomOf="@id/tv_select_a_customer"
+        />
 
     <TextView
         android:id="@+id/tv_filter"
