@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.safe.args)    //build.gradle.app
+    alias(libs.plugins.safe.args)
+    id("kotlin-parcelize")//build.gradle.app
 }
 
 android {
