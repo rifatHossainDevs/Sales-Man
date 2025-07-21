@@ -148,10 +148,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
 
-
-
-
-
 //Spineer code start
     private val cityList = listOf("Select City", "Dhaka", "Chittagong", "Khulna")
     private val areaMap = mapOf(
