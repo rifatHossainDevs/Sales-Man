@@ -2,7 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Location permissions (required for scanning Bluetooth devices) -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- For Android 12 and above -->
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
+    <!-- For below Android 12 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30"/>
+
 
     <application
         android:allowBackup="true"
@@ -14,7 +25,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DealershipManagement">
         <activity
-            android:name=".MainActivity"
+            android:name=".starter.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.DealershipManagement.MainActivity">
             <intent-filter>
