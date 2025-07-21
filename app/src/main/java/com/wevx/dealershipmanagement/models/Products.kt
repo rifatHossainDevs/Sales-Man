@@ -8,5 +8,5 @@ data class Products(
     val productUnit: String,
     val productCategory: String
 ) {
-    val subtotal: Double get() = productQty * productQty
+    val subtotal: Double get() = productQty * productPricePerUnit
 }
