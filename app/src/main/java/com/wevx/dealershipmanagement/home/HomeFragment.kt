@@ -18,7 +18,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     private lateinit var adapter: CustomerAdapter
 
-
     val customers = listOf(
         Customers(
             "1",
