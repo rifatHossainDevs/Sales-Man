@@ -125,12 +125,34 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     override fun setAllClickListener() {
         adapter = CustomerAdapter(customers, this)
         binding.rvAllCustomer.adapter = adapter
+
+        binding.btnAddUser.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_addCustomerFragment)
+        }
     }
 
     override fun allObserver() {
 
     }
 
+    override fun selectCustomer(customerId: String) {
+        findNavController().navigate(R.id.action_homeFragment_to_productsFragment)
+    }
+
+    override fun editClickListener(customer: Customers) {
+
+    }
+
+    override fun deleteClickListener(customers: Customers) {
+
+    }
+
+
+
+
+
+
+//Spineer code start
     private val cityList = listOf("Select City", "Dhaka", "Chittagong", "Khulna")
     private val areaMap = mapOf(
         "Dhaka" to listOf("Select Area", "Mirpur", "Uttara", "Dhanmondi"),
@@ -297,18 +319,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             .setDuration(300)
             .start()
     }
-
-    override fun selectCustomer(customerId: String) {
-        findNavController().navigate(R.id.action_homeFragment_to_productsFragment)
-    }
-
-    override fun editClickListener(customer: Customers) {
-
-    }
-
-    override fun deleteClickListener(customers: Customers) {
-
-    }
-
+//spineer code end
 
 }
