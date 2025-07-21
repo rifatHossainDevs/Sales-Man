@@ -18,7 +18,6 @@ import com.wevx.dealershipmanagement.recyclerView.ProductCartAdapter
 class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsBinding::inflate) {
 
     private var selectedCategory: String = ""
-
     private lateinit var bottomSheetBinding: ProductCartBottomSheetBinding
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var adapter: ProductCartAdapter
