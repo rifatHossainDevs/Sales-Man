@@ -236,10 +236,19 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <ImageView
+                android:src="@drawable/ic_profile_image_24"
+                android:id="@+id/iv_user"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_100sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_confirm_password_layout"/>
+
             <androidx.appcompat.widget.AppCompatButton
+                android:layout_marginTop="@dimen/_4sdp"
                 android:id="@+id/btn_upload_image"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_confirm_password_layout"
+                app:layout_constraintTop_toBottomOf="@id/iv_user"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_28sdp"
                 android:textStyle="bold"
@@ -250,16 +259,7 @@
                 android:layout_marginBottom="@dimen/_16sdp"
                 android:text="@string/upload_image"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toEndOf="@id/btn_upload_image"
-                app:layout_constraintTop_toTopOf="@id/btn_upload_image"
-                app:layout_constraintBottom_toBottomOf="@id/btn_upload_image"
-                tools:text="@string/image_uri"
-                android:layout_marginStart="@dimen/_8sdp"
-                android:textSize="@dimen/_12sdp"
-                />
+
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_create_account"
