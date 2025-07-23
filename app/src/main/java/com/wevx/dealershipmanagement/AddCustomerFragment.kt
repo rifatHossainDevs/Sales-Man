@@ -2,16 +2,16 @@ package com.wevx.dealershipmanagement
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.navigation.fragment.findNavController
 import com.wevx.dealershipmanagement.base.BaseFragment
 import com.wevx.dealershipmanagement.databinding.FragmentAddCustomerBinding
+import com.wevx.dealershipmanagement.local_database.LocalDatabase.areaMap
+import com.wevx.dealershipmanagement.local_database.LocalDatabase.cityList
+import com.wevx.dealershipmanagement.local_database.LocalDatabase.zoneMap
 
 class AddCustomerFragment :
     BaseFragment<FragmentAddCustomerBinding>(FragmentAddCustomerBinding::inflate) {
@@ -26,21 +26,7 @@ class AddCustomerFragment :
     }
 
 
-    private val cityList = listOf("Select City", "Dhaka", "Chittagong", "Khulna")
-    private val areaMap = mapOf(
-        "Dhaka" to listOf("Select Area", "Mirpur", "Uttara", "Dhanmondi"),
-        "Chittagong" to listOf("Select Area", "Pahartali", "Agrabad"),
-        "Khulna" to listOf("Select Area", "Sonadanga", "Khalishpur")
-    )
-    private val zoneMap = mapOf(
-        "Mirpur" to listOf("Select Zone", "Zone A", "Zone B"),
-        "Uttara" to listOf("Select Zone", "Zone C"),
-        "Dhanmondi" to listOf("Select Zone", "Zone D"),
-        "Pahartali" to listOf("Select Zone", "Zone E"),
-        "Agrabad" to listOf("Select Zone", "Zone F"),
-        "Sonadanga" to listOf("Select Zone", "Zone G"),
-        "Khalishpur" to listOf("Select Zone", "Zone H")
-    )
+
 
     // Track expanded state per spinner
     private var cityExpanded = false
