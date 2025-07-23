@@ -22,13 +22,19 @@ class RegistrationFragment :
     override fun setAllClickListener() {
 
         allButtonClickListener()
-        uploadButtonClickListener()
         permissionRequest = getPermissionRequest()
 
         binding.btnUploadImage.setOnClickListener {
             requestPermission(permissionRequest, permissionList)
         }
     }
+
+    override fun allObserver() {
+
+    }
+
+
+
 
     private fun getPermissionRequest(): ActivityResultLauncher<Array<String>> {
         return registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
@@ -50,13 +56,7 @@ class RegistrationFragment :
         }
     }
 
-    private fun uploadButtonClickListener() {
 
-    }
-
-    override fun allObserver() {
-
-    }
 
     companion object {
 
@@ -77,7 +77,6 @@ class RegistrationFragment :
                 //viewmodel.setImageUri(fileUri)
                 //product.imageLink = fileUri.toString()
                 if (fileUri.toString() != "") {
-                    binding.ivUser.visibility = View.VISIBLE
                     binding.ivUser.setImageURI(fileUri)
                 }
 

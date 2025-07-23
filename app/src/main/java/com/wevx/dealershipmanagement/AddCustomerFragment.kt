@@ -1,12 +1,19 @@
 package com.wevx.dealershipmanagement
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.fragment.findNavController
+import com.github.dhaval2404.imagepicker.ImagePicker
 import com.wevx.dealershipmanagement.base.BaseFragment
 import com.wevx.dealershipmanagement.databinding.FragmentAddCustomerBinding
 import com.wevx.dealershipmanagement.local_database.LocalDatabase.areaMap
@@ -15,9 +22,14 @@ import com.wevx.dealershipmanagement.local_database.LocalDatabase.zoneMap
 
 class AddCustomerFragment :
     BaseFragment<FragmentAddCustomerBinding>(FragmentAddCustomerBinding::inflate) {
+    private lateinit var permissionRequest: ActivityResultLauncher<Array<String>>
+
     override fun setAllClickListener() {
-        binding.btnCreateCustomer.setOnClickListener {
-            findNavController().navigate(R.id.action_addCustomerFragment_to_homeFragment)
+        allButtonClickListener()
+        permissionRequest = getPermissionRequest()
+
+        binding.btnUploadImage.setOnClickListener {
+            requestPermission(permissionRequest, permissionList)
         }
     }
 
@@ -25,9 +37,65 @@ class AddCustomerFragment :
 
     }
 
+    private fun getPermissionRequest(): ActivityResultLauncher<Array<String>> {
+        return registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+            if (areAllPermissionGranted(permissionList)) {
+                ImagePicker.with(this)
+                    .cropSquare()
+                    .cameraOnly()
+                    .compress(1024)         //Final image size will be less than 1 MB(Optional)
+                    .maxResultSize(
+                        512,
+                        512
+                    )  //Final image resolution will be less than 1080 x 1080(Optional)
+                    .createIntent { intent ->
+                        startForProfileImageResult.launch(intent)
+                    }
+                Toast.makeText(requireContext(), "Granted", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Not Granted", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    companion object {
+
+        private val permissionList = arrayOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA
+        )
+    }
+
+    private val startForProfileImageResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            val resultCode = result.resultCode
+            val data = result.data
+
+            if (resultCode == Activity.RESULT_OK) {
+                //Image Uri will not be null for RESULT_OK
+                val fileUri = data?.data!!
+                //viewmodel.setImageUri(fileUri)
+                //product.imageLink = fileUri.toString()
+                if (fileUri.toString() != "") {
+                    binding.ivUser.setImageURI(fileUri)
+                }
+
+            } else if (resultCode == ImagePicker.RESULT_ERROR) {
+                Toast.makeText(requireContext(), ImagePicker.getError(data), Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                Toast.makeText(requireContext(), "Task Cancelled", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    fun allButtonClickListener() {
+        binding.btnCreateCustomer.setOnClickListener {
+            findNavController().navigate(R.id.action_addCustomerFragment_to_homeFragment)
+        }
+    }
 
 
-
+    //spinner code
     // Track expanded state per spinner
     private var cityExpanded = false
     private var areaExpanded = false

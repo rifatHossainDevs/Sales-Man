@@ -269,6 +269,15 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <ImageView
+                android:layout_marginTop="@dimen/_16sdp"
+                android:id="@+id/iv_user"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_100sdp"
+                android:src="@drawable/ic_profile_image_24"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/spinner_area_zone" />
+
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_upload_image"
@@ -283,23 +292,13 @@
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/spinner_area_zone" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_8sdp"
-                android:textSize="@dimen/_12sdp"
-                app:layout_constraintBottom_toBottomOf="@id/btn_upload_image"
-                app:layout_constraintStart_toEndOf="@id/btn_upload_image"
-                app:layout_constraintTop_toTopOf="@id/btn_upload_image"
-                tools:text="@string/image_uri" />
+                app:layout_constraintTop_toBottomOf="@id/iv_user" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_create_customer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_24sdp"
+                android:layout_marginTop="@dimen/_16sdp"
                 android:background="@drawable/btn_create_account"
                 android:paddingHorizontal="@dimen/_8sdp"
                 android:text="Create Customer"
