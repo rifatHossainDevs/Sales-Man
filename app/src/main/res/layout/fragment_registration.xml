@@ -9,11 +9,11 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_height="0dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -62,9 +62,9 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_title">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_user_name"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/et_user_name"
                     android:drawableStart="@drawable/ic_user_name_24"
                     android:drawablePadding="4dp"
                     android:inputType="text" />
@@ -73,10 +73,10 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/et_phone_number_layout"
-                app:layout_constraintTop_toBottomOf="@+id/et_user_name_layout"
-                android:hint="@string/phone_number1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:hint="@string/phone_number1"
                 android:textColorHint="#A9A9A9"
                 app:boxStrokeWidth="2dp"
                 app:counterEnabled="true"
@@ -84,16 +84,15 @@
                 app:counterTextAppearance="@style/TextAppearance.Material3.TitleSmall"
                 app:endIconMode="clear_text"
                 app:helperTextTextColor="#FF0000"
-                android:layout_marginTop="@dimen/_8sdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                >
+                app:layout_constraintTop_toBottomOf="@+id/et_user_name_layout">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_phone_number"
-                    android:drawableStart="@drawable/ic_phone_24"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:drawableStart="@drawable/ic_phone_24"
                     android:drawablePadding="4dp"
                     android:inputType="phone" />
 
@@ -102,10 +101,9 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/et_email_layout"
-                app:layout_constraintTop_toBottomOf="@+id/et_phone_number_layout"
-                android:hint="@string/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="@string/email"
                 android:textColorHint="#A9A9A9"
                 app:boxStrokeWidth="2dp"
                 app:counterTextAppearance="@style/TextAppearance.Material3.TitleSmall"
@@ -113,7 +111,7 @@
                 app:helperTextTextColor="#FF0000"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                >
+                app:layout_constraintTop_toBottomOf="@+id/et_phone_number_layout">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_email"
@@ -127,170 +125,157 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/et_present_address_layout"
-                app:layout_constraintTop_toBottomOf="@+id/et_email_layout"
-                android:hint="@string/present_address"
-                app:endIconMode="clear_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_8sdp"
+                android:hint="@string/present_address"
                 android:textColorHint="#A9A9A9"
                 app:boxStrokeWidth="2dp"
                 app:counterTextAppearance="@style/TextAppearance.Material3.TitleSmall"
+                app:endIconMode="clear_text"
                 app:helperTextTextColor="#FF0000"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                >
+                app:layout_constraintTop_toBottomOf="@+id/et_email_layout">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_present_address"
-                    android:inputType="text"
-                    android:drawableStart="@drawable/ic_pressent_address_24"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:drawableStart="@drawable/ic_pressent_address_24"
                     android:drawablePadding="4dp"
-                    />
+                    android:inputType="text" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/et_permanent_address_layout"
-                app:layout_constraintTop_toBottomOf="@+id/et_present_address_layout"
-                android:hint="@string/permanent_address"
-                app:endIconMode="clear_text"
                 android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/_8sdp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:hint="@string/permanent_address"
                 android:textColorHint="#A9A9A9"
                 app:boxStrokeWidth="2dp"
                 app:counterTextAppearance="@style/TextAppearance.Material3.TitleSmall"
+                app:endIconMode="clear_text"
                 app:helperTextTextColor="#FF0000"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                >
+                app:layout_constraintTop_toBottomOf="@+id/et_present_address_layout">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_permanent_address"
-                    android:inputType="text"
-                    android:drawableStart="@drawable/ic_permanent_address_24"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:drawableStart="@drawable/ic_permanent_address_24"
                     android:drawablePadding="4dp"
-                    />
+                    android:inputType="text" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/et_password_layout"
-                app:layout_constraintTop_toBottomOf="@+id/et_permanent_address_layout"
-                android:hint="@string/password"
-                app:counterEnabled="true"
-                app:endIconMode="password_toggle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_8sdp"
+                android:hint="@string/password"
                 android:textColorHint="#A9A9A9"
                 app:boxStrokeWidth="2dp"
+                app:counterEnabled="true"
                 app:counterTextAppearance="@style/TextAppearance.Material3.TitleSmall"
+                app:endIconMode="password_toggle"
                 app:helperTextTextColor="#FF0000"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                >
+                app:layout_constraintTop_toBottomOf="@+id/et_permanent_address_layout">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_password"
-                    android:inputType="textPassword"
-                    android:drawableStart="@drawable/ic_password_24"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:drawableStart="@drawable/ic_password_24"
                     android:drawablePadding="4dp"
-                    />
+                    android:inputType="textPassword" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/et_confirm_password_layout"
-                app:layout_constraintTop_toBottomOf="@+id/et_password_layout"
-                android:hint="@string/confirm_password"
-                app:counterEnabled="true"
-                app:endIconMode="password_toggle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="@string/confirm_password"
                 android:textColorHint="#A9A9A9"
                 app:boxStrokeWidth="2dp"
+                app:counterEnabled="true"
                 app:counterTextAppearance="@style/TextAppearance.Material3.TitleSmall"
+                app:endIconMode="password_toggle"
                 app:helperTextTextColor="#FF0000"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                >
+                app:layout_constraintTop_toBottomOf="@+id/et_password_layout">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_confirm_password"
-                    android:inputType="textPassword"
-                    android:drawableStart="@drawable/ic_confirm_password_24"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:drawableStart="@drawable/ic_confirm_password_24"
                     android:drawablePadding="4dp"
-                    />
+                    android:inputType="textPassword" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <ImageView
-                android:src="@drawable/ic_profile_image_24"
                 android:id="@+id/iv_user"
                 android:layout_width="@dimen/_100sdp"
                 android:layout_height="@dimen/_100sdp"
+                android:src="@drawable/ic_profile_image_24"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_confirm_password_layout"/>
+                app:layout_constraintTop_toBottomOf="@id/et_confirm_password_layout" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:layout_marginTop="@dimen/_4sdp"
                 android:id="@+id/btn_upload_image"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_user"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_28sdp"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:paddingHorizontal="@dimen/_8sdp"
-                android:fontFamily="@font/poppins_medium"
-                android:background="@drawable/btn_upload_image"
+                android:layout_marginTop="@dimen/_4sdp"
                 android:layout_marginBottom="@dimen/_16sdp"
-                android:text="@string/upload_image"/>
-
+                android:background="@drawable/btn_upload_image"
+                android:fontFamily="@font/poppins_medium"
+                android:paddingHorizontal="@dimen/_8sdp"
+                android:text="@string/upload_image"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_user" />
 
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_create_account"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btn_upload_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:paddingHorizontal="@dimen/_8sdp"
-                android:textSize="@dimen/_14sdp"
                 android:layout_marginTop="@dimen/_24sdp"
                 android:background="@drawable/btn_create_account"
-                android:text="@string/create_account"/>
+                android:paddingHorizontal="@dimen/_8sdp"
+                android:text="@string/create_account"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_upload_image" />
 
             <TextView
                 android:id="@+id/tv_already_have_account"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btn_create_account"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="@string/already_have_an_account"
                 android:textColor="#FF304F"
-                android:textSize="@dimen/_12sdp" />
+                android:textSize="@dimen/_12sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_create_account" />
 
             <Button
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_already_have_account"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 android:id="@+id/btn_login"
                 style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="match_parent"
@@ -298,6 +283,10 @@
                 android:text="@string/login"
                 android:textColor="@color/primary"
                 android:textSize="@dimen/_16sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_already_have_account"
                 app:strokeColor="#10254A"
                 app:strokeWidth="@dimen/_2sdp" />
 
