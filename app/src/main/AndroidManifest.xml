@@ -14,6 +14,13 @@
     <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30"/>
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -26,6 +33,10 @@
         android:theme="@style/Theme.DealershipManagement">
         <activity
             android:name=".starter.MainActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DealershipManagement.MainActivity"/>
+        <activity
+            android:name=".starter.AuthActivity"
             android:exported="true"
             android:theme="@style/Theme.DealershipManagement.MainActivity">
             <intent-filter>
@@ -34,10 +45,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".starter.AuthActivity"
-            android:exported="false"
-            android:theme="@style/Theme.DealershipManagement.MainActivity"/>
     </application>
 
 </manifest>
