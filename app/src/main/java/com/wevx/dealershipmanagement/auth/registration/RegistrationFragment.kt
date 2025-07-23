@@ -76,7 +76,7 @@ class RegistrationFragment :
                 val fileUri = data?.data!!
                 //viewmodel.setImageUri(fileUri)
                 //product.imageLink = fileUri.toString()
-                if (fileUri.toString()!= ""){
+                if (fileUri.toString() != "") {
                     binding.ivUser.visibility = View.VISIBLE
                     binding.ivUser.setImageURI(fileUri)
                 }
