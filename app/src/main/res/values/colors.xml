@@ -6,4 +6,5 @@
     <color name="secondary">#23686C</color>
     <color name="recyclerView">#FFC107</color>
     <color name="gray">#808080</color>
+    <color name="navigationDrawer">#F4A73E</color>
 </resources>

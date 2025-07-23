@@ -78,4 +78,7 @@ dependencies {
     //viewModel
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.livedata)
+
+    //Circle Image View
+    implementation (libs.circleimageview)
 }
