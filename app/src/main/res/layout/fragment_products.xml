@@ -20,18 +20,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:background="@drawable/shap_add_bg"
         android:id="@+id/btn_continue"
         android:layout_width="@dimen/_32sdp"
-        android:paddingVertical="@dimen/_4sdp"
-        android:paddingHorizontal="@dimen/_8sdp"
-        android:src="@drawable/ic_tick_24"
         android:layout_height="@dimen/_28sdp"
-        app:layout_constraintTop_toTopOf="@id/tv_select_products"
+        android:layout_marginTop="@dimen/_4sdp"
         android:layout_marginEnd="@dimen/_12sdp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/shap_add_bg"
+        android:paddingHorizontal="@dimen/_8sdp"
+        android:paddingVertical="@dimen/_4sdp"
+        android:src="@drawable/ic_tick_24"
         app:layout_constraintBottom_toBottomOf="@id/tv_select_products"
-        android:layout_marginTop="@dimen/_4sdp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_select_products" />
 
     <LinearLayout
         android:id="@+id/categoryLayout"
@@ -64,14 +64,14 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/productsRecyclerView"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_layout_product"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/_8sdp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/categoryLayout" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/categoryLayout"
+        tools:listitem="@layout/item_layout_product" />
 
 
     <!--<com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -86,9 +86,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@color/white" />-->
-
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
