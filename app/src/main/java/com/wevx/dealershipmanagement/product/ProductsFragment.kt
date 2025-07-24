@@ -12,7 +12,10 @@ import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.base.BaseFragment
 import com.wevx.dealershipmanagement.databinding.FragmentProductsBinding
 import com.wevx.dealershipmanagement.databinding.ProductCartBottomSheetBinding
+import com.wevx.dealershipmanagement.local_database.LocalDatabase
+import com.wevx.dealershipmanagement.local_database.LocalDatabase.products
 import com.wevx.dealershipmanagement.models.Products
+import com.wevx.dealershipmanagement.recyclerView.ProductAdapter
 import com.wevx.dealershipmanagement.recyclerView.ProductCartAdapter
 
 class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsBinding::inflate) {
@@ -21,6 +24,7 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
     private lateinit var bottomSheetBinding: ProductCartBottomSheetBinding
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var adapter: ProductCartAdapter
+    private lateinit var productAdapter: ProductAdapter
 
     override fun setAllClickListener() {
         bottomSheetBinding = ProductCartBottomSheetBinding.inflate(layoutInflater)
@@ -32,19 +36,14 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
 
     @SuppressLint("SetTextI18n")
     private fun bottomSheetClickListener() {
-        val products = listOf(
-            Products("1", "Banana", 10.00, 10.00, "pcs", "Fruit"),
-            Products("2", "Apple", 5.00, 25.00, "pcs", "Fruit"),
-            Products("3", "Milk", 2.00, 30.00, "L", "Dairy"),
-            Products("4", "Bread", 1.00, 20.00, "pcs", "Bakery"),
-            Products("5", "Rice", 5.00, 200.00, "kg", "Grains"),
-            Products("6", "Eggs", 12.00, 120.00, "pcs", "Poultry")
-        )
 
         bottomSheetBinding.recyclerProducts.layoutManager = LinearLayoutManager(requireContext())
 
-         adapter= ProductCartAdapter(products)
+        adapter = ProductCartAdapter(products)
         bottomSheetBinding.recyclerProducts.adapter = adapter
+
+        productAdapter = ProductAdapter(products)
+        binding.productsRecyclerView.adapter = productAdapter
 
         val total = products.sumOf { it.subtotal }
         bottomSheetBinding.tvTotal.text = "Total: %.2f".format(total)
@@ -109,7 +108,6 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
     }
-
 
 
 }
