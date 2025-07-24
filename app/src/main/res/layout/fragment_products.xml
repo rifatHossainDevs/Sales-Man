@@ -5,14 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:paddingHorizontal="@dimen/_8sdp"
     tools:context=".product.ProductsFragment">
 
     <TextView
         android:id="@+id/tv_select_products"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_4sdp"
+        android:layout_marginStart="@dimen/_8sdp"
         android:fontFamily="@font/poppins_semibold"
         android:text="Select Products"
         android:textColor="@color/black"
@@ -20,10 +19,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:background="@drawable/shap_add_bg"
+        android:id="@+id/btn_continue"
+        android:layout_width="@dimen/_32sdp"
+        android:paddingVertical="@dimen/_4sdp"
+        android:paddingHorizontal="@dimen/_8sdp"
+        android:src="@drawable/ic_tick_24"
+        android:layout_height="@dimen/_28sdp"
+        app:layout_constraintTop_toTopOf="@id/tv_select_products"
+        android:layout_marginEnd="@dimen/_12sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/tv_select_products"
+        android:layout_marginTop="@dimen/_4sdp"/>
+
     <LinearLayout
         android:id="@+id/categoryLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_8sdp"
         android:layout_marginTop="@dimen/_8sdp"
         android:background="@drawable/bg_spinner"
         android:gravity="center_vertical"
@@ -48,17 +62,33 @@
             android:src="@drawable/ic_dropdown_24" />
     </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/productsRecyclerView"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_layout_product"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_8sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/categoryLayout" />
+
+
+    <!--<com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_continue"
         android:layout_width="wrap_content"
-        app:tint="@color/white"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_16sdp"
+        android:layout_marginHorizontal="@dimen/_8sdp"
         android:layout_marginEnd="@dimen/_8sdp"
+        android:layout_marginBottom="@dimen/_16sdp"
         android:backgroundTint="@color/secondary"
         android:src="@drawable/ic_tick_24"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/white" />-->
+
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
