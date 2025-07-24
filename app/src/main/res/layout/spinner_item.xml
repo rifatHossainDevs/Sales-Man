@@ -1,6 +1,12 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="wrap_content" android:padding="8dp">
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    tools:ignore="UseCompoundDrawables">
 
     <TextView
         android:id="@+id/spinner_text"
@@ -16,4 +22,3 @@
         android:src="@drawable/ic_dropdown_24"
         android:rotation="0"/>
 </LinearLayout>
-
