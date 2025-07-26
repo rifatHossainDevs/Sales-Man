@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -124,6 +125,31 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/et_nid_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:hint="@string/national_id_card"
+                android:textColorHint="#A9A9A9"
+                app:boxStrokeWidth="2dp"
+                app:counterTextAppearance="@style/TextAppearance.Material3.TitleSmall"
+                app:endIconMode="clear_text"
+                app:helperTextTextColor="#FF0000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_email_layout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_nid"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableStart="@drawable/ic_nid_24"
+                    android:drawablePadding="4dp"
+                    android:inputType="number" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/et_present_address_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -136,7 +162,7 @@
                 app:helperTextTextColor="#FF0000"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_email_layout">
+                app:layout_constraintTop_toBottomOf="@+id/et_nid_layout">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_present_address"
