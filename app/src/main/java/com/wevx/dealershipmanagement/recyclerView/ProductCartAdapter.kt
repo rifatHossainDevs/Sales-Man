@@ -5,9 +5,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.wevx.dealershipmanagement.databinding.ItemLayoutProductCartBinding
+import com.wevx.dealershipmanagement.models.CartItem
 import com.wevx.dealershipmanagement.models.Products
 
-class ProductCartAdapter(val product: List<Products>) :
+class ProductCartAdapter(val cartItem: List<CartItem>) :
     RecyclerView.Adapter<ProductCartAdapter.ViewHolder>() {
 
 
@@ -29,18 +30,18 @@ class ProductCartAdapter(val product: List<Products>) :
         holder: ViewHolder,
         position: Int
     ) {
-        product[position].let { product ->
+        cartItem[position].let { cartItem ->
             holder.binding.apply {
-                tvName.text = product.productName
-                tvQuantity.text = "${product.productQty} ${product.productUnit}"
-                tvSubtotal.text = "%.2f".format(product.subtotal)
+                tvName.text = cartItem.product.productName
+                tvQuantity.text = "${cartItem.purchaseQuantity} ${cartItem.product.productUnit}"
+                tvSubtotal.text = "%.2f".format(cartItem.subtotal)
 
             }
         }
 
     }
 
-    override fun getItemCount(): Int = product.size
+    override fun getItemCount(): Int = cartItem.size
 
     class ViewHolder(val binding: ItemLayoutProductCartBinding) :
         RecyclerView.ViewHolder(binding.root)
