@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat
 import com.wevx.dealershipmanagement.SharedData
 import com.wevx.dealershipmanagement.base.BaseFragment
 import com.wevx.dealershipmanagement.databinding.FragmentReceiptBinding
-import com.wevx.dealershipmanagement.models.Products
+import com.wevx.dealershipmanagement.models.CartItem
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -23,13 +23,8 @@ class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBind
 
     private val REQUEST_CODE_PERMISSIONS = 1001
 
-    // ✅ Dynamic product list
-    private var productList = SharedData.productList
-    val products = SharedData.productList
-
-    fun setProductList(products: List<Products>) {
-        this.productList = products
-    }
+    // Use List<CartItem> from SharedData
+    private var productList: List<CartItem> = SharedData.selectedProductList
 
     override fun setAllClickListener() {
         binding.btnPrintReceipt.setOnClickListener {
@@ -51,10 +46,7 @@ class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBind
             permissions.add(Manifest.permission.BLUETOOTH_SCAN)
         }
         return permissions.all {
-            ContextCompat.checkSelfPermission(
-                requireContext(),
-                it
-            ) == PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
         }
     }
 
@@ -76,21 +68,13 @@ class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBind
     }
 
     @Deprecated("Deprecated in Java")
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
                 startPrintingProcess()
             } else {
-                Toast.makeText(
-                    requireContext(),
-                    "Bluetooth permissions are required to print",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(requireContext(), "Bluetooth permissions are required to print", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -108,11 +92,7 @@ class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBind
         val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter() ?: return null
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.BLUETOOTH_CONNECT
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                 return null
             }
         }
@@ -123,25 +103,15 @@ class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBind
 
     private fun printReceipt(printer: BluetoothDevice) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.BLUETOOTH_CONNECT
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                Toast.makeText(
-                    requireContext(),
-                    "Bluetooth Connect permission is required",
-                    Toast.LENGTH_SHORT
-                ).show()
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(requireContext(), "Bluetooth Connect permission is required", Toast.LENGTH_SHORT).show()
                 return
             }
         }
 
         Thread {
             try {
-                val uuid = printer.uuids?.firstOrNull()?.uuid
-                    ?: UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
-
+                val uuid = printer.uuids?.firstOrNull()?.uuid ?: UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
                 val socket = printer.createRfcommSocketToServiceRecord(uuid)
                 socket.connect()
 
@@ -153,25 +123,17 @@ class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBind
                 socket.close()
 
                 requireActivity().runOnUiThread {
-                    Toast.makeText(
-                        requireContext(),
-                        "Receipt printed successfully!",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(requireContext(), "Receipt printed successfully!", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 requireActivity().runOnUiThread {
-                    Toast.makeText(
-                        requireContext(),
-                        "Printing failed: ${e.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    Toast.makeText(requireContext(), "Printing failed: ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }
         }.start()
     }
 
-    // ✅ Dynamic receipt builder
+    // Build receipt using CartItem
     @SuppressLint("DefaultLocale")
     private fun buildReceiptText(): String {
         val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
@@ -179,38 +141,34 @@ class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBind
         val itemsText = StringBuilder()
         var total = 0.0
 
-        // Items Loop
-        for (product in productList) {
-            val subtotal = product.productQty * product.productPricePerUnit
+        for (item in productList) {
+            val subtotal = item.subtotal
             total += subtotal
             val line = String.format(
                 "%-14s %2.0f x %6.2f = %7.2f",
-                product.productName,
-                product.productQty,
-                product.productPricePerUnit,
+                item.product.productName,
+                item.purchaseQuantity,
+                item.product.productPricePerUnit,
                 subtotal
             )
             itemsText.appendLine(line)
         }
 
         return """
-        -------------------------------
-             DEALERSHIP MANAGEMENT
-                 Sales Receipt
-        -------------------------------
-        Salesman: Rifat Hossain
-        Date: $date
+            -------------------------------
+                 DEALERSHIP MANAGEMENT
+                     Sales Receipt
+            -------------------------------
+            Salesman: Rifat Hossain
+            Date: $date
 
-        Items:
-        $itemsText-------------------------------
-        Total:                      ${"%.2f".format(total)}
-        Thank you for your purchase!
-        -------------------------------
-    """.trimIndent()
+            Items:
+            $itemsText-------------------------------
+            Total:                      ${"%.2f".format(total)}
+            Thank you for your purchase!
+            -------------------------------
+        """.trimIndent()
     }
-
-
-
 
     override fun allObserver() {
         val receiptString = buildReceiptText()
