@@ -8,16 +8,17 @@ import com.wevx.dealershipmanagement.SharedData
 import com.wevx.dealershipmanagement.base.BaseFragment
 import com.wevx.dealershipmanagement.databinding.FragmentPaymentBinding
 import com.wevx.dealershipmanagement.local_database.LocalDatabase.products
+import com.wevx.dealershipmanagement.models.CartItem
 import com.wevx.dealershipmanagement.models.Products
 import com.wevx.dealershipmanagement.recyclerView.ProductCartAdapter
 
 class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBinding::inflate) {
     private lateinit var adapter: ProductCartAdapter
+    lateinit var selectedItems: List<CartItem>
 
     override fun setAllClickListener() {
         allSelectedProducts()
         binding.btnPayment.setOnClickListener {
-            SharedData.productList = products
 
             findNavController().navigate(R.id.action_paymentFragment_to_receiptFragment)
         }
@@ -29,9 +30,10 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
     }
 
     @SuppressLint("SetTextI18n")
-    fun allSelectedProducts(){
+    fun allSelectedProducts() {
+        selectedItems = SharedData.selectedProductList
 
-        adapter= ProductCartAdapter(products)
+        adapter = ProductCartAdapter(selectedItems)
         binding.recyclerProducts.adapter = adapter
 
         val total = products.sumOf { it.subtotal }
