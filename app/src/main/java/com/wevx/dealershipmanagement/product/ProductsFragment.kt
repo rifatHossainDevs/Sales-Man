@@ -5,16 +5,16 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.wevx.dealershipmanagement.R
+import com.wevx.dealershipmanagement.SharedData
 import com.wevx.dealershipmanagement.base.BaseFragment
 import com.wevx.dealershipmanagement.databinding.FragmentProductsBinding
 import com.wevx.dealershipmanagement.databinding.ProductCartBottomSheetBinding
-import com.wevx.dealershipmanagement.local_database.LocalDatabase
 import com.wevx.dealershipmanagement.local_database.LocalDatabase.products
-import com.wevx.dealershipmanagement.models.Products
+import com.wevx.dealershipmanagement.models.CartItem
 import com.wevx.dealershipmanagement.recyclerView.ProductAdapter
 import com.wevx.dealershipmanagement.recyclerView.ProductCartAdapter
 
@@ -26,35 +26,64 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
     private lateinit var adapter: ProductCartAdapter
     private lateinit var productAdapter: ProductAdapter
 
-    override fun setAllClickListener() {
-        bottomSheetBinding = ProductCartBottomSheetBinding.inflate(layoutInflater)
-        bottomSheetDialog = BottomSheetDialog(requireContext())
+    lateinit var selectedItems: List<CartItem>
+    lateinit var cartItems: List<CartItem>
 
+    override fun setAllClickListener() {
+
+        setProductRecyclerView()
         bottomSheetClickListener()
         spinnerClickListener()
+
+    }
+
+    private fun setProductRecyclerView() {
+        binding.productsRecyclerView.setHasFixedSize(true)
+        cartItems = products.map { CartItem(it, 0.0) }
+        productAdapter = ProductAdapter(cartItems, object : ProductAdapter.HandleClickListener {
+            @SuppressLint("SetTextI18n")
+            override fun onQuantityChangedListener() {
+                //val total = cartItems.sumOf { it.subtotal }
+                //bottomSheetBinding.tvTotal.text = "Total: %.2f".format(total)
+
+            }
+
+        })
+        binding.productsRecyclerView.adapter = productAdapter
+    }
+
+    override fun allObserver() {
+
     }
 
     @SuppressLint("SetTextI18n")
     private fun bottomSheetClickListener() {
+        bottomSheetBinding = ProductCartBottomSheetBinding.inflate(layoutInflater)
+        bottomSheetDialog = BottomSheetDialog(requireContext())
 
-        bottomSheetBinding.recyclerProducts.layoutManager = LinearLayoutManager(requireContext())
 
-        adapter = ProductCartAdapter(products)
-        bottomSheetBinding.recyclerProducts.adapter = adapter
 
-        productAdapter = ProductAdapter(products)
-        binding.productsRecyclerView.adapter = productAdapter
-
-        val total = products.sumOf { it.subtotal }
-        bottomSheetBinding.tvTotal.text = "Total: %.2f".format(total)
-
-        bottomSheetDialog.apply {
-            setContentView(bottomSheetBinding.root)
-            setCancelable(true)
-        }
 
         binding.btnContinue.setOnClickListener {
-            bottomSheetDialog.show()
+            selectedItems = cartItems.filter { it.purchaseQuantity > 0 }
+            if (selectedItems.isEmpty()) {
+                Toast.makeText(requireContext(), "No item is selected", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            SharedData.selectedProductList = selectedItems
+
+            adapter = ProductCartAdapter(selectedItems)
+            bottomSheetBinding.recyclerProducts.adapter = adapter
+
+            val total = cartItems.sumOf { it.subtotal }
+            bottomSheetBinding.tvTotal.text = "Total: %.2f".format(total)
+
+            bottomSheetDialog.apply {
+                setContentView(bottomSheetBinding.root)
+                setCancelable(true)
+                show()
+            }
         }
 
         bottomSheetBinding.btnClose.setOnClickListener {
@@ -66,11 +95,6 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
             findNavController().navigate(R.id.action_productsFragment_to_paymentFragment)
         }
     }
-
-    override fun allObserver() {
-
-    }
-
 
     @SuppressLint("ClickableViewAccessibility")
     private fun spinnerClickListener() {
