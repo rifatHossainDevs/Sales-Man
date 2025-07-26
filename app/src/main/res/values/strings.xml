@@ -30,4 +30,5 @@
     <string name="logout">Logout</string>
     <string name="select_a_customer">Select a Customer</string>
     <string name="filter">Filter</string>
+    <string name="national_id_card">National ID Card</string>
 </resources>
