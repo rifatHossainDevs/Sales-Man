@@ -1,6 +1,7 @@
 package com.wevx.dealershipmanagement.local_database
 
 import com.wevx.dealershipmanagement.R
+import com.wevx.dealershipmanagement.models.CartItem
 import com.wevx.dealershipmanagement.models.Customers
 import com.wevx.dealershipmanagement.models.DrawerItems
 import com.wevx.dealershipmanagement.models.Products
