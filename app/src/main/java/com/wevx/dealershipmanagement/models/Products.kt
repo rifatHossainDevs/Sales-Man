@@ -7,7 +7,7 @@ data class Products(
     val productQty: Double,
     val productUnit: String,
     val productCategory: String,
-    val brand: String,
+    val brandName: String,
     val imageUrl: String
 ) {
     val subtotal: Double get() = productQty * productPricePerUnit
