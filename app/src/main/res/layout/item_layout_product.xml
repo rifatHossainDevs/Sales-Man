@@ -7,7 +7,7 @@
     android:layout_marginBottom="8dp"
     android:backgroundTint="@color/recyclerView"
     app:cardCornerRadius="8dp"
-    app:cardElevation="@dimen/_12sdp">
+    app:cardElevation="@dimen/_2sdp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -81,7 +81,7 @@
 
 
             <ImageView
-                android:id="@+id/iv_edit"
+                android:id="@+id/iv_decrement"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center"
@@ -91,6 +91,7 @@
                 android:src="@drawable/ic_minus_24" />
 
             <EditText
+                android:id="@+id/et_quantity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -101,13 +102,18 @@
                 android:inputType="numberDecimal"
                 android:paddingHorizontal="@dimen/_12sdp"
                 android:text="0"
+                android:hint="0"
+                android:textColorHint="@color/gray"
+                android:cursorVisible="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_16ssp"
                 android:textStyle="bold" />
 
 
             <ImageView
-                android:id="@+id/iv_delete"
+                android:id="@+id/iv_increment"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center"
