@@ -46,7 +46,7 @@
     </fragment>
     <fragment
         android:id="@+id/addCustomerFragment"
-        android:name="com.wevx.dealershipmanagement.AddCustomerFragment"
+        android:name="com.wevx.dealershipmanagement.addCustomer.AddCustomerFragment"
         android:label="fragment_add_customer"
         tools:layout="@layout/fragment_add_customer" >
         <action
