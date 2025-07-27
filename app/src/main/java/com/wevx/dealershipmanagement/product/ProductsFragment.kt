@@ -43,8 +43,6 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
         productAdapter = ProductAdapter(cartItems, object : ProductAdapter.HandleClickListener {
             @SuppressLint("SetTextI18n")
             override fun onQuantityChangedListener() {
-                //val total = cartItems.sumOf { it.subtotal }
-                //bottomSheetBinding.tvTotal.text = "Total: %.2f".format(total)
 
             }
 
