@@ -2,7 +2,6 @@ package com.wevx.dealershipmanagement.auth.registration
 
 import android.Manifest
 import android.app.Activity
-import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -13,6 +12,7 @@ import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.areAllPermissionGranted
 import com.wevx.dealershipmanagement.base.BaseFragment
 import com.wevx.dealershipmanagement.databinding.FragmentRegistrationBinding
+import com.wevx.dealershipmanagement.extract
 import com.wevx.dealershipmanagement.requestPermission
 
 class RegistrationFragment :
@@ -22,8 +22,13 @@ class RegistrationFragment :
     override fun setAllClickListener() {
 
         allButtonClickListener()
+        uploadButtonClickListener()
         permissionRequest = getPermissionRequest()
 
+
+    }
+
+    private fun uploadButtonClickListener() {
         binding.btnUploadImage.setOnClickListener {
             requestPermission(permissionRequest, permissionList)
         }
@@ -32,8 +37,6 @@ class RegistrationFragment :
     override fun allObserver() {
 
     }
-
-
 
 
     private fun getPermissionRequest(): ActivityResultLauncher<Array<String>> {
@@ -55,7 +58,6 @@ class RegistrationFragment :
             }
         }
     }
-
 
 
     companion object {
@@ -89,8 +91,119 @@ class RegistrationFragment :
         }
 
     private fun allButtonClickListener() {
-        binding.btnLogin.setOnClickListener {
-            findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
+        binding.apply {
+            btnCreateAccount.setOnClickListener {
+                val name = etUserName.extract()
+                val phone = etPhoneNumber.extract()
+                val email = etEmail.extract()
+                val nid = etNid.extract()
+                val presentAddress = etPresentAddress.extract()
+                val permanentAddress = etPermanentAddress.extract()
+                val password = etPassword.extract()
+                val confirmPassword = etConfirmPassword.extract()
+                if (checkAllFieldValidity(
+                        name,
+                        phone,
+                        email,
+                        nid,
+                        presentAddress,
+                        permanentAddress,
+                        password,
+                        confirmPassword
+                    )
+                ) {
+                    findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
+                }
+            }
+
+            btnLogin.setOnClickListener {
+                findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
+            }
         }
+
+    }
+
+
+    private fun checkAllFieldValidity(
+        name: String,
+        phone: String,
+        email: String,
+        nid: String,
+        presentAddress: String,
+        permanentAddress: String,
+        password: String,
+        confirmPassword: String
+    ): Boolean {
+        val emailPattern = "^[a-z0-9+_.-]+@[a-z.-]{4,7}\\.[a-z]{2,5}$"
+        val passwordPattern =
+            "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!@#\$%^&*(),.?\":{}|<>~_-]).{8,}\$"
+
+        if (name == "") {
+            binding.etUserNameLayout.error = "This field must be filled"
+            return false
+        }
+
+        if (phone == "") {
+            binding.etConfirmPasswordLayout.error = "This field must be filled"
+            return false
+        }
+        if (phone.length < 11) {
+            binding.etPasswordLayout.error = "Password Should have at least 11 Digit"
+            return false
+        }
+
+        if (email == "") {
+            binding.etEmailLayout.error = "This field must be filled"
+            return false
+        }
+        if (!email.matches(emailPattern.toRegex())) {
+            binding.etEmailLayout.error = "Invalid Email Format"
+            return false
+        }
+        if (password == "") {
+            binding.etConfirmPasswordLayout.error = "This field must be filled"
+            return false
+        }
+
+        if (nid == "") {
+            binding.etConfirmPasswordLayout.error = "This field must be filled"
+            return false
+        }
+
+        if (nid.length != 10 && nid.length != 17) {
+            binding.etPasswordLayout.error = "NID Should have 10 or 17 Digit"
+            return false
+        }
+
+        if (presentAddress == "") {
+            binding.etConfirmPasswordLayout.error = "This field must be filled"
+            return false
+        }
+
+        if (permanentAddress == "") {
+            binding.etConfirmPasswordLayout.error = "This field must be filled"
+            return false
+        }
+
+        if (password.length < 8) {
+            binding.etPasswordLayout.error = "Password Should have at least 8 Characters"
+            return false
+        }
+        if (!password.matches(passwordPattern.toRegex())) {
+            binding.etPasswordLayout.error =
+                "At least one capital letter, small letter, digit and symbol"
+            return false
+        }
+
+        if (confirmPassword.length < 8) {
+            binding.etPasswordLayout.error = "Password Should have at least 8 Characters"
+            return false
+        }
+        if (password != confirmPassword) {
+            binding.etPasswordLayout.error = "Password and Confirm Password are not match!"
+            return false
+        }
+
+        return true
     }
 }
