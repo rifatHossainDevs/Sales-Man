@@ -55,7 +55,13 @@ class ProductAdapter(
 
             var isEditing = false
             val watcher = object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
@@ -103,18 +109,16 @@ class ProductAdapter(
                 if (!etQuantity.hasFocus()) {
                     etQuantity.requestFocus()
                     etQuantity.isCursorVisible = true
-                    val imm = etQuantity.context.getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
-                    imm.showSoftInput(etQuantity, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
+                    val imm =
+                        etQuantity.context.getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+                    imm.showSoftInput(
+                        etQuantity,
+                        android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
+                    )
                 }
             }
         }
     }
-
-
-
-
-
-
 
 
     override fun getItemCount(): Int = cartItem.size
