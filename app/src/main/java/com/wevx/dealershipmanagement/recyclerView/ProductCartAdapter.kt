@@ -6,11 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.wevx.dealershipmanagement.databinding.ItemLayoutProductCartBinding
 import com.wevx.dealershipmanagement.models.CartItem
-import com.wevx.dealershipmanagement.models.Products
 
 class ProductCartAdapter(val cartItem: List<CartItem>) :
     RecyclerView.Adapter<ProductCartAdapter.ViewHolder>() {
-
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
