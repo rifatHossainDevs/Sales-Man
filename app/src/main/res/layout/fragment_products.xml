@@ -63,11 +63,11 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:descendantFocusability="beforeDescendants"
         android:id="@+id/productsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/_8sdp"
+        android:descendantFocusability="beforeDescendants"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
