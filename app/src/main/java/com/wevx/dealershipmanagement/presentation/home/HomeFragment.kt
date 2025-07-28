@@ -28,7 +28,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     }
 
-
     override fun allObserver() {
 
     }
@@ -75,7 +74,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupSpinnerTouchListeners() {
-        // When spinner touched (opened), rotate arrow up and set expanded true
         binding.spinnerCity.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 cityExpanded = true
