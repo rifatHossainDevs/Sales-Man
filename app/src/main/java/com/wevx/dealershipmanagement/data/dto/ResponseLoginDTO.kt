@@ -25,7 +25,6 @@ data class ResponseLoginDTO(
         @SerializedName("user")
         val user: User? = null
     ) {
-
         @Keep
         data class User(
             @SerializedName("avatar")
