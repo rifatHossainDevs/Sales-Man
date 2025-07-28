@@ -115,7 +115,6 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
             false
         }
 
-        // Handle selection and reset icon
         binding.spinnerCategory.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
