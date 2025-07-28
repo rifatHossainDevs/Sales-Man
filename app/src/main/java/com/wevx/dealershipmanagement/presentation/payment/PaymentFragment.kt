@@ -18,18 +18,16 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
         allSelectedProducts()
         buttonClickListener()
 
-
     }
 
+    override fun allObserver() {
+
+    }
     private fun buttonClickListener() {
         binding.btnPayment.setOnClickListener {
 
             findNavController().navigate(R.id.action_paymentFragment_to_receiptFragment)
         }
-    }
-
-    override fun allObserver() {
-
     }
 
     @SuppressLint("SetTextI18n")
