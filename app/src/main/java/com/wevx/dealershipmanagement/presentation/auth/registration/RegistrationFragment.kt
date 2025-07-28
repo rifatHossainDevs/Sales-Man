@@ -74,7 +74,6 @@ class RegistrationFragment :
             val data = result.data
 
             if (resultCode == Activity.RESULT_OK) {
-                //Image Uri will not be null for RESULT_OK
                 val fileUri = data?.data!!
                 //viewmodel.setImageUri(fileUri)
                 //product.imageLink = fileUri.toString()
