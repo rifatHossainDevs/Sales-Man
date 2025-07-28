@@ -16,11 +16,16 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
 
     override fun setAllClickListener() {
         allSelectedProducts()
+        buttonClickListener()
+
+
+    }
+
+    private fun buttonClickListener() {
         binding.btnPayment.setOnClickListener {
 
             findNavController().navigate(R.id.action_paymentFragment_to_receiptFragment)
         }
-
     }
 
     override fun allObserver() {
