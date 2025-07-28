@@ -58,7 +58,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
 
     //Spinner code start
-    // Track expanded state per spinner
     private var cityExpanded = false
     private var areaExpanded = false
     private var zoneExpanded = false
