@@ -44,7 +44,7 @@ class RegistrationFragment :
             if (areAllPermissionGranted(permissionList)) {
                 ImagePicker.with(this)
                     .cropSquare()
-                    .compress(1024)         //Final image size will be less than 1 MB(Optional)
+                    .compress(1024)
                     .maxResultSize(
                         512,
                         512
