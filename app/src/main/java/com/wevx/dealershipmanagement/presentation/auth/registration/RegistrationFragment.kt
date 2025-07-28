@@ -203,3 +203,4 @@ class RegistrationFragment :
         return true
     }
 }
+
