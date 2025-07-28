@@ -75,7 +75,6 @@ class RegistrationFragment :
 
             if (resultCode == Activity.RESULT_OK) {
                 val fileUri = data?.data!!
-                //viewmodel.setImageUri(fileUri)
                 //product.imageLink = fileUri.toString()
                 if (fileUri.toString() != "") {
                     binding.ivUser.setImageURI(fileUri)
