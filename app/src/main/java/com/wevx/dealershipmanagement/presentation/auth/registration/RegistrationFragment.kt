@@ -120,7 +120,6 @@ class RegistrationFragment :
 
     }
 
-
     private fun checkAllFieldValidity(
         name: String,
         phone: String,
