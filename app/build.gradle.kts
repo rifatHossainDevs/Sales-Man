@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.safe.args)
     id("kotlin-parcelize")//build.gradle.app
+    alias(libs.plugins.hiltAndroid)
+    kotlin("kapt")
 }
 
 android {
@@ -81,4 +83,8 @@ dependencies {
 
     //Circle Image View
     implementation (libs.circleimageview)
+
+    // dagger hilt
+    implementation(libs.dagger.hilt.android)
+    kapt(libs.dagger.hilt.compiler)
 }

@@ -1,0 +1,68 @@
+package com.wevx.dealershipmanagement.data.dto
+
+
+import com.google.gson.annotations.SerializedName
+import androidx.annotation.Keep
+import com.wevx.dealershipmanagement.domain.models.LoginModel
+
+@Keep
+data class ResponseLoginDTO(
+    @SerializedName("data")
+    val `data`: Data? = null,
+    @SerializedName("message")
+    val message: String? = null,
+    @SerializedName("statusCode")
+    val statusCode: Int? = null,
+    @SerializedName("success")
+    val success: Boolean? = null
+) {
+    @Keep
+    data class Data(
+        @SerializedName("accessToken")
+        val accessToken: String? = null,
+        @SerializedName("refreshToken")
+        val refreshToken: String? = null,
+        @SerializedName("user")
+        val user: User? = null
+    ) {
+
+        @Keep
+        data class User(
+            @SerializedName("avatar")
+            val avatar: String? = null,
+            @SerializedName("createdAt")
+            val createdAt: String? = null,
+            @SerializedName("email")
+            val email: String? = null,
+            @SerializedName("fullName")
+            val fullName: String? = null,
+            @SerializedName("_id")
+            val id: String? = null,
+            @SerializedName("nid")
+            val nid: String? = null,
+            @SerializedName("phone")
+            val phone: String? = null,
+            @SerializedName("updatedAt")
+            val updatedAt: String? = null,
+            @SerializedName("userType")
+            val userType: String? = null,
+            @SerializedName("__v")
+            val v: Int? = null
+        )
+    }
+}
+
+
+fun ResponseLoginDTO.Data.toUserModel(): LoginModel {
+    return LoginModel(
+        accessToken = this.accessToken ?: "",
+        refreshToken = this.refreshToken ?: "",
+        userProfileImageUrl = this.user?.avatar ?: "",
+        userEmail = this.user?.email ?: "",
+        userName = this.user?.fullName ?: "",
+        userId = this.user?.id ?: "",
+        nid = this.user?.nid ?: "",
+        userPhoneNumber = this.user?.phone ?: "",
+        userRole = this.user?.userType ?: ""
+    )
+}

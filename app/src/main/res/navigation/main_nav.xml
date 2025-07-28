@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.wevx.dealershipmanagement.home.HomeFragment"
+        android:name="com.wevx.dealershipmanagement.presentation.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/productsFragment"
-        android:name="com.wevx.dealershipmanagement.product.ProductsFragment"
+        android:name="com.wevx.dealershipmanagement.presentation.product.ProductsFragment"
         android:label="fragment_products"
         tools:layout="@layout/fragment_products" >
         <action
@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/paymentFragment"
-        android:name="com.wevx.dealershipmanagement.payment.PaymentFragment"
+        android:name="com.wevx.dealershipmanagement.presentation.payment.PaymentFragment"
         android:label="fragment_payment"
         tools:layout="@layout/fragment_payment" >
         <action
@@ -37,7 +37,7 @@
     </fragment>
     <fragment
         android:id="@+id/receiptFragment"
-        android:name="com.wevx.dealershipmanagement.receipt.ReceiptFragment"
+        android:name="com.wevx.dealershipmanagement.presentation.receipt.ReceiptFragment"
         android:label="fragment_receipt"
         tools:layout="@layout/fragment_receipt" >
         <action
@@ -46,7 +46,7 @@
     </fragment>
     <fragment
         android:id="@+id/addCustomerFragment"
-        android:name="com.wevx.dealershipmanagement.addCustomer.AddCustomerFragment"
+        android:name="com.wevx.dealershipmanagement.presentation.addCustomer.AddCustomerFragment"
         android:label="fragment_add_customer"
         tools:layout="@layout/fragment_add_customer" >
         <action

@@ -20,6 +20,7 @@ coroutines_version = "1.10.2"
 lifecycle_version = "2.9.1"
 fragment = "1.8.8"
 circleimageview = "3.1.0"
+hilt_version = "2.56.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -51,10 +52,13 @@ lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata-
 androidx-fragment = { group = "androidx.fragment", name = "fragment", version.ref = "fragment" }
 
 circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleimageview" }
+dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt_version" }
+dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt_version" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 safe-args = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigationUiKtx"}
+hiltAndroid = { id = "com.google.dagger.hilt.android", version.ref = "hilt_version" }
 
 

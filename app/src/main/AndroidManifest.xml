@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
     <!-- Location permissions (required for scanning Bluetooth devices) -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -23,6 +24,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
+        android:name=".core.di.MyApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -32,11 +34,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DealershipManagement">
         <activity
-            android:name=".starter.MainActivity"
+            android:name=".presentation.MainActivity"
             android:exported="false"
             android:theme="@style/Theme.DealershipManagement.MainActivity"/>
         <activity
-            android:name=".starter.AuthActivity"
+            android:name=".presentation.AuthActivity"
             android:exported="true"
             android:theme="@style/Theme.DealershipManagement.MainActivity">
             <intent-filter>

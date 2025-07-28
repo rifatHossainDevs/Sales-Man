@@ -6,7 +6,7 @@
     app:startDestination="@id/loginFragment">
     <fragment
         android:id="@+id/registrationFragment"
-        android:name="com.wevx.dealershipmanagement.auth.registration.RegistrationFragment"
+        android:name="com.wevx.dealershipmanagement.presentation.auth.registration.RegistrationFragment"
         android:label="fragment_registration"
         tools:layout="@layout/fragment_registration" >
         <action
@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.wevx.dealershipmanagement.auth.login.LoginFragment"
+        android:name="com.wevx.dealershipmanagement.presentation.auth.login.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -27,7 +27,7 @@
     </fragment>
     <fragment
         android:id="@+id/forgetPasswordFragment"
-        android:name="com.wevx.dealershipmanagement.auth.forgetPassword.ForgetPasswordFragment"
+        android:name="com.wevx.dealershipmanagement.presentation.auth.forgetPassword.ForgetPasswordFragment"
         android:label="fragment_forget_password"
         tools:layout="@layout/fragment_forget_password" >
         <action
