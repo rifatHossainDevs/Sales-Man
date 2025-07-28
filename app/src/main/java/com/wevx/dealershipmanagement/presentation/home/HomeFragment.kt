@@ -108,7 +108,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 position: Int,
                 id: Long
             ) {
-                // Spinner closed, rotate arrow down and reset expanded state
                 cityExpanded = false
                 rotateIcon(binding.cityDropdownIcon, false)
 
