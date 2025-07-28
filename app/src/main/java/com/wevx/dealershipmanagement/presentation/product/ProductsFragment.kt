@@ -108,7 +108,6 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
 
         binding.spinnerCategory.adapter = adapter
 
-        // Animate dropdown icon when touched
         binding.spinnerCategory.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 binding.categoryDropdownIcon.animate().rotation(180f).setDuration(200).start()
