@@ -22,7 +22,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     private lateinit var adapter: CustomerAdapter
 
-
     override fun setAllClickListener() {
         setRecyclerView()
         addCustomerClickListener()
