@@ -26,7 +26,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         setRecyclerView()
         addCustomerClickListener()
 
-
     }
 
 
