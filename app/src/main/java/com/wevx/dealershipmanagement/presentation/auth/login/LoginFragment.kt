@@ -7,7 +7,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.wevx.dealershipmanagement.presentation.MainActivity
 import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.core.common.BaseFragment
-import com.wevx.dealershipmanagement.data.dto.RequestLogin
+import com.wevx.dealershipmanagement.data.dto.loginDto.RequestLogin
 import com.wevx.dealershipmanagement.databinding.FragmentLoginBinding
 import com.wevx.dealershipmanagement.databinding.PhoneVerificationBottomSheetBinding
 import dagger.hilt.android.AndroidEntryPoint
