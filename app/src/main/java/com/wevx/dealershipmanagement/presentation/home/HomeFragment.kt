@@ -13,7 +13,9 @@ import com.wevx.dealershipmanagement.core.common.BaseFragment
 import com.wevx.dealershipmanagement.databinding.FragmentHomeBinding
 import com.wevx.dealershipmanagement.domain.models.Customers
 import com.wevx.dealershipmanagement.presentation.adapter.CustomerAdapter
+import com.wevx.dealershipmanagement.presentation.home.getArea.AreaViewModel
 import com.wevx.dealershipmanagement.presentation.home.getDistrict.DistrictViewModel
+import com.wevx.dealershipmanagement.presentation.home.getSubDistrict.SubDistrictViewModel
 import com.wevx.dealershipmanagement.utils.LocalDatabase.customers
 import com.wevx.dealershipmanagement.utils.LocalDatabase.divisions
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,7 +26,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     private lateinit var adapter: CustomerAdapter
     private var selectedDivisionId = 1
+    private var selectedDistrictId = 1
+    private var selectedAreaId = 1
     private val districtViewModel: DistrictViewModel by viewModels()
+    private val subDistrictViewModel: SubDistrictViewModel by viewModels()
+    private val areaViewModel: AreaViewModel by viewModels()
 
     // Mock Data
     private val districtMap = mapOf(
@@ -49,6 +55,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
 
         districtViewModel.getDistrict(selectedDivisionId)
+        subDistrictViewModel.getSubDistrict(selectedDistrictId)
+        areaViewModel.getArea(selectedAreaId)
     }
 
     override fun allObserver() {}

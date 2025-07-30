@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.safe.args)
-    id("kotlin-parcelize")//build.gradle.app
+    id("kotlin-parcelize")
     alias(libs.plugins.hiltAndroid)
     kotlin("kapt")
 }

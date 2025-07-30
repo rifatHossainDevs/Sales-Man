@@ -2,11 +2,17 @@ package com.wevx.dealershipmanagement.core.di
 
 import com.wevx.dealershipmanagement.data.remote.auth.AuthApiService
 import com.wevx.dealershipmanagement.data.remote.home.HomeApiService
+import com.wevx.dealershipmanagement.data.remote.product.ProductApiService
 import com.wevx.dealershipmanagement.data.repository_impl.auth.AuthRepositoryImpl
 import com.wevx.dealershipmanagement.data.repository_impl.home.HomeRepositoryImpl
+import com.wevx.dealershipmanagement.data.repository_impl.product.ProductRepositoryImpl
 import com.wevx.dealershipmanagement.domain.repository.auth.AuthRepository
 import com.wevx.dealershipmanagement.domain.repository.home.HomeRepository
+import com.wevx.dealershipmanagement.domain.repository.product.ProductRepository
+import com.wevx.dealershipmanagement.domain.use_case.home_usecase.GetAreaUseCase
 import com.wevx.dealershipmanagement.domain.use_case.home_usecase.GetDistrictUseCase
+import com.wevx.dealershipmanagement.domain.use_case.home_usecase.GetSubDistrictUseCase
+import com.wevx.dealershipmanagement.domain.use_case.product_usecase.GetCategoryUseCase
 import com.wevx.dealershipmanagement.utils.Constants
 import dagger.Module
 import dagger.Provides
@@ -62,6 +68,43 @@ object NetworkModule {
         homeRepository: HomeRepository
     ): GetDistrictUseCase {
         return GetDistrictUseCase(homeRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSubDistrictUseCase(
+        homeRepository: HomeRepository
+    ): GetSubDistrictUseCase {
+        return GetSubDistrictUseCase(homeRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAreaUseCase(
+        homeRepository: HomeRepository
+    ): GetAreaUseCase {
+        return GetAreaUseCase(homeRepository)
+    }
+
+    //Product
+    @Provides
+    @Singleton
+    fun provideProductApiService(retrofit: Retrofit): ProductApiService {
+        return retrofit.create(ProductApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideProductRepository(productApiService: ProductApiService): ProductRepository {
+        return ProductRepositoryImpl(productApiService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCategoryUseCase(
+        productRepository: ProductRepository
+    ): GetCategoryUseCase {
+        return GetCategoryUseCase(productRepository)
     }
 
     // Profile
