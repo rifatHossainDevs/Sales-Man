@@ -65,7 +65,7 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
 
-            productState.data?.let { allProductList->
+            productState.data?.let { allProductList ->
 
             }
         }
