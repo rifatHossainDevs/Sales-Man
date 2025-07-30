@@ -1,4 +1,4 @@
-package com.wevx.dealershipmanagement.data.dto
+package com.wevx.dealershipmanagement.data.dto.loginDto
 
 
 import com.google.gson.annotations.SerializedName
