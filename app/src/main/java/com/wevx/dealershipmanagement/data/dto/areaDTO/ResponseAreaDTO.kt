@@ -1,10 +1,9 @@
-package com.wevx.dealershipmanagement.data.dto.responseAreaDTO
+package com.wevx.dealershipmanagement.data.dto.areaDTO
 
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 import com.wevx.dealershipmanagement.domain.models.AreaModel
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Keep
