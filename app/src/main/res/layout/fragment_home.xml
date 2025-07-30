@@ -40,99 +40,138 @@
         app:layout_constraintStart_toEndOf="@id/iv_filter"
         app:layout_constraintTop_toTopOf="@id/iv_filter" />
 
+
     <LinearLayout
-        android:id="@+id/citySpinnerLayout"
+
+        android:id="@+id/spinner_division_district"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_8sdp"
-        android:background="@drawable/bg_spinner"
         android:orientation="horizontal"
-        android:padding="@dimen/_2sdp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_filter">
 
-        <Spinner
-            android:id="@+id/spinnerCity"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/transparent" />
-
-        <ImageView
-            android:id="@+id/cityDropdownIcon"
-            android:layout_width="@dimen/_20sdp"
-            android:layout_height="@dimen/_20sdp"
-            android:layout_gravity="center_vertical"
-            android:rotation="0"
-            android:src="@drawable/ic_dropdown_24" />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/spinner_area_zone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_8sdp"
-        android:baselineAligned="false"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/citySpinnerLayout">
-
         <LinearLayout
-            android:id="@+id/areaSpinnerLayout"
+            android:id="@+id/divisionLayout"
+            android:layout_marginEnd="@dimen/_2sdp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/_4sdp"
             android:layout_weight="1"
             android:background="@drawable/bg_spinner"
             android:orientation="horizontal"
-            android:padding="@dimen/_2sdp">
+            android:padding="4dp">
+
+            <Spinner
+                android:id="@+id/spinnerDivision"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent" />
+
+            <ImageView
+                android:id="@+id/divisionDropdownIcon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:rotation="0"
+                android:src="@drawable/ic_dropdown_24" />
+        </LinearLayout>
+
+        <!-- District -->
+        <LinearLayout
+            android:id="@+id/districtLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:background="@drawable/bg_spinner"
+            android:orientation="horizontal"
+            android:padding="4dp">
+
+            <Spinner
+                android:id="@+id/spinnerDistrict"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent" />
+
+            <ImageView
+                android:id="@+id/districtDropdownIcon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:rotation="0"
+                android:src="@drawable/ic_dropdown_24" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/_4sdp"
+        android:id="@+id/spinner_subDistrict_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/spinner_division_district">
+
+        <LinearLayout
+            android:id="@+id/subdistrictLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_2sdp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_spinner"
+            android:orientation="horizontal"
+            android:padding="4dp">
+
+            <Spinner
+                android:id="@+id/spinnerSubdistrict"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent" />
+
+            <ImageView
+                android:id="@+id/subdistrictDropdownIcon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:rotation="0"
+                android:src="@drawable/ic_dropdown_24" />
+        </LinearLayout>
+
+        <!-- Area -->
+        <LinearLayout
+            android:id="@+id/areaLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_spinner"
+            android:orientation="horizontal"
+            android:padding="4dp"
+            app:layout_constraintStart_toEndOf="@id/subdistrictLayout"
+            app:layout_constraintTop_toTopOf="@id/subdistrictLayout">
 
             <Spinner
                 android:id="@+id/spinnerArea"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@android:color/transparent"
-                tools:ignore="NestedWeights" />
+                android:background="@android:color/transparent" />
 
             <ImageView
                 android:id="@+id/areaDropdownIcon"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center_vertical"
                 android:rotation="0"
                 android:src="@drawable/ic_dropdown_24" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/zoneSpinnerLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_4sdp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_spinner"
-            android:orientation="horizontal"
-            android:padding="@dimen/_2sdp">
-
-            <Spinner
-                android:id="@+id/spinnerZone"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:enabled="false" />
-
-            <ImageView
-                android:id="@+id/zoneDropdownIcon"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:layout_gravity="center_vertical"
-                android:rotation="0"
-                android:src="@drawable/ic_dropdown_24" />
-        </LinearLayout>
     </LinearLayout>
+
+    <!-- Subdistrict -->
 
 
     <TextView
@@ -145,7 +184,7 @@
         android:textColor="@color/black"
         android:textSize="@dimen/_16sdp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/spinner_area_zone" />
+        app:layout_constraintTop_toBottomOf="@id/spinner_subDistrict_area" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_all_customer"
