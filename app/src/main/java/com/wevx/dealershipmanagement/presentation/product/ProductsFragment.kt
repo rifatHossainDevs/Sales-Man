@@ -25,7 +25,6 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var adapter: ProductCartAdapter
     private lateinit var productAdapter: ProductAdapter
-
     lateinit var selectedItems: List<CartItem>
     lateinit var cartItems: List<CartItem>
 
@@ -37,6 +36,10 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
 
     }
 
+    override fun allObserver() {
+
+    }
+
     private fun setProductRecyclerView() {
         binding.productsRecyclerView.setHasFixedSize(true)
         cartItems = products.map { CartItem(it, 0.0) }
@@ -45,23 +48,14 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
             override fun onQuantityChangedListener() {
 
             }
-
         })
         binding.productsRecyclerView.adapter = productAdapter
-    }
-
-    override fun allObserver() {
-
     }
 
     @SuppressLint("SetTextI18n")
     private fun bottomSheetClickListener() {
         bottomSheetBinding = ProductCartBottomSheetBinding.inflate(layoutInflater)
         bottomSheetDialog = BottomSheetDialog(requireContext())
-
-
-
-
         binding.btnContinue.setOnClickListener {
             selectedItems = cartItems.filter { it.purchaseQuantity > 0 }
             if (selectedItems.isEmpty()) {
@@ -99,9 +93,7 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
         val categories = listOf("Select Category", "Electronics", "Groceries", "Clothing", "Books")
 
         val adapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            categories
+            requireContext(), android.R.layout.simple_spinner_item, categories
         ).also {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
@@ -122,10 +114,12 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
                 ) {
                     selectedCategory = categories[position]
                     binding.categoryDropdownIcon.animate().rotation(0f).setDuration(200).start()
-                    // You can use selectedCategory wherever you need
+
                 }
 
-                override fun onNothingSelected(parent: AdapterView<*>?) {}
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+
+                }
             }
     }
 
