@@ -7,7 +7,9 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.wevx.dealershipmanagement.databinding.ActivityMainBinding
 import com.wevx.dealershipmanagement.utils.LocalDatabase
 import com.wevx.dealershipmanagement.presentation.adapter.DrawerItemAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var drawerLayout: DrawerLayout
