@@ -1,17 +1,14 @@
 package com.wevx.dealershipmanagement.core.di
 
 import com.wevx.dealershipmanagement.data.remote.auth.AuthApiService
-import com.wevx.dealershipmanagement.data.remote.home.HomeApiService
+import com.wevx.dealershipmanagement.data.remote.home.AreaApiService
 import com.wevx.dealershipmanagement.data.remote.product.ProductApiService
 import com.wevx.dealershipmanagement.data.repository_impl.auth.AuthRepositoryImpl
-import com.wevx.dealershipmanagement.data.repository_impl.home.HomeRepositoryImpl
+import com.wevx.dealershipmanagement.data.repository_impl.home.AreaRepositoryImpl
 import com.wevx.dealershipmanagement.data.repository_impl.product.ProductRepositoryImpl
 import com.wevx.dealershipmanagement.domain.repository.auth.AuthRepository
-import com.wevx.dealershipmanagement.domain.repository.home.HomeRepository
+import com.wevx.dealershipmanagement.domain.repository.home.AreaRepository
 import com.wevx.dealershipmanagement.domain.repository.product.ProductRepository
-import com.wevx.dealershipmanagement.domain.use_case.home_usecase.GetAreaUseCase
-import com.wevx.dealershipmanagement.domain.use_case.home_usecase.GetDistrictUseCase
-import com.wevx.dealershipmanagement.domain.use_case.home_usecase.GetSubDistrictUseCase
 import com.wevx.dealershipmanagement.domain.use_case.product_usecase.GetCategoryUseCase
 import com.wevx.dealershipmanagement.utils.Constants
 import dagger.Module
@@ -52,14 +49,14 @@ object NetworkModule {
     //Home
     @Provides
     @Singleton
-    fun provideHomeApiService(retrofit: Retrofit): HomeApiService {
-        return retrofit.create(HomeApiService::class.java)
+    fun provideAreaApiService(retrofit: Retrofit): AreaApiService {
+        return retrofit.create(AreaApiService::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideHomeRepository(homeApiService: HomeApiService): HomeRepository {
-        return HomeRepositoryImpl(homeApiService)
+    fun provideAreaRepository(homeApiService: AreaApiService): AreaRepository {
+        return AreaRepositoryImpl(homeApiService)
     }
 
     //Product
