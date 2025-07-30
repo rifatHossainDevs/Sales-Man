@@ -62,30 +62,6 @@ object NetworkModule {
         return HomeRepositoryImpl(homeApiService)
     }
 
-    @Provides
-    @Singleton
-    fun provideDistrictUseCase(
-        homeRepository: HomeRepository
-    ): GetDistrictUseCase {
-        return GetDistrictUseCase(homeRepository)
-    }
-
-    @Provides
-    @Singleton
-    fun provideSubDistrictUseCase(
-        homeRepository: HomeRepository
-    ): GetSubDistrictUseCase {
-        return GetSubDistrictUseCase(homeRepository)
-    }
-
-    @Provides
-    @Singleton
-    fun provideAreaUseCase(
-        homeRepository: HomeRepository
-    ): GetAreaUseCase {
-        return GetAreaUseCase(homeRepository)
-    }
-
     //Product
     @Provides
     @Singleton
