@@ -1,4 +1,4 @@
-package com.wevx.dealershipmanagement.data.dto.responseCategoryDTO
+package com.wevx.dealershipmanagement.data.dto.categoryDTO
 
 import kotlinx.serialization.Serializable
 import androidx.annotation.Keep
