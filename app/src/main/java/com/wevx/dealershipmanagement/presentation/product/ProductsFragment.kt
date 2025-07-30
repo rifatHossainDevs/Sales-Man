@@ -20,6 +20,7 @@ import com.wevx.dealershipmanagement.domain.models.CartItem
 import com.wevx.dealershipmanagement.domain.models.CategoryModel
 import com.wevx.dealershipmanagement.presentation.adapter.ProductAdapter
 import com.wevx.dealershipmanagement.presentation.adapter.ProductCartAdapter
+import com.wevx.dealershipmanagement.presentation.product.getAllProduct.AllProductViewModel
 import com.wevx.dealershipmanagement.presentation.product.getCategory.CategoryViewModel
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,6 +38,7 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
     lateinit var cartItems: List<CartItem>
 
     val categoryViewModel: CategoryViewModel by viewModels()
+    val allProductViewModel: AllProductViewModel by viewModels()
 
     override fun setAllClickListener() {
 
@@ -44,24 +46,40 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
         bottomSheetClickListener()
 
         categoryViewModel.getCategory()
+        allProductViewModel.getAllProduct()
 
 
     }
 
     override fun allObserver() {
         categoryObserver()
+        allProductObserver()
 
     }
 
-    private fun categoryObserver() {
-        categoryViewModel.categoryState.collectInLifecycle(viewLifecycleOwner) { state ->
-            if (state.loading) return@collectInLifecycle
+    private fun allProductObserver() {
+        allProductViewModel.allProductState.collectInLifecycle(viewLifecycleOwner) { productState ->
+            if (productState.loading) return@collectInLifecycle
 
-            state.error?.let {
+            productState.error?.let {
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
 
-            state.data?.let { categoryList ->
+            productState.data?.let { allProductList->
+
+            }
+        }
+    }
+
+    private fun categoryObserver() {
+        categoryViewModel.categoryState.collectInLifecycle(viewLifecycleOwner) { categoryState ->
+            if (categoryState.loading) return@collectInLifecycle
+
+            categoryState.error?.let {
+                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+            }
+
+            categoryState.data?.let { categoryList ->
                 val categoryNames = mutableListOf("Select Category")
                 categoryNames.addAll(categoryList.map { it.categoryName })
 
