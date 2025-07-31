@@ -6,24 +6,39 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.utils.areAllPermissionGranted
 import com.wevx.dealershipmanagement.core.common.BaseFragment
+import com.wevx.dealershipmanagement.data.dto.registrationDto.RequestRegistration
 import com.wevx.dealershipmanagement.databinding.FragmentRegistrationBinding
 import com.wevx.dealershipmanagement.utils.extract
 import com.wevx.dealershipmanagement.utils.requestPermission
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RegistrationFragment :
     BaseFragment<FragmentRegistrationBinding>(FragmentRegistrationBinding::inflate) {
     private lateinit var permissionRequest: ActivityResultLauncher<Array<String>>
+    private val registrationViewModel: RegistrationViewModel by viewModels()
 
     override fun setAllClickListener() {
 
         allButtonClickListener()
         uploadButtonClickListener()
         permissionRequest = getPermissionRequest()
+
+        val requestRegistration = RequestRegistration(
+            email = "martha.wayles.skelton.jefferson@myownpersonaldomain.com",
+            fullName = "Rifat Hossain",
+            phone = "01255688888",
+            password = "P@5101054",
+            userType = "seller"
+        )
+
+        registrationViewModel.registrationUser(requestRegistration)
 
 
     }
