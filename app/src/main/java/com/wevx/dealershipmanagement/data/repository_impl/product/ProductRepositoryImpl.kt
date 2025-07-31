@@ -13,12 +13,14 @@ class ProductRepositoryImpl @Inject constructor(
     
     override suspend fun getCategory(): Response<ResponseCategoryDTO> {
         return productApiService.getCategory()
-
     }
 
     override suspend fun getAllProduct(): Response<ResponseProductDTO> {
         return productApiService.getAllProduct()
     }
 
+    override suspend fun getProductByCategory(categoryId: String): Response<ResponseProductDTO> {
+        return productApiService.getProductByCategory(categoryId)
+    }
 
 }

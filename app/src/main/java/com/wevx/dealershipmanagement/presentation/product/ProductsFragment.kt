@@ -22,13 +22,14 @@ import com.wevx.dealershipmanagement.presentation.adapter.ProductAdapter
 import com.wevx.dealershipmanagement.presentation.adapter.ProductCartAdapter
 import com.wevx.dealershipmanagement.presentation.product.getAllProduct.AllProductViewModel
 import com.wevx.dealershipmanagement.presentation.product.getCategory.CategoryViewModel
+import com.wevx.dealershipmanagement.presentation.product.productByCategory.ProductByCategoryViewModel
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsBinding::inflate) {
 
-    private var selectedCategory: String = ""
+    private var selectedCategoryName: String = ""
     private var selectedCategoryId: String = ""
     private lateinit var bottomSheetBinding: ProductCartBottomSheetBinding
     private lateinit var bottomSheetDialog: BottomSheetDialog
@@ -39,6 +40,7 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
 
     val categoryViewModel: CategoryViewModel by viewModels()
     val allProductViewModel: AllProductViewModel by viewModels()
+    val productByCategoryViewModel: ProductByCategoryViewModel by viewModels()
 
     override fun setAllClickListener() {
 
@@ -47,6 +49,7 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
 
         categoryViewModel.getCategory()
         allProductViewModel.getAllProduct()
+        productByCategoryViewModel.getProductByCategory(selectedCategoryId)
 
 
     }
@@ -164,11 +167,11 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
                 ) {
                     if (position > 0) {
                         val selectedModel = categoryList[position - 1]
-                        selectedCategory = selectedModel.categoryName
+                        selectedCategoryName = selectedModel.categoryName
                         selectedCategoryId = selectedModel.id
                         Log.d(
                             "CategorySelected",
-                            "Name: $selectedCategory, ID: $selectedCategoryId"
+                            "Name: $selectedCategoryName, ID: $selectedCategoryName"
                         )
                     }
                     binding.categoryDropdownIcon.animate().rotation(0f).setDuration(200).start()

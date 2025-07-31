@@ -10,5 +10,7 @@ interface ProductRepository {
 
     suspend fun getAllProduct(): Response<ResponseProductDTO>
 
+    suspend fun getProductByCategory(categoryId: String): Response<ResponseProductDTO>
+
 
 }

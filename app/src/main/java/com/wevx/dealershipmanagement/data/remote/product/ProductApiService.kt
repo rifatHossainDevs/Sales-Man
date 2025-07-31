@@ -15,4 +15,7 @@ interface ProductApiService {
     @GET("products/get-all-products")
     suspend fun getAllProduct(): Response<ResponseProductDTO>
 
+    @GET("products/get-product-by-category/{categoryId}")
+    suspend fun getProductByCategory(@Path("categoryId") categoryId: String): Response<ResponseProductDTO>
+
 }
