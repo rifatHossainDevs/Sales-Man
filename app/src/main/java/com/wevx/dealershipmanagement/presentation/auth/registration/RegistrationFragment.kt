@@ -40,7 +40,6 @@ class RegistrationFragment :
 
         registrationViewModel.registrationUser(requestRegistration)
 
-
     }
 
     private fun uploadButtonClickListener() {
