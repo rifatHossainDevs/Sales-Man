@@ -84,7 +84,7 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
             }
 
             productState.data?.let { allProductList ->
-
+                Log.d("allProduct", "allProductObserver: $allProductList")
             }
         }
     }
