@@ -29,7 +29,7 @@ class ProductByCategoryViewModel @Inject constructor(
                     is Resource.Success -> {
                         _productByCategoryState.value =
                             ProductByCategroyDataState(data = response.data)
-                        Log.d("TAG", "allProduct: ${response.data}")
+                        Log.d("productByCategory", "productByCategory: ${response.data}")
                     }
 
                     is Resource.Loading -> {
@@ -39,7 +39,7 @@ class ProductByCategoryViewModel @Inject constructor(
                     is Resource.Error -> {
                         _productByCategoryState.value =
                             ProductByCategroyDataState(error = response.message)
-                        Log.d("TAG", "category error: ${response.message}")
+                        Log.d("TAG", "productByCategory error: ${response.message}")
                     }
                 }
 

@@ -49,7 +49,7 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
 
         categoryViewModel.getCategory()
         allProductViewModel.getAllProduct()
-        productByCategoryViewModel.getProductByCategory(selectedCategoryId)
+        productByCategoryViewModel.getProductByCategory("6887ec0e4f6e1eed1e9edf8d")
 
 
     }
@@ -57,7 +57,22 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
     override fun allObserver() {
         categoryObserver()
         allProductObserver()
+        productByCategoryObserver()
 
+    }
+
+    private fun productByCategoryObserver() {
+        productByCategoryViewModel.productByCategoryState.collectInLifecycle(viewLifecycleOwner) { productState ->
+            if (productState.loading) return@collectInLifecycle
+
+            productState.error?.let {
+                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+            }
+
+            productState.data?.let { filteredProductList ->
+
+            }
+        }
     }
 
     private fun allProductObserver() {
