@@ -37,7 +37,6 @@ class RegistrationViewModel @Inject constructor(
                         _registrationState.value = RegistrationDataState(error = response.message)
                     }
                 }
-
             }
         }
     }
