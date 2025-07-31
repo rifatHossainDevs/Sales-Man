@@ -6,6 +6,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.wevx.dealershipmanagement.R
@@ -14,10 +15,12 @@ import com.wevx.dealershipmanagement.databinding.FragmentHomeBinding
 import com.wevx.dealershipmanagement.domain.models.Customers
 import com.wevx.dealershipmanagement.presentation.adapter.CustomerAdapter
 import com.wevx.dealershipmanagement.presentation.home.getArea.AreaViewModel
+import com.wevx.dealershipmanagement.presentation.home.getDistrict.DistrictDataState
 import com.wevx.dealershipmanagement.presentation.home.getDistrict.DistrictViewModel
 import com.wevx.dealershipmanagement.presentation.home.getSubDistrict.SubDistrictViewModel
 import com.wevx.dealershipmanagement.utils.LocalDatabase.customers
 import com.wevx.dealershipmanagement.utils.LocalDatabase.divisions
+import com.wevx.dealershipmanagement.utils.collectInLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,7 +35,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private val subDistrictViewModel: SubDistrictViewModel by viewModels()
     private val areaViewModel: AreaViewModel by viewModels()
 
-    // Mock Data
     private val districtMap = mapOf(
         "Dhaka" to listOf("Gazipur", "Narayanganj"),
         "Chattogram" to listOf("Cox's Bazar", "Rangamati")
@@ -59,7 +61,33 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         areaViewModel.getArea(selectedAreaId)
     }
 
-    override fun allObserver() {}
+    override fun allObserver() {
+        districtObserver()
+        subDistrictObserver()
+        areaObserver()
+    }
+
+    private fun areaObserver() {
+
+    }
+
+    private fun subDistrictObserver() {
+
+    }
+
+    private fun districtObserver() {
+        districtViewModel.districtState.collectInLifecycle(viewLifecycleOwner) { districtState ->
+            if (districtState.loading) return@collectInLifecycle
+
+            districtState.error?.let {
+                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+            }
+
+            districtState.data?.let {districtList ->
+
+            }
+        }
+    }
 
     private fun setRecyclerView() {
         adapter = CustomerAdapter(customers, this)
