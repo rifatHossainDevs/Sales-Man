@@ -1,21 +1,22 @@
 package com.wevx.dealershipmanagement.presentation.product
 
+import ProductViewModel
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.utils.SharedData
 import com.wevx.dealershipmanagement.core.common.BaseFragment
 import com.wevx.dealershipmanagement.databinding.FragmentProductsBinding
 import com.wevx.dealershipmanagement.databinding.ProductCartBottomSheetBinding
-import com.wevx.dealershipmanagement.utils.LocalDatabase.products
 import com.wevx.dealershipmanagement.domain.models.CartItem
 import com.wevx.dealershipmanagement.domain.models.CategoryModel
 import com.wevx.dealershipmanagement.presentation.adapter.ProductAdapter
@@ -29,50 +30,32 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsBinding::inflate) {
 
-    private var selectedCategoryName: String = ""
     private var selectedCategoryId: String = ""
     private lateinit var bottomSheetBinding: ProductCartBottomSheetBinding
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var adapter: ProductCartAdapter
     private lateinit var productAdapter: ProductAdapter
-    lateinit var selectedItems: List<CartItem>
-    lateinit var cartItems: List<CartItem>
+    private lateinit var cartItems: List<CartItem>
+    private lateinit var selectedItems: List<CartItem>
 
-    val categoryViewModel: CategoryViewModel by viewModels()
-    val allProductViewModel: AllProductViewModel by viewModels()
-    val productByCategoryViewModel: ProductByCategoryViewModel by viewModels()
+    private val categoryViewModel: CategoryViewModel by viewModels()
+    private val allProductViewModel: AllProductViewModel by viewModels()
+    private val productByCategoryViewModel: ProductByCategoryViewModel by viewModels()
+
+    private val productViewModel: ProductViewModel by activityViewModels()
+
+    private val cartItemMap = mutableMapOf<String, CartItem>()
 
     override fun setAllClickListener() {
-
-        setProductRecyclerView()
         bottomSheetClickListener()
-
         categoryViewModel.getCategory()
         allProductViewModel.getAllProduct()
-        productByCategoryViewModel.getProductByCategory("6887ec0e4f6e1eed1e9edf8d")
-
-
     }
 
     override fun allObserver() {
         categoryObserver()
         allProductObserver()
         productByCategoryObserver()
-
-    }
-
-    private fun productByCategoryObserver() {
-        productByCategoryViewModel.productByCategoryState.collectInLifecycle(viewLifecycleOwner) { productState ->
-            if (productState.loading) return@collectInLifecycle
-
-            productState.error?.let {
-                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
-            }
-
-            productState.data?.let { filteredProductList ->
-
-            }
-        }
     }
 
     private fun allProductObserver() {
@@ -84,7 +67,24 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
             }
 
             productState.data?.let { allProductList ->
-                Log.d("allProduct", "allProductObserver: $allProductList")
+                productViewModel.allProducts = allProductList
+                selectedCategoryId = ""
+                setProductRecyclerView()
+            }
+        }
+    }
+
+    private fun productByCategoryObserver() {
+        productByCategoryViewModel.productByCategoryState.collectInLifecycle(viewLifecycleOwner) { productState ->
+            if (productState.loading) return@collectInLifecycle
+
+            productState.error?.let {
+                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+            }
+
+            productState.data?.let { filteredProductList ->
+                productViewModel.filteredProducts = filteredProductList
+                setProductRecyclerView()
             }
         }
     }
@@ -106,16 +106,28 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
         }
     }
 
-
     private fun setProductRecyclerView() {
-        binding.productsRecyclerView.setHasFixedSize(true)
-        cartItems = products.map { CartItem(it, 0.0) }
-        productAdapter = ProductAdapter(cartItems, object : ProductAdapter.HandleClickListener {
-            @SuppressLint("SetTextI18n")
-            override fun onQuantityChangedListener() {
+        val currentProducts = if (selectedCategoryId.isEmpty()) {
+            productViewModel.allProducts
+        } else {
+            productViewModel.filteredProducts
+        }
 
+        cartItems = currentProducts.map { product ->
+            val existing = cartItemMap[product.productId]
+            CartItem(product, existing?.purchaseQuantity ?: 0.0)
+        }
+
+        cartItems.forEach { cartItemMap[it.product.productId] = it }
+
+        productAdapter = ProductAdapter(cartItems, object : ProductAdapter.HandleClickListener {
+            override fun onQuantityChangedListener() {
+                cartItems.forEach { cartItemMap[it.product.productId] = it }
             }
         })
+
+        binding.productsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.productsRecyclerView.setHasFixedSize(true)
         binding.productsRecyclerView.adapter = productAdapter
     }
 
@@ -123,8 +135,10 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
     private fun bottomSheetClickListener() {
         bottomSheetBinding = ProductCartBottomSheetBinding.inflate(layoutInflater)
         bottomSheetDialog = BottomSheetDialog(requireContext())
+
         binding.btnContinue.setOnClickListener {
-            selectedItems = cartItems.filter { it.purchaseQuantity > 0 }
+            selectedItems = cartItemMap.values.filter { it.purchaseQuantity > 0 }
+
             if (selectedItems.isEmpty()) {
                 Toast.makeText(requireContext(), "No item is selected", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -135,7 +149,7 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
             adapter = ProductCartAdapter(selectedItems)
             bottomSheetBinding.recyclerProducts.adapter = adapter
 
-            val total = cartItems.sumOf { it.subtotal }
+            val total = selectedItems.sumOf { it.subtotal }
             bottomSheetBinding.tvTotal.text = "Total: %.2f".format(total)
 
             bottomSheetDialog.apply {
@@ -180,23 +194,19 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
                 override fun onItemSelected(
                     parent: AdapterView<*>?, view: View?, position: Int, id: Long
                 ) {
+                    binding.categoryDropdownIcon.animate().rotation(0f).setDuration(200).start()
+
                     if (position > 0) {
                         val selectedModel = categoryList[position - 1]
-                        selectedCategoryName = selectedModel.categoryName
                         selectedCategoryId = selectedModel.id
-                        Log.d(
-                            "CategorySelected",
-                            "Name: $selectedCategoryName, ID: $selectedCategoryName"
-                        )
+                        productByCategoryViewModel.getProductByCategory(selectedCategoryId)
+                    } else {
+                        selectedCategoryId = ""
+                        setProductRecyclerView()
                     }
-                    binding.categoryDropdownIcon.animate().rotation(0f).setDuration(200).start()
                 }
 
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-
-                }
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
     }
-
-
 }
