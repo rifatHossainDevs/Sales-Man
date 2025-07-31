@@ -68,11 +68,32 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     private fun areaObserver() {
+        areaViewModel.areaState.collectInLifecycle(viewLifecycleOwner) { areaState ->
+            if (areaState.loading) return@collectInLifecycle
 
+            areaState.error?.let {
+                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+            }
+
+            areaState.data?.let { areaList ->
+
+
+            }
+        }
     }
 
     private fun subDistrictObserver() {
+        subDistrictViewModel.subDistrictState.collectInLifecycle(viewLifecycleOwner) { subDistrictState ->
+            if (subDistrictState.loading) return@collectInLifecycle
 
+            subDistrictState.error?.let {
+                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+            }
+
+            subDistrictState.data?.let { subDistrictList ->
+
+            }
+        }
     }
 
     private fun districtObserver() {
@@ -83,7 +104,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
 
-            districtState.data?.let {districtList ->
+            districtState.data?.let { districtList ->
 
             }
         }
@@ -149,95 +170,123 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
         setupSpinner(binding.spinnerDivision, divisionNames)
 
-        binding.spinnerDivision.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                rotateIcon(binding.divisionDropdownIcon, false)
+        binding.spinnerDivision.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    rotateIcon(binding.divisionDropdownIcon, false)
 
-                if (position == 0) {
-                    setupSpinner(binding.spinnerDistrict, listOf("Select District"))
+                    if (position == 0) {
+                        setupSpinner(binding.spinnerDistrict, listOf("Select District"))
+                        setupSpinner(binding.spinnerSubdistrict, listOf("Select Subdistrict"))
+                        setupSpinner(binding.spinnerArea, listOf("Select Area"))
+                        disableSpinner(binding.spinnerDistrict)
+                        disableSpinner(binding.spinnerSubdistrict)
+                        disableSpinner(binding.spinnerArea)
+                        return
+                    }
+
+                    val selectedDivision = divisions[position - 1]
+                    selectedDivisionId = selectedDivision.divisionId
+                    val districts =
+                        listOf("Select District") + (districtMap[selectedDivision.divisionName]
+                            ?: emptyList())
+
+                    setupSpinner(binding.spinnerDistrict, districts)
+                    enableSpinner(binding.spinnerDistrict)
+
                     setupSpinner(binding.spinnerSubdistrict, listOf("Select Subdistrict"))
                     setupSpinner(binding.spinnerArea, listOf("Select Area"))
-                    disableSpinner(binding.spinnerDistrict)
                     disableSpinner(binding.spinnerSubdistrict)
                     disableSpinner(binding.spinnerArea)
-                    return
+
+                    setupDistrictSpinner(districts)
                 }
 
-                val selectedDivision = divisions[position - 1]
-                selectedDivisionId = selectedDivision.divisionId
-                val districts = listOf("Select District") + (districtMap[selectedDivision.divisionName] ?: emptyList())
-
-                setupSpinner(binding.spinnerDistrict, districts)
-                enableSpinner(binding.spinnerDistrict)
-
-                setupSpinner(binding.spinnerSubdistrict, listOf("Select Subdistrict"))
-                setupSpinner(binding.spinnerArea, listOf("Select Area"))
-                disableSpinner(binding.spinnerSubdistrict)
-                disableSpinner(binding.spinnerArea)
-
-                setupDistrictSpinner(districts)
+                override fun onNothingSelected(parent: AdapterView<*>) {}
             }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-        }
     }
 
     private fun setupDistrictSpinner(districts: List<String>) {
-        binding.spinnerDistrict.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                rotateIcon(binding.districtDropdownIcon, false)
+        binding.spinnerDistrict.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    rotateIcon(binding.districtDropdownIcon, false)
 
-                if (position == 0) {
-                    setupSpinner(binding.spinnerSubdistrict, listOf("Select Subdistrict"))
+                    if (position == 0) {
+                        setupSpinner(binding.spinnerSubdistrict, listOf("Select Subdistrict"))
+                        setupSpinner(binding.spinnerArea, listOf("Select Area"))
+                        disableSpinner(binding.spinnerSubdistrict)
+                        disableSpinner(binding.spinnerArea)
+                        return
+                    }
+
+                    val selectedDistrict = districts[position]
+                    val subdistricts =
+                        listOf("Select Subdistrict") + (subdistrictMap[selectedDistrict]
+                            ?: emptyList())
+
+                    setupSpinner(binding.spinnerSubdistrict, subdistricts)
+                    enableSpinner(binding.spinnerSubdistrict)
+
                     setupSpinner(binding.spinnerArea, listOf("Select Area"))
-                    disableSpinner(binding.spinnerSubdistrict)
                     disableSpinner(binding.spinnerArea)
-                    return
+
+                    setupSubdistrictSpinner(subdistricts)
                 }
 
-                val selectedDistrict = districts[position]
-                val subdistricts = listOf("Select Subdistrict") + (subdistrictMap[selectedDistrict] ?: emptyList())
-
-                setupSpinner(binding.spinnerSubdistrict, subdistricts)
-                enableSpinner(binding.spinnerSubdistrict)
-
-                setupSpinner(binding.spinnerArea, listOf("Select Area"))
-                disableSpinner(binding.spinnerArea)
-
-                setupSubdistrictSpinner(subdistricts)
+                override fun onNothingSelected(parent: AdapterView<*>) {}
             }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-        }
     }
 
     private fun setupSubdistrictSpinner(subdistricts: List<String>) {
-        binding.spinnerSubdistrict.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                rotateIcon(binding.subdistrictDropdownIcon, false)
+        binding.spinnerSubdistrict.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    rotateIcon(binding.subdistrictDropdownIcon, false)
 
-                if (position == 0) {
-                    setupSpinner(binding.spinnerArea, listOf("Select Area"))
-                    disableSpinner(binding.spinnerArea)
-                    return
+                    if (position == 0) {
+                        setupSpinner(binding.spinnerArea, listOf("Select Area"))
+                        disableSpinner(binding.spinnerArea)
+                        return
+                    }
+
+                    val selectedSubdistrict = subdistricts[position]
+                    val areas =
+                        listOf("Select Area") + (areaMap[selectedSubdistrict] ?: emptyList())
+
+                    setupSpinner(binding.spinnerArea, areas)
+                    enableSpinner(binding.spinnerArea)
+
+                    setupAreaSpinner(areas)
                 }
 
-                val selectedSubdistrict = subdistricts[position]
-                val areas = listOf("Select Area") + (areaMap[selectedSubdistrict] ?: emptyList())
-
-                setupSpinner(binding.spinnerArea, areas)
-                enableSpinner(binding.spinnerArea)
-
-                setupAreaSpinner(areas)
+                override fun onNothingSelected(parent: AdapterView<*>) {}
             }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-        }
     }
 
     private fun setupAreaSpinner(areas: List<String>) {
         binding.spinnerArea.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 rotateIcon(binding.areaDropdownIcon, false)
                 // Handle selected area here
             }

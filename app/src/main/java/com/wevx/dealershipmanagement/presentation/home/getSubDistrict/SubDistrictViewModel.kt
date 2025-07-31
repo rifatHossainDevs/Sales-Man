@@ -21,26 +21,26 @@ class SubDistrictViewModel @Inject constructor(
     private val subDistrictUseCase: GetSubDistrictUseCase
 ) : ViewModel() {
 
-    private val _sunDistrictState = MutableStateFlow(SubDistrictDataState())
-    val sunDistrictState: StateFlow<SubDistrictDataState> = _sunDistrictState
+    private val _subDistrictState = MutableStateFlow(SubDistrictDataState())
+    val subDistrictState: StateFlow<SubDistrictDataState> = _subDistrictState
 
 
     fun getSubDistrict(disId: Int) {
         viewModelScope.launch {
-            _sunDistrictState.value = SubDistrictDataState(loading = true)
+            _subDistrictState.value = SubDistrictDataState(loading = true)
             subDistrictUseCase.invoke(disId).collect { response ->
                 when (response) {
                     is Resource.Success -> {
-                        _sunDistrictState.value = SubDistrictDataState(data = response.data)
+                        _subDistrictState.value = SubDistrictDataState(data = response.data)
                         Log.d("TAG", "subDistrict: ${response.data}")
                     }
 
                     is Resource.Loading -> {
-                        _sunDistrictState.value = SubDistrictDataState(loading = true)
+                        _subDistrictState.value = SubDistrictDataState(loading = true)
                     }
 
                     is Resource.Error -> {
-                        _sunDistrictState.value = SubDistrictDataState(error = response.message)
+                        _subDistrictState.value = SubDistrictDataState(error = response.message)
                         Log.d("TAG", "sub District error: ${response.message}")
                     }
                 }
