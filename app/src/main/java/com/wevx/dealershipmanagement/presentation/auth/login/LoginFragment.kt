@@ -70,7 +70,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
         bottomSheetBinding.btnContinue.setOnClickListener {
             if (permission == "true") {
-
+                startActivity(Intent(requireContext(), MainActivity::class.java))
             }
         }
     }
