@@ -14,6 +14,7 @@ import com.wevx.dealershipmanagement.utils.areAllPermissionGranted
 import com.wevx.dealershipmanagement.core.common.BaseFragment
 import com.wevx.dealershipmanagement.data.dto.registrationDto.RequestRegistration
 import com.wevx.dealershipmanagement.databinding.FragmentRegistrationBinding
+import com.wevx.dealershipmanagement.utils.collectInLifecycle
 import com.wevx.dealershipmanagement.utils.extract
 import com.wevx.dealershipmanagement.utils.requestPermission
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,15 +31,7 @@ class RegistrationFragment :
         uploadButtonClickListener()
         permissionRequest = getPermissionRequest()
 
-        val requestRegistration = RequestRegistration(
-            email = "martha.wayles.skelton.jefferson@myownpersonaldomain.com",
-            fullName = "Rifat Hossain",
-            phone = "01255688888",
-            password = "P@5101054",
-            userType = "seller"
-        )
 
-        registrationViewModel.registrationUser(requestRegistration)
 
     }
 
@@ -49,7 +42,17 @@ class RegistrationFragment :
     }
 
     override fun allObserver() {
+        registrationViewModel.registrationState.collectInLifecycle(viewLifecycleOwner) { registrationState ->
+            if (registrationState.loading) return@collectInLifecycle
+            registrationState.error?.let {
+                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+            }
 
+            registrationState.data?.let {
+                Toast.makeText(requireContext(), "Success: $it", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
+            }
+        }
     }
 
 
@@ -123,7 +126,15 @@ class RegistrationFragment :
                         confirmPassword
                     )
                 ) {
-                    findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
+                    val requestRegistration = RequestRegistration(
+                        email = email,
+                        fullName = name,
+                        phone = phone,
+                        password = password,
+                        userType = "seller"
+                    )
+                    registrationViewModel.registrationUser(requestRegistration)
+
                 }
             }
 
@@ -158,7 +169,7 @@ class RegistrationFragment :
             return false
         }
         if (phone.length < 11) {
-            binding.etPasswordLayout.error = "Password Should have at least 11 Digit"
+            binding.etPhoneNumber.error = "Password Should have at least 11 Digit"
             return false
         }
 
@@ -181,7 +192,7 @@ class RegistrationFragment :
         }
 
         if (nid.length != 10 && nid.length != 17) {
-            binding.etPasswordLayout.error = "NID Should have 10 or 17 Digit"
+            binding.etNidLayout.error = "NID Should have 10 or 17 Digit"
             return false
         }
 
