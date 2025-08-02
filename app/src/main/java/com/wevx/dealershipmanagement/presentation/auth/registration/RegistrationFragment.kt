@@ -12,7 +12,7 @@ import com.github.dhaval2404.imagepicker.ImagePicker
 import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.utils.areAllPermissionGranted
 import com.wevx.dealershipmanagement.core.common.BaseFragment
-import com.wevx.dealershipmanagement.data.dto.registrationDto.RequestRegistration
+import com.wevx.dealershipmanagement.data.dto.registrationDto.RequestRegistrationDto
 import com.wevx.dealershipmanagement.databinding.FragmentRegistrationBinding
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
 import com.wevx.dealershipmanagement.utils.extract
@@ -60,8 +60,6 @@ class RegistrationFragment :
                 val phone = etPhoneNumber.extract()
                 val email = etEmail.extract()
                 val nid = etNid.extract()
-                val presentAddress = etPresentAddress.extract()
-                val permanentAddress = etPermanentAddress.extract()
                 val password = etPassword.extract()
                 val confirmPassword = etConfirmPassword.extract()
                 if (checkAllFieldValidity(
@@ -69,13 +67,11 @@ class RegistrationFragment :
                         phone,
                         email,
                         nid,
-                        presentAddress,
-                        permanentAddress,
                         password,
                         confirmPassword
                     )
                 ) {
-                    val requestRegistration = RequestRegistration(
+                    val requestRegistration = RequestRegistrationDto(
                         email = email,
                         fullName = name,
                         phone = phone,
@@ -140,8 +136,6 @@ class RegistrationFragment :
         phone: String,
         email: String,
         nid: String,
-        presentAddress: String,
-        permanentAddress: String,
         password: String,
         confirmPassword: String
     ): Boolean {
@@ -201,15 +195,6 @@ class RegistrationFragment :
             return false
         }
 
-        if (presentAddress == "") {
-            binding.etPresentAddressLayout.error = "This field must be filled"
-            return false
-        }
-
-        if (permanentAddress == "") {
-            binding.etPermanentAddressLayout.error = "This field must be filled"
-            return false
-        }
 
         return true
     }
