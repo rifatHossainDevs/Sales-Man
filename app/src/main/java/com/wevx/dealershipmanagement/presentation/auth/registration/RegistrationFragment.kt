@@ -165,11 +165,11 @@ class RegistrationFragment :
         }
 
         if (phone == "") {
-            binding.etConfirmPasswordLayout.error = "This field must be filled"
+            binding.etPhoneNumberLayout.error = "This field must be filled"
             return false
         }
         if (phone.length < 11) {
-            binding.etPhoneNumber.error = "Password Should have at least 11 Digit"
+            binding.etPhoneNumberLayout.error = "Password Should have at least 11 Digit"
             return false
         }
 
@@ -182,7 +182,22 @@ class RegistrationFragment :
             return false
         }
         if (password == "") {
-            binding.etConfirmPasswordLayout.error = "This field must be filled"
+            binding.etPasswordLayout.error = "This field must be filled"
+            return false
+        }
+
+        if (password.length < 8) {
+            binding.etPasswordLayout.error = "Password Should have at least 8 Characters"
+            return false
+        }
+        if (!password.matches(passwordPattern.toRegex())) {
+            binding.etPasswordLayout.error =
+                "At least one capital letter, small letter, digit and symbol"
+            return false
+        }
+
+        if (password != confirmPassword) {
+            binding.etConfirmPasswordLayout.error = "Password and Confirm Password are not match!"
             return false
         }
 
@@ -197,31 +212,12 @@ class RegistrationFragment :
         }
 
         if (presentAddress == "") {
-            binding.etConfirmPasswordLayout.error = "This field must be filled"
+            binding.etPresentAddressLayout.error = "This field must be filled"
             return false
         }
 
         if (permanentAddress == "") {
-            binding.etConfirmPasswordLayout.error = "This field must be filled"
-            return false
-        }
-
-        if (password.length < 8) {
-            binding.etPasswordLayout.error = "Password Should have at least 8 Characters"
-            return false
-        }
-        if (!password.matches(passwordPattern.toRegex())) {
-            binding.etPasswordLayout.error =
-                "At least one capital letter, small letter, digit and symbol"
-            return false
-        }
-
-        if (confirmPassword.length < 8) {
-            binding.etPasswordLayout.error = "Password Should have at least 8 Characters"
-            return false
-        }
-        if (password != confirmPassword) {
-            binding.etPasswordLayout.error = "Password and Confirm Password are not match!"
+            binding.etPermanentAddressLayout.error = "This field must be filled"
             return false
         }
 
