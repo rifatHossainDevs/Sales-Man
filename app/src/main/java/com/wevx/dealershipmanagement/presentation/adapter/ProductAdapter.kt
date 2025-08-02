@@ -1,5 +1,6 @@
 package com.wevx.dealershipmanagement.presentation.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
@@ -30,12 +31,13 @@ class ProductAdapter(
         )
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val cartItem = cartItem[position]
         holder.binding.apply {
             tvProductName.text = cartItem.product.productName
             tvBrandName.text = cartItem.product.brandName
-            tvPrice.text = "Price: ${cartItem.product.productPricePerUnit}"
+            tvPrice.text = "Price: ${cartItem.product.price}"
             ivProduct.load(cartItem.product.imageUrl)
 
             // Remove previous TextWatcher if any

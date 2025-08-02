@@ -2,6 +2,8 @@ package com.wevx.dealershipmanagement.data.repository_impl.auth
 
 import com.wevx.dealershipmanagement.data.dto.loginDto.RequestLogin
 import com.wevx.dealershipmanagement.data.dto.loginDto.ResponseLoginDTO
+import com.wevx.dealershipmanagement.data.dto.registrationDto.RequestRegistration
+import com.wevx.dealershipmanagement.data.dto.registrationDto.ResponseRegistrationDTO
 import com.wevx.dealershipmanagement.data.remote.auth.AuthApiService
 import com.wevx.dealershipmanagement.domain.repository.auth.AuthRepository
 import jakarta.inject.Inject
@@ -13,6 +15,10 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun login(requestLogin: RequestLogin): Response<ResponseLoginDTO> {
         return authApiService.login(requestLogin)
+    }
+
+    override suspend fun registration(requestRegistration: RequestRegistration): Response<ResponseRegistrationDTO> {
+        return authApiService.registration(requestRegistration)
     }
 
 }

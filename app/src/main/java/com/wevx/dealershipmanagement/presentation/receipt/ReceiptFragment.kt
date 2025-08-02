@@ -22,8 +22,6 @@ import java.util.UUID
 class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBinding::inflate) {
 
     private val REQUEST_CODE_PERMISSIONS = 1001
-
-    // Use List<CartItem> from SharedData
     private var productList: List<CartItem> = SharedData.selectedProductList
 
     override fun setAllClickListener() {
@@ -145,10 +143,10 @@ class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBind
             val subtotal = item.subtotal
             total += subtotal
             val line = String.format(
-                "%-14s %2.0f x %6.2f = %7.2f",
+                "%-14s %2.0f x %6s = %7.2f",
                 item.product.productName,
                 item.purchaseQuantity,
-                item.product.productPricePerUnit,
+                item.product.unit,
                 subtotal
             )
             itemsText.appendLine(line)

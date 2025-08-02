@@ -31,7 +31,7 @@ class ProductCartAdapter(val cartItem: List<CartItem>) :
         cartItem[position].let { cartItem ->
             holder.binding.apply {
                 tvName.text = cartItem.product.productName
-                tvQuantity.text = "${cartItem.purchaseQuantity} ${cartItem.product.productUnit}"
+                tvQuantity.text = "${cartItem.purchaseQuantity} ${cartItem.product.unit}"
                 tvSubtotal.text = "%.2f".format(cartItem.subtotal)
 
             }
