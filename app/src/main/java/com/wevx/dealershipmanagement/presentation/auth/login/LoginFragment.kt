@@ -19,7 +19,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
     private lateinit var bottomSheetBinding: PhoneVerificationBottomSheetBinding
     private lateinit var bottomSheetDialog: BottomSheetDialog
-
     private val loginViewModel: LoginViewModel by viewModels()
 
     private val permission = "true"
@@ -34,6 +33,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
 
     }
+
 
     override fun allObserver() {
         loginViewModel.loginState.collectInLifecycle(viewLifecycleOwner) { loginState ->
@@ -60,13 +60,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             requireActivity().finish()
         }
 
-        /*binding.btnLogin.setOnClickListener {
-            bottomSheetDialog.show()
-        }*/
         bottomSheetBinding.btnClose.setOnClickListener {
             bottomSheetDialog.dismiss()
         }
-
 
     }
 
@@ -78,8 +74,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                 val confirmPassword = etConfirmPassword.extract()
                 if (checkAllFieldValidity(phone, password, confirmPassword)) {
                     val data = RequestLogin(
-                        phone = "01234567890",
-                        password = "P@5101054"
+                        phone = phone,
+                        password = password
                     )
                     loginViewModel.loginUser(data)
                 }
@@ -133,7 +129,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             binding.etConfirmPasswordLayout.error = "Password and Confirm Password are not match!"
             return false
         }
-
 
         return true
     }
