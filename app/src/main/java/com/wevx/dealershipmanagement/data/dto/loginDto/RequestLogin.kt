@@ -6,8 +6,8 @@ import androidx.annotation.Keep
 
 @Keep
 data class RequestLogin(
-    @SerializedName("email")
-    val email: String? = null,
+    @SerializedName("phone")
+    val phone: String? = null,
     @SerializedName("password")
     val password: String? = null
 )
