@@ -12,6 +12,7 @@ import com.wevx.dealershipmanagement.data.dto.loginDto.RequestLogin
 import com.wevx.dealershipmanagement.databinding.FragmentLoginBinding
 import com.wevx.dealershipmanagement.databinding.PhoneVerificationBottomSheetBinding
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
+import com.wevx.dealershipmanagement.utils.extract
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,25 +33,18 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         allButtonClickListener()
 
 
-        val data = RequestLogin(
-            email = "uthoaimarma597@gmail.com",
-            password = "P@5101054"
-        )
-        loginViewModel.loginUser(data)
-
-
     }
 
     override fun allObserver() {
         loginViewModel.loginState.collectInLifecycle(viewLifecycleOwner) { loginState ->
             if (loginState.loading) return@collectInLifecycle
-            loginState.error.let {
+            loginState.error?.let {
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
 
-            loginState.data.let {
-                Toast.makeText(requireContext(), "Success data: $it", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(requireContext(), MainActivity::class.java))
+            loginState.data?.let {
+                Toast.makeText(requireContext(), "Success : $it", Toast.LENGTH_SHORT).show()
+                bottomSheetDialog.show()
             }
         }
     }
@@ -61,21 +55,37 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             setCancelable(true)
         }
 
-        binding.btnLogin.setOnClickListener {
-            bottomSheetDialog.show()
+        bottomSheetBinding.btnContinue.setOnClickListener {
+            startActivity(Intent(requireContext(), MainActivity::class.java))
+            requireActivity().finish()
         }
+
+        /*binding.btnLogin.setOnClickListener {
+            bottomSheetDialog.show()
+        }*/
         bottomSheetBinding.btnClose.setOnClickListener {
             bottomSheetDialog.dismiss()
         }
 
-        bottomSheetBinding.btnContinue.setOnClickListener {
-            if (permission == "true") {
-                startActivity(Intent(requireContext(), MainActivity::class.java))
-            }
-        }
+
     }
 
     private fun allButtonClickListener() {
+        binding.apply {
+            btnLogin.setOnClickListener {
+                val phone = etPhoneNumber.extract()
+                val password = etPassword.extract()
+                val confirmPassword = etConfirmPassword.extract()
+                if (checkAllFieldValidity(phone, password, confirmPassword)) {
+                    val data = RequestLogin(
+                        phone = "01234567890",
+                        password = "P@5101054"
+                    )
+                    loginViewModel.loginUser(data)
+                }
+            }
+        }
+
         binding.btnCreateAccount.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_registrationFragment)
         }
@@ -84,5 +94,47 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             findNavController().navigate(R.id.action_loginFragment_to_forgetPasswordFragment)
         }
 
+    }
+
+    private fun checkAllFieldValidity(
+        phone: String,
+        password: String,
+        confirmPassword: String
+    ): Boolean {
+        binding.etPhoneNumberLayout.error = null
+        binding.etPasswordLayout.error = null
+        binding.etConfirmPasswordLayout.error = null
+
+        if (phone == "") {
+            binding.etPhoneNumberLayout.error = "This field must be filled"
+            return false
+        }
+        if (phone.length < 11) {
+            binding.etPhoneNumberLayout.error = "Phone number Should have at least 11 Digit"
+            return false
+        }
+
+        if (password == "") {
+            binding.etPasswordLayout.error = "This field must be filled"
+            return false
+        }
+
+        if (password.length < 8) {
+            binding.etPasswordLayout.error = "Password Should have at least 8 Characters"
+            return false
+        }
+
+        if (confirmPassword == "") {
+            binding.etConfirmPasswordLayout.error = "This field must be filled"
+            return false
+        }
+
+        if (password != confirmPassword) {
+            binding.etConfirmPasswordLayout.error = "Password and Confirm Password are not match!"
+            return false
+        }
+
+
+        return true
     }
 }
