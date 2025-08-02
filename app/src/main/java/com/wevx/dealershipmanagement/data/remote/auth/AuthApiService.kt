@@ -5,6 +5,7 @@ import com.wevx.dealershipmanagement.data.dto.changePasswordDTO.ResponseChangePa
 import com.wevx.dealershipmanagement.data.dto.loginDto.RequestLogin
 import com.wevx.dealershipmanagement.data.dto.loginDto.ResponseLoginDTO
 import com.wevx.dealershipmanagement.data.dto.profileDTO.ResponseProfileDto
+import com.wevx.dealershipmanagement.data.dto.registrationDto.RequestRegistrationDto
 import com.wevx.dealershipmanagement.data.dto.registrationDto.ResponseRegistrationDTO
 import retrofit2.Response
 import retrofit2.http.Body
@@ -17,7 +18,7 @@ interface AuthApiService {
     suspend fun login(@Body requestLogin: RequestLogin): Response<ResponseLoginDTO>
 
     @POST("users/register")
-    suspend fun registration(@Body requestRegistration: RequestRegistration): Response<ResponseRegistrationDTO>
+    suspend fun registration(@Body requestRegistration: RequestRegistrationDto): Response<ResponseRegistrationDTO>
 
     @GET("users/current-user")
     suspend fun getProfile(): Response<ResponseProfileDto>

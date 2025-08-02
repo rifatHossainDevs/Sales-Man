@@ -5,6 +5,7 @@ import com.wevx.dealershipmanagement.data.dto.changePasswordDTO.ResponseChangePa
 import com.wevx.dealershipmanagement.data.dto.loginDto.RequestLogin
 import com.wevx.dealershipmanagement.data.dto.loginDto.ResponseLoginDTO
 import com.wevx.dealershipmanagement.data.dto.profileDTO.ResponseProfileDto
+import com.wevx.dealershipmanagement.data.dto.registrationDto.RequestRegistrationDto
 import com.wevx.dealershipmanagement.data.dto.registrationDto.ResponseRegistrationDTO
 import com.wevx.dealershipmanagement.data.remote.auth.AuthApiService
 import com.wevx.dealershipmanagement.domain.repository.auth.AuthRepository
@@ -19,7 +20,7 @@ class AuthRepositoryImpl @Inject constructor(
         return authApiService.login(requestLogin)
     }
 
-    override suspend fun registration(requestRegistration: RequestRegistration): Response<ResponseRegistrationDTO> {
+    override suspend fun registration(requestRegistration: RequestRegistrationDto): Response<ResponseRegistrationDTO> {
         return authApiService.registration(requestRegistration)
     }
 

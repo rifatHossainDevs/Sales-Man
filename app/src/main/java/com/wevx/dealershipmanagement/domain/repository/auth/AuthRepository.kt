@@ -5,6 +5,7 @@ import com.wevx.dealershipmanagement.data.dto.changePasswordDTO.ResponseChangePa
 import com.wevx.dealershipmanagement.data.dto.loginDto.RequestLogin
 import com.wevx.dealershipmanagement.data.dto.loginDto.ResponseLoginDTO
 import com.wevx.dealershipmanagement.data.dto.profileDTO.ResponseProfileDto
+import com.wevx.dealershipmanagement.data.dto.registrationDto.RequestRegistrationDto
 import com.wevx.dealershipmanagement.data.dto.registrationDto.ResponseRegistrationDTO
 import retrofit2.Response
 
@@ -12,7 +13,7 @@ interface AuthRepository {
 
     suspend fun login(requestLogin: RequestLogin): Response<ResponseLoginDTO>
 
-    suspend fun registration(requestRegistration: RequestRegistration): Response<ResponseRegistrationDTO>
+    suspend fun registration(requestRegistration: RequestRegistrationDto): Response<ResponseRegistrationDTO>
 
     suspend fun getProfile(): Response<ResponseProfileDto>
 

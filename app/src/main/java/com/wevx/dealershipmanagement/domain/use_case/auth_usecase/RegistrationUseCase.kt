@@ -1,6 +1,7 @@
 package com.wevx.dealershipmanagement.domain.use_case.auth_usecase
 
 import com.wevx.dealershipmanagement.core.common.Resource
+import com.wevx.dealershipmanagement.data.dto.registrationDto.RequestRegistrationDto
 import com.wevx.dealershipmanagement.data.dto.registrationDto.toRegistrationModel
 import com.wevx.dealershipmanagement.domain.models.RegistrationModel
 import com.wevx.dealershipmanagement.domain.repository.auth.AuthRepository
@@ -11,7 +12,7 @@ import javax.inject.Inject
 class RegistrationUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
-    operator fun invoke(requestRegistration: RequestRegistration): Flow<Resource<RegistrationModel>> = flow {
+    operator fun invoke(requestRegistration: RequestRegistrationDto): Flow<Resource<RegistrationModel>> = flow {
         try {
             emit(Resource.Loading())
             val response = authRepository.registration(requestRegistration)
