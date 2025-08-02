@@ -31,8 +31,6 @@ class RegistrationFragment :
         uploadButtonClickListener()
         permissionRequest = getPermissionRequest()
 
-
-
     }
 
     private fun uploadButtonClickListener() {
@@ -54,55 +52,6 @@ class RegistrationFragment :
             }
         }
     }
-
-
-    private fun getPermissionRequest(): ActivityResultLauncher<Array<String>> {
-        return registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-            if (areAllPermissionGranted(permissionList)) {
-                ImagePicker.with(this)
-                    .cropSquare()
-                    .compress(1024)
-                    .maxResultSize(
-                        512,
-                        512
-                    )
-                    .createIntent { intent ->
-                        startForProfileImageResult.launch(intent)
-                    }
-                Toast.makeText(requireContext(), "Granted", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(requireContext(), "Not Granted", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-
-    companion object {
-
-        private val permissionList = arrayOf(
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.CAMERA
-        )
-    }
-
-    private val startForProfileImageResult =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-            val resultCode = result.resultCode
-            val data = result.data
-
-            if (resultCode == Activity.RESULT_OK) {
-                val fileUri = data?.data!!
-                if (fileUri.toString() != "") {
-                    binding.ivUser.setImageURI(fileUri)
-                }
-
-            } else if (resultCode == ImagePicker.RESULT_ERROR) {
-                Toast.makeText(requireContext(), ImagePicker.getError(data), Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                Toast.makeText(requireContext(), "Task Cancelled", Toast.LENGTH_SHORT).show()
-            }
-        }
 
     private fun allButtonClickListener() {
         binding.apply {
@@ -144,6 +93,47 @@ class RegistrationFragment :
         }
 
     }
+
+    private fun getPermissionRequest(): ActivityResultLauncher<Array<String>> {
+        return registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+            if (areAllPermissionGranted(permissionList)) {
+                ImagePicker.with(this).cropSquare().compress(1024).maxResultSize(
+                        512, 512
+                    ).createIntent { intent ->
+                        startForProfileImageResult.launch(intent)
+                    }
+                Toast.makeText(requireContext(), "Granted", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Not Granted", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    companion object {
+
+        private val permissionList = arrayOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA
+        )
+    }
+
+    private val startForProfileImageResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            val resultCode = result.resultCode
+            val data = result.data
+
+            if (resultCode == Activity.RESULT_OK) {
+                val fileUri = data?.data!!
+                if (fileUri.toString() != "") {
+                    binding.ivUser.setImageURI(fileUri)
+                }
+
+            } else if (resultCode == ImagePicker.RESULT_ERROR) {
+                Toast.makeText(requireContext(), ImagePicker.getError(data), Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                Toast.makeText(requireContext(), "Task Cancelled", Toast.LENGTH_SHORT).show()
+            }
+        }
 
     private fun checkAllFieldValidity(
         name: String,
