@@ -17,17 +17,12 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
-    private lateinit var bottomSheetBinding: PhoneVerificationBottomSheetBinding
-    private lateinit var bottomSheetDialog: BottomSheetDialog
+
     private val loginViewModel: LoginViewModel by viewModels()
 
-    private val permission = "true"
+    //private val permission = "true"
 
     override fun setAllClickListener() {
-        bottomSheetBinding = PhoneVerificationBottomSheetBinding.inflate(layoutInflater)
-        bottomSheetDialog = BottomSheetDialog(requireContext())
-
-        bottomSheetClickListener()
 
         allButtonClickListener()
 
@@ -44,27 +39,13 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
             loginState.data?.let {
                 Toast.makeText(requireContext(), "Success : $it", Toast.LENGTH_SHORT).show()
-                bottomSheetDialog.show()
+                startActivity(Intent(requireContext(), MainActivity::class.java))
+                requireActivity().finish()
             }
         }
     }
 
-    private fun bottomSheetClickListener() {
-        bottomSheetDialog.apply {
-            setContentView(bottomSheetBinding.root)
-            setCancelable(true)
-        }
 
-        bottomSheetBinding.btnContinue.setOnClickListener {
-            startActivity(Intent(requireContext(), MainActivity::class.java))
-            requireActivity().finish()
-        }
-
-        bottomSheetBinding.btnClose.setOnClickListener {
-            bottomSheetDialog.dismiss()
-        }
-
-    }
 
     private fun allButtonClickListener() {
         binding.apply {

@@ -30,6 +30,8 @@ data class ResponseRegistrationDTO(
         val fullName: String? = null,
         @SerializedName("_id")
         val id: String? = null,
+        @SerializedName("nidNumber")
+        val nidNumber: String? = null,
         @SerializedName("phone")
         val phone: String? = null,
         @SerializedName("updatedAt")
@@ -48,6 +50,7 @@ fun ResponseRegistrationDTO.Data.toRegistrationModel(): RegistrationModel {
         userName = this.fullName ?: "",
         userPhoneNumber = this.phone ?: "",
         userProfileImageUrl = this.avatar ?: "",
-        userRole = this.userType ?: ""
+        userRole = this.userType ?: "",
+        nid = this.nidNumber ?: ""
     )
 }

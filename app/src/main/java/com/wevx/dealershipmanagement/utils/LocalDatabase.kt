@@ -144,9 +144,8 @@ object LocalDatabase {
         DrawerItems(drawerImage[1], "Visit Planner"),
         DrawerItems(drawerImage[2], "Payment Collection"),
         DrawerItems(drawerImage[3], "Payment History"),
-        DrawerItems(drawerImage[4], "Edit Profile"),
-        DrawerItems(drawerImage[5], "Change Password"),
-        DrawerItems(drawerImage[6], "Sync Data")
+        DrawerItems(drawerImage[4], "See Profile"),
+        DrawerItems(drawerImage[5], "Change Password")
     )
 
     val products = listOf(

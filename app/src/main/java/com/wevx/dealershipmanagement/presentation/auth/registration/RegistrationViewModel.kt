@@ -34,6 +34,7 @@ class RegistrationViewModel @Inject constructor(
                     }
 
                     is Resource.Error -> {
+                        Log.e("registration", "Error during registration: ${response.message}")
                         _registrationState.value = RegistrationDataState(error = response.message)
                     }
                 }

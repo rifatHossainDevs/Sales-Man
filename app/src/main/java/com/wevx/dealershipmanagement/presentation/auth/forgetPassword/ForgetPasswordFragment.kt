@@ -6,7 +6,9 @@ import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.core.common.BaseFragment
 import com.wevx.dealershipmanagement.databinding.FragmentForgetPasswordBinding
 import com.wevx.dealershipmanagement.databinding.PhoneVerificationBottomSheetBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ForgetPasswordFragment : BaseFragment<FragmentForgetPasswordBinding>(
     FragmentForgetPasswordBinding::inflate
 ) {

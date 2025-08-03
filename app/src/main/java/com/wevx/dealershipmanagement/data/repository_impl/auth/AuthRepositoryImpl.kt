@@ -4,6 +4,7 @@ import com.wevx.dealershipmanagement.data.dto.changePasswordDTO.RequestChangePas
 import com.wevx.dealershipmanagement.data.dto.changePasswordDTO.ResponseChangePasswordDTO
 import com.wevx.dealershipmanagement.data.dto.loginDto.RequestLogin
 import com.wevx.dealershipmanagement.data.dto.loginDto.ResponseLoginDTO
+import com.wevx.dealershipmanagement.data.dto.logoutDTO.ResponseLogoutDto
 import com.wevx.dealershipmanagement.data.dto.profileDTO.ResponseProfileDto
 import com.wevx.dealershipmanagement.data.dto.registrationDto.RequestRegistrationDto
 import com.wevx.dealershipmanagement.data.dto.registrationDto.ResponseRegistrationDTO
@@ -30,6 +31,10 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun changePassword(requestChangePassword: RequestChangePasswordDto): Response<ResponseChangePasswordDTO> {
         return authApiService.changePassword(requestChangePassword)
+    }
+
+    override suspend fun logout(): Response<ResponseLogoutDto> {
+        return authApiService.logout()
     }
 
 }

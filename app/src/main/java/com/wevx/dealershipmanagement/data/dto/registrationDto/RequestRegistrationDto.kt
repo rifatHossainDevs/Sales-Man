@@ -3,7 +3,7 @@ package com.wevx.dealershipmanagement.data.dto.registrationDto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import android.support.annotation.Keep
+import androidx.annotation.Keep
 
 @Keep
 @Serializable

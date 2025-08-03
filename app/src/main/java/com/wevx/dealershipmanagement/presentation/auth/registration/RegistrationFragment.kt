@@ -9,11 +9,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.utils.areAllPermissionGranted
 import com.wevx.dealershipmanagement.core.common.BaseFragment
 import com.wevx.dealershipmanagement.data.dto.registrationDto.RequestRegistrationDto
 import com.wevx.dealershipmanagement.databinding.FragmentRegistrationBinding
+import com.wevx.dealershipmanagement.databinding.PhoneVerificationBottomSheetBinding
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
 import com.wevx.dealershipmanagement.utils.extract
 import com.wevx.dealershipmanagement.utils.requestPermission
@@ -23,13 +25,36 @@ import dagger.hilt.android.AndroidEntryPoint
 class RegistrationFragment :
     BaseFragment<FragmentRegistrationBinding>(FragmentRegistrationBinding::inflate) {
     private lateinit var permissionRequest: ActivityResultLauncher<Array<String>>
+    private lateinit var bottomSheetBinding: PhoneVerificationBottomSheetBinding
+    private lateinit var bottomSheetDialog: BottomSheetDialog
     private val registrationViewModel: RegistrationViewModel by viewModels()
 
     override fun setAllClickListener() {
 
+        bottomSheetClickListener()
+
         allButtonClickListener()
         uploadButtonClickListener()
         permissionRequest = getPermissionRequest()
+
+    }
+
+    private fun bottomSheetClickListener() {
+        bottomSheetDialog = BottomSheetDialog(requireContext())
+        bottomSheetBinding = PhoneVerificationBottomSheetBinding.inflate(layoutInflater)
+        bottomSheetDialog.apply {
+            setContentView(bottomSheetBinding.root)
+            setCancelable(true)
+        }
+
+        bottomSheetBinding.btnContinue.setOnClickListener {
+            findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
+            bottomSheetDialog.dismiss()
+        }
+
+        bottomSheetBinding.btnClose.setOnClickListener {
+            bottomSheetDialog.dismiss()
+        }
 
     }
 
@@ -48,7 +73,7 @@ class RegistrationFragment :
 
             registrationState.data?.let {
                 Toast.makeText(requireContext(), "Success: $it", Toast.LENGTH_SHORT).show()
-                findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
+                bottomSheetDialog.show()
             }
         }
     }
@@ -62,6 +87,8 @@ class RegistrationFragment :
                 val nid = etNid.extract()
                 val password = etPassword.extract()
                 val confirmPassword = etConfirmPassword.extract()
+
+
                 if (checkAllFieldValidity(
                         name,
                         phone,
@@ -76,6 +103,7 @@ class RegistrationFragment :
                         fullName = name,
                         phone = phone,
                         password = password,
+                        nidNumber = nid,
                         userType = "seller"
                     )
                     registrationViewModel.registrationUser(requestRegistration)
@@ -94,10 +122,10 @@ class RegistrationFragment :
         return registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
             if (areAllPermissionGranted(permissionList)) {
                 ImagePicker.with(this).cropSquare().compress(1024).maxResultSize(
-                        512, 512
-                    ).createIntent { intent ->
-                        startForProfileImageResult.launch(intent)
-                    }
+                    512, 512
+                ).createIntent { intent ->
+                    startForProfileImageResult.launch(intent)
+                }
                 Toast.makeText(requireContext(), "Granted", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(requireContext(), "Not Granted", Toast.LENGTH_SHORT).show()

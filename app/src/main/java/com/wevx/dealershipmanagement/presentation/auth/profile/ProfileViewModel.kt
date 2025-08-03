@@ -1,5 +1,6 @@
 package com.wevx.dealershipmanagement.presentation.auth.profile
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wevx.dealershipmanagement.core.common.Resource
@@ -25,6 +26,7 @@ class ProfileViewModel @Inject constructor(
                 when (response) {
                     is Resource.Success -> {
                         _profileState.value = ProfileDataState(data = response.data)
+                        Log.d("profileData", "getProfile: ${response.data}")
                     }
 
                     is Resource.Loading -> {

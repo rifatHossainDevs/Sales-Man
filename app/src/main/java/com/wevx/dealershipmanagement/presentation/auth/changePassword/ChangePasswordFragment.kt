@@ -1,4 +1,4 @@
-package com.wevx.dealershipmanagement
+package com.wevx.dealershipmanagement.presentation.auth.changePassword
 
 import android.content.Intent
 import android.widget.Toast
@@ -7,10 +7,11 @@ import com.wevx.dealershipmanagement.core.common.BaseFragment
 import com.wevx.dealershipmanagement.data.dto.changePasswordDTO.RequestChangePasswordDto
 import com.wevx.dealershipmanagement.databinding.FragmentChangePasswordBinding
 import com.wevx.dealershipmanagement.presentation.AuthActivity
-import com.wevx.dealershipmanagement.presentation.auth.changePassword.ChangePasswordViewModel
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
 import com.wevx.dealershipmanagement.utils.extract
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(
     FragmentChangePasswordBinding::inflate
 ) {

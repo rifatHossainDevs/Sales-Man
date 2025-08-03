@@ -1,5 +1,6 @@
 package com.wevx.dealershipmanagement.domain.use_case.auth_usecase
 
+import android.util.Log
 import com.wevx.dealershipmanagement.core.common.Resource
 import com.wevx.dealershipmanagement.data.dto.registrationDto.RequestRegistrationDto
 import com.wevx.dealershipmanagement.data.dto.registrationDto.toRegistrationModel
@@ -25,7 +26,9 @@ class RegistrationUseCase @Inject constructor(
                     emit(Resource.Error("Registration failed: No data received"))
                 }
             } else {
-                emit(Resource.Error("Registration failed: ${response.message()}"))
+                val errorBody = response.errorBody()?.string()
+                emit(Resource.Error("Registration failed: ${errorBody ?: response.message()}"))
+                Log.d("errorMessage", "invoke: $errorBody")
             }
         } catch (e: Exception) {
             emit(Resource.Error("An error occurred: ${e.localizedMessage}"))

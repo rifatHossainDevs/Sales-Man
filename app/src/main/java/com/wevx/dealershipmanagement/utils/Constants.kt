@@ -15,4 +15,14 @@ object Constants {
     const val MULTIPLE_PERMISSIONS_CODE = 100
     const val CAMERA_REQUEST_CODE = 201
     const val GALLERY_REQUEST_CODE = 202
+
+    const val SEE_PROFILE = "See Profile"
+    const val CHANGE_PASSWORD = "Change Password"
+    const val PAYMENT_HISTORY = "Payment History"
+    const val PAYMENT_COLLECTION = "Payment Collection"
+    const val VISIT_PLANNER = "Visit Planner"
+    const val STOCK_AVAILABILITY = "Stock Availability"
+
+
+
 }

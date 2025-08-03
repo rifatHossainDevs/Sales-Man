@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.wevx.dealershipmanagement.databinding.ItemDrawerItemsBinding
 import com.wevx.dealershipmanagement.domain.models.DrawerItems
 
-class DrawerItemAdapter(val drawerItems: List<DrawerItems>) :
+class DrawerItemAdapter(val drawerItems: List<DrawerItems>, private val onItemClick: (DrawerItems) -> Unit) :
     RecyclerView.Adapter<DrawerItemAdapter.ViewHolder>() {
 
 
@@ -33,6 +33,10 @@ class DrawerItemAdapter(val drawerItems: List<DrawerItems>) :
             holder.binding.apply {
                 tvName.text = item.name
                 ivImage.setImageResource(item.image)
+
+                root.setOnClickListener {
+                    onItemClick(item)
+                }
             }
         }
 
