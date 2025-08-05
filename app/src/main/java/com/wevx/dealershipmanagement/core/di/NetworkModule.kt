@@ -3,12 +3,15 @@ package com.wevx.dealershipmanagement.core.di
 import com.wevx.dealershipmanagement.data.remote.auth.AuthApiService
 import com.wevx.dealershipmanagement.data.remote.home.AreaApiService
 import com.wevx.dealershipmanagement.data.remote.product.ProductApiService
+import com.wevx.dealershipmanagement.data.remote.storeOwner.StoreOwnerApiService
 import com.wevx.dealershipmanagement.data.repository_impl.auth.AuthRepositoryImpl
 import com.wevx.dealershipmanagement.data.repository_impl.home.AreaRepositoryImpl
 import com.wevx.dealershipmanagement.data.repository_impl.product.ProductRepositoryImpl
+import com.wevx.dealershipmanagement.data.repository_impl.storeOwner.StoreOwnerRepositoryImpl
 import com.wevx.dealershipmanagement.domain.repository.auth.AuthRepository
 import com.wevx.dealershipmanagement.domain.repository.home.AreaRepository
 import com.wevx.dealershipmanagement.domain.repository.product.ProductRepository
+import com.wevx.dealershipmanagement.domain.repository.storeOwner.StoreOwnerRepository
 import com.wevx.dealershipmanagement.domain.use_case.product_usecase.GetCategoryUseCase
 import com.wevx.dealershipmanagement.utils.Constants
 import dagger.Module
@@ -79,6 +82,21 @@ object NetworkModule {
     ): GetCategoryUseCase {
         return GetCategoryUseCase(productRepository)
     }
+
+    //StoreOwner
+    @Provides
+    @Singleton
+    fun provideStoreOwnerApiService(retrofit: Retrofit): StoreOwnerApiService{
+        return retrofit.create(StoreOwnerApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideStoreOwnerRepository(storeOwnerApiService: StoreOwnerApiService): StoreOwnerRepository {
+        return StoreOwnerRepositoryImpl(storeOwnerApiService)
+    }
+
+
 
     // Profile
     /*@Provides
