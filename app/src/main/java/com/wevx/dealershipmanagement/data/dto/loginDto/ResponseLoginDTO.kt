@@ -1,9 +1,9 @@
 package com.wevx.dealershipmanagement.data.dto.loginDto
 
-
 import com.google.gson.annotations.SerializedName
 import androidx.annotation.Keep
 import com.wevx.dealershipmanagement.domain.models.LoginModel
+import kotlinx.serialization.Serializable
 
 @Keep
 data class ResponseLoginDTO(
@@ -17,6 +17,7 @@ data class ResponseLoginDTO(
     val success: Boolean? = null
 ) {
     @Keep
+    @Serializable
     data class Data(
         @SerializedName("accessToken")
         val accessToken: String? = null,
@@ -26,9 +27,14 @@ data class ResponseLoginDTO(
         val user: User? = null
     ) {
         @Keep
+        @Serializable
         data class User(
+            @SerializedName("active")
+            val active: Boolean? = null,
             @SerializedName("avatar")
             val avatar: String? = null,
+            @SerializedName("companyId")
+            val companyId: String? = null,
             @SerializedName("createdAt")
             val createdAt: String? = null,
             @SerializedName("email")
@@ -37,8 +43,8 @@ data class ResponseLoginDTO(
             val fullName: String? = null,
             @SerializedName("_id")
             val id: String? = null,
-            @SerializedName("nid")
-            val nid: String? = null,
+            @SerializedName("nidNumber")
+            val nidNumber: String? = null,
             @SerializedName("phone")
             val phone: String? = null,
             @SerializedName("updatedAt")
@@ -60,8 +66,10 @@ fun ResponseLoginDTO.Data.toUserModel(): LoginModel {
         userEmail = this.user?.email ?: "",
         userName = this.user?.fullName ?: "",
         userId = this.user?.id ?: "",
-        nid = this.user?.nid ?: "",
+        nidNumber = this.user?.nidNumber ?: "",
         userPhoneNumber = this.user?.phone ?: "",
-        userRole = this.user?.userType ?: ""
+        userType = this.user?.userType ?: "",
+        companyId = this.user?.companyId ?: "",
+        isActive = this.user?.active ?: false
     )
 }

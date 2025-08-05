@@ -1,23 +1,24 @@
 package com.wevx.dealershipmanagement.data.dto.registrationDto
 
-
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import androidx.annotation.Keep
+import com.google.gson.annotations.SerializedName
 
 @Keep
 @Serializable
 data class RequestRegistrationDto(
-    @SerialName("email")
+    @SerializedName("email")
     val email: String? = null,
-    @SerialName("fullName")
+    @SerializedName("fullName")
     val fullName: String? = null,
-    @SerialName("nidNumber")
+    @SerializedName("nidNumber")
     val nidNumber: String? = null,
-    @SerialName("password")
+    @SerializedName("password")
     val password: String? = null,
-    @SerialName("phone")
+    @SerializedName("phone")
     val phone: String? = null,
-    @SerialName("userType")
-    val userType: String? = null
+    @SerializedName("userType")
+    val userType: String? = null,
+    @SerializedName("companyId")
+    val companyId: String? = null,
 )
