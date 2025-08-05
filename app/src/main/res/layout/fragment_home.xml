@@ -8,6 +8,7 @@
     android:paddingHorizontal="@dimen/_8sdp"
     tools:context=".presentation.home.HomeFragment">
 
+
     <TextView
         android:id="@+id/tv_select_a_customer"
         android:layout_width="wrap_content"
@@ -52,9 +53,9 @@
 
         <LinearLayout
             android:id="@+id/divisionLayout"
-            android:layout_marginEnd="@dimen/_2sdp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_2sdp"
             android:layout_weight="1"
             android:background="@drawable/bg_spinner"
             android:orientation="horizontal"
@@ -81,8 +82,8 @@
             android:id="@+id/districtLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginStart="@dimen/_2sdp"
+            android:layout_weight="1"
             android:background="@drawable/bg_spinner"
             android:orientation="horizontal"
             android:padding="4dp">
@@ -106,10 +107,10 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginTop="@dimen/_4sdp"
         android:id="@+id/spinner_subDistrict_area"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4sdp"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/spinner_division_district">
@@ -183,6 +184,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/spinner_subDistrict_area" />
 
+    <TextView
+        android:id="@+id/tvNoStoreFound"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="No store owner found"
+        android:textAlignment="center"
+        android:textColor="@android:color/darker_gray"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_all_customer" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_all_customer"
         android:layout_width="match_parent"
@@ -194,6 +208,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_all_customer"
         tools:listitem="@layout/item_layout_customer" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/rv_all_customer"
+        app:layout_constraintEnd_toEndOf="@id/rv_all_customer"
+        app:layout_constraintStart_toStartOf="@id/rv_all_customer"
+        app:layout_constraintTop_toTopOf="@id/rv_all_customer" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_add_user"
