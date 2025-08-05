@@ -104,7 +104,8 @@ class RegistrationFragment :
                         phone = phone,
                         password = password,
                         nidNumber = nid,
-                        userType = "seller"
+                        userType = "seller",
+                        companyId = "6891ec289a653e04819bc4fb"
                     )
                     registrationViewModel.registrationUser(requestRegistration)
 
