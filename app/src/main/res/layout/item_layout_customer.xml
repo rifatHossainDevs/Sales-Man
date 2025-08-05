@@ -7,7 +7,6 @@
     android:layout_marginBottom="8dp">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/mathCv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/recyclerView"
@@ -23,7 +22,7 @@
             android:layout_margin="4dp">
 
             <ImageView
-                android:id="@+id/iv_customer"
+                android:id="@+id/iv_store"
                 android:layout_width="@dimen/_68sdp"
                 android:layout_height="0dp"
                 android:background="@drawable/bg_customer_item"
@@ -46,8 +45,8 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/_16ssp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@id/iv_customer"
-                app:layout_constraintTop_toTopOf="@id/iv_customer" />
+                app:layout_constraintStart_toEndOf="@id/iv_store"
+                app:layout_constraintTop_toTopOf="@id/iv_store" />
 
             <TextView
                 android:id="@+id/tv_owner"
