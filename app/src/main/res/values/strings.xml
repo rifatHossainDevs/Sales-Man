@@ -31,4 +31,10 @@
     <string name="select_a_customer">Select a Customer</string>
     <string name="filter">Filter</string>
     <string name="national_id_card">National ID Card</string>
+    <string name="selected_store">Selected Store</string>
+    <string name="md_khalid_hasan_jibon">MD Khalid Hasan Jibon</string>
+    <string name="address_shop_store_details_fragment">shop no-27/28,block-d,level-06 shop no-27/28,block-d,level-06 shop no-27/28,block-d,level-06</string>
+    <string name="current_orders">Current Orders:</string>
+    <string name="complete_orders">Complete Orders:</string>
+    <string name="m_s_khalid_store">M/S Khalid Store</string>
 </resources>
