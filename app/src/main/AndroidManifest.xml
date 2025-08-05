@@ -35,7 +35,7 @@
         android:theme="@style/Theme.DealershipManagement">
         <activity
             android:name=".presentation.MainActivity"
-            android:exported="false"
+            android:exported="true"
             android:theme="@style/Theme.DealershipManagement.MainActivity"/>
         <activity
             android:name=".presentation.AuthActivity"
