@@ -47,10 +47,10 @@ class MainActivity : AppCompatActivity() {
 
         adapter = DrawerItemAdapter(LocalDatabase.drawerItems){selectedItem->
             when(selectedItem.name){
-                SEE_PROFILE->{
+                /*SEE_PROFILE->{
                     navController.navigate(R.id.profileFragment)
                     drawerLayout.closeDrawer(GravityCompat.START)
-                }
+                }*/
                 Constants.CHANGE_PASSWORD->{
                     navController.navigate(R.id.changePasswordFragment)
                     drawerLayout.closeDrawer(GravityCompat.START)
