@@ -35,8 +35,6 @@ class CustomSpinnerAdapter(
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = LayoutInflater.from(context).inflate(R.layout.spinner_item, parent, false)
         val text = view.findViewById<TextView>(R.id.spinner_text)
-        val icon = view.findViewById<ImageView>(R.id.spinner_icon)
-        icon.visibility = View.GONE  // Hide icon in dropdown list
 
         text.text = items[position]
         text.setTextColor(
