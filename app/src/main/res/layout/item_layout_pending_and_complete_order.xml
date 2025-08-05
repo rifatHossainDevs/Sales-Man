@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/_8sdp"
+    android:layout_marginBottom="8dp"
+    android:backgroundTint="@color/recyclerView"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="@dimen/_2sdp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/_4sdp">
+
+
+        <TextView
+            android:id="@+id/tv_invoice_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Invoice: INV/001"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_tracking_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Tracking: 2023-01-14t00:00:00z"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_10ssp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/tv_invoice_number"
+            app:layout_constraintTop_toBottomOf="@id/tv_invoice_number" />
+
+        <TextView
+            android:id="@+id/tv_shipment_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Shipment: 06-08-2025"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_10ssp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/tv_tracking_number"
+            app:layout_constraintTop_toBottomOf="@id/tv_tracking_number" />
+
+        <TextView
+            android:id="@+id/tv_order_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Order: 06-08-2025"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_10ssp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/tv_shipment_date"
+            app:layout_constraintTop_toBottomOf="@id/tv_shipment_date" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnViewInvoice"
+            android:layout_width="@dimen/_60sdp"
+            android:layout_height="@dimen/_28sdp"
+            android:backgroundTint="@color/white"
+            android:paddingHorizontal="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:fontFamily="@font/roboto"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="View Invoice"
+            android:textColor="@color/secondary"
+            android:textStyle="bold"
+            android:textSize="10sp"
+            app:cornerRadius="4dp" />
+
+        <TextView
+            android:id="@+id/tv_subtotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:text="Total: $12000.00"
+            android:textColor="#F41450"
+            android:textSize="@dimen/_12ssp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/btnViewInvoice"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.cardview.widget.CardView>
