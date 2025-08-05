@@ -26,9 +26,7 @@ class RegistrationUseCase @Inject constructor(
                     emit(Resource.Error("Registration failed: No data received"))
                 }
             } else {
-                val errorBody = response.errorBody()?.string()
-                emit(Resource.Error("Registration failed: ${errorBody ?: response.message()}"))
-                Log.d("errorMessage", "invoke: $errorBody")
+                emit(Resource.Error("Registration failed: ${response.message()}"))
             }
         } catch (e: Exception) {
             emit(Resource.Error("An error occurred: ${e.localizedMessage}"))
