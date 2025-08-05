@@ -7,5 +7,7 @@ data class RegistrationModel(
     val nid: String,
     val userPhoneNumber: String,
     val userProfileImageUrl: String? = null,
-    val userRole: String
+    val userRole: String,
+    val companyId: String? = null,
+    val active: Boolean? = null
 )
