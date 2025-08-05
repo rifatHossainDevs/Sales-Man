@@ -11,11 +11,11 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_homeFragment_to_productsFragment"
-            app:destination="@id/productsFragment" />
-        <action
             android:id="@+id/action_homeFragment_to_addCustomerFragment"
             app:destination="@id/addCustomerFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_storeOwnerDetailsFragment"
+            app:destination="@id/storeOwnerDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/productsFragment"
@@ -54,13 +54,17 @@
             app:destination="@id/homeFragment" />
     </fragment>
     <fragment
-        android:id="@+id/profileFragment"
-        android:name="com.wevx.dealershipmanagement.presentation.auth.profile.ProfileFragment"
-        android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
-    <fragment
         android:id="@+id/changePasswordFragment"
         android:name="com.wevx.dealershipmanagement.presentation.auth.changePassword.ChangePasswordFragment"
         android:label="fragment_change_password"
         tools:layout="@layout/fragment_change_password" />
+    <fragment
+        android:id="@+id/storeOwnerDetailsFragment"
+        android:name="com.wevx.dealershipmanagement.StoreOwnerDetailsFragment"
+        android:label="fragment_store_owner_details"
+        tools:layout="@layout/fragment_store_owner_details" >
+        <action
+            android:id="@+id/action_storeOwnerDetailsFragment_to_productsFragment"
+            app:destination="@id/productsFragment" />
+    </fragment>
 </navigation>
