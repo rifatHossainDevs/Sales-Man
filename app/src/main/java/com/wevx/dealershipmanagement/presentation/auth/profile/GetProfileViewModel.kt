@@ -12,28 +12,28 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class EditProfileViewModel @Inject constructor(
+class GetProfileViewModel @Inject constructor(
     private val profileUseCase: GetProfileUseCase
 ) : ViewModel() {
-    private val _profileState = MutableStateFlow(EditProfileDataState())
-    val profileState: StateFlow<EditProfileDataState> = _profileState
+    private val _profileState = MutableStateFlow(GetProfileDataState())
+    val profileState: StateFlow<GetProfileDataState> = _profileState
 
     fun getProfile() {
         viewModelScope.launch {
-            _profileState.value = EditProfileDataState(loading = true)
+            _profileState.value = GetProfileDataState(loading = true)
             profileUseCase.invoke().collect { response ->
                 when (response) {
                     is Resource.Success -> {
-                        _profileState.value = EditProfileDataState(data = response.data)
+                        _profileState.value = GetProfileDataState(data = response.data)
                         Log.d("profileData", "getProfile: ${response.data}")
                     }
 
                     is Resource.Loading -> {
-                        _profileState.value = EditProfileDataState(loading = true)
+                        _profileState.value = GetProfileDataState(loading = true)
                     }
 
                     is Resource.Error -> {
-                        _profileState.value = EditProfileDataState(error = response.message)
+                        _profileState.value = GetProfileDataState(error = response.message)
                     }
                 }
 
