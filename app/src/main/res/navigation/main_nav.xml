@@ -60,7 +60,7 @@
         tools:layout="@layout/fragment_change_password" />
     <fragment
         android:id="@+id/storeOwnerDetailsFragment"
-        android:name="com.wevx.dealershipmanagement.StoreOwnerDetailsFragment"
+        android:name="com.wevx.dealershipmanagement.presentation.storeOwnerDetails.StoreOwnerDetailsFragment"
         android:label="fragment_store_owner_details"
         tools:layout="@layout/fragment_store_owner_details" >
         <action
