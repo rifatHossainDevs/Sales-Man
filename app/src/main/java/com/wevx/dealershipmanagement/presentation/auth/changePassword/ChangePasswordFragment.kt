@@ -7,6 +7,7 @@ import com.wevx.dealershipmanagement.core.common.BaseFragment
 import com.wevx.dealershipmanagement.data.dto.changePasswordDTO.RequestChangePasswordDto
 import com.wevx.dealershipmanagement.databinding.FragmentChangePasswordBinding
 import com.wevx.dealershipmanagement.presentation.AuthActivity
+import com.wevx.dealershipmanagement.utils.TokenManager
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
 import com.wevx.dealershipmanagement.utils.extract
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,6 +19,7 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(
     private val viewModel: ChangePasswordViewModel by viewModels()
 
     override fun setAllClickListener() {
+        val tokenManager = TokenManager(requireContext())
 
         binding.apply {
             btnChangePassword.setOnClickListener {
@@ -28,7 +30,8 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(
                     oldPassword = oldPassword,
                     newPassword = newPassword
                 )
-                viewModel.changePassword(requestChangePassword)
+                val token = "Bearer ${tokenManager.getAccessToken()}"
+                viewModel.changePassword(requestChangePassword, token)
             }
         }
 
@@ -44,7 +47,7 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(
             }
 
             changePasswordState.data?.let { data ->
-                //Toast.makeText(requireContext(), "Success : $data", Toast.LENGTH_SHORT).show()
+
                 if (data.success == true) {
                     Toast.makeText(
                         requireContext(),
