@@ -18,10 +18,10 @@ class ChangePasswordViewModel @Inject constructor(
     private val _changePasswordState = MutableStateFlow(ChangePasswordDataState())
     val changePasswordState: StateFlow<ChangePasswordDataState> = _changePasswordState
 
-    fun changePassword(requestChangePassword: RequestChangePasswordDto) {
+    fun changePassword(requestChangePassword: RequestChangePasswordDto, token: String) {
         viewModelScope.launch {
             _changePasswordState.value = ChangePasswordDataState(loading = true)
-            changePasswordUseCase.invoke(requestChangePassword).collect { response ->
+            changePasswordUseCase.invoke(requestChangePassword, token).collect { response ->
                 when (response) {
                     is Resource.Success -> {
                         _changePasswordState.value = ChangePasswordDataState(data = response.data)
