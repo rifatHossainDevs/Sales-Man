@@ -13,10 +13,10 @@ import javax.inject.Inject
 class LogoutUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
-    operator fun invoke(): Flow<Resource<ResponseLogoutDto>> = flow {
+    operator fun invoke(token: String): Flow<Resource<ResponseLogoutDto>> = flow {
         try {
             emit(Resource.Loading())
-            val response = authRepository.logout()
+            val response = authRepository.logout(token)
 
             if (response.isSuccessful) {
                 val data = response.body()
