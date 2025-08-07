@@ -2,17 +2,19 @@ package com.wevx.dealershipmanagement.core.di
 
 import com.wevx.dealershipmanagement.data.remote.auth.AuthApiService
 import com.wevx.dealershipmanagement.data.remote.home.AreaApiService
+import com.wevx.dealershipmanagement.data.remote.order.OrderApiService
 import com.wevx.dealershipmanagement.data.remote.product.ProductApiService
 import com.wevx.dealershipmanagement.data.remote.storeOwner.StoreOwnerApiService
 import com.wevx.dealershipmanagement.data.repository_impl.auth.AuthRepositoryImpl
 import com.wevx.dealershipmanagement.data.repository_impl.home.AreaRepositoryImpl
+import com.wevx.dealershipmanagement.data.repository_impl.order.OrderRepositoryImpl
 import com.wevx.dealershipmanagement.data.repository_impl.product.ProductRepositoryImpl
 import com.wevx.dealershipmanagement.data.repository_impl.storeOwner.StoreOwnerRepositoryImpl
 import com.wevx.dealershipmanagement.domain.repository.auth.AuthRepository
 import com.wevx.dealershipmanagement.domain.repository.home.AreaRepository
+import com.wevx.dealershipmanagement.domain.repository.order.OrderRepository
 import com.wevx.dealershipmanagement.domain.repository.product.ProductRepository
 import com.wevx.dealershipmanagement.domain.repository.storeOwner.StoreOwnerRepository
-import com.wevx.dealershipmanagement.domain.use_case.product_usecase.GetCategoryUseCase
 import com.wevx.dealershipmanagement.utils.Constants
 import dagger.Module
 import dagger.Provides
@@ -75,14 +77,6 @@ object NetworkModule {
         return ProductRepositoryImpl(productApiService)
     }
 
-    @Provides
-    @Singleton
-    fun provideCategoryUseCase(
-        productRepository: ProductRepository
-    ): GetCategoryUseCase {
-        return GetCategoryUseCase(productRepository)
-    }
-
     //StoreOwner
     @Provides
     @Singleton
@@ -94,6 +88,19 @@ object NetworkModule {
     @Singleton
     fun provideStoreOwnerRepository(storeOwnerApiService: StoreOwnerApiService): StoreOwnerRepository {
         return StoreOwnerRepositoryImpl(storeOwnerApiService)
+    }
+
+    //Order
+    @Provides
+    @Singleton
+    fun provideOrderApiService(retrofit: Retrofit): OrderApiService {
+        return retrofit.create(OrderApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOrderRepository(orderApiService: OrderApiService): OrderRepository {
+        return OrderRepositoryImpl(orderApiService)
     }
 
 
@@ -112,4 +119,3 @@ object NetworkModule {
     }*/
 
 }
-
