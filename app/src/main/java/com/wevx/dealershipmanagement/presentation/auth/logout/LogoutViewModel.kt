@@ -24,10 +24,10 @@ class LogoutViewModel @Inject constructor(
     private val _logoutState = MutableStateFlow(LogoutDataState())
     val logoutState: StateFlow<LogoutDataState> = _logoutState
 
-    fun logoutUser() {
+    fun logoutUser(token: String) {
         viewModelScope.launch {
             _logoutState.value = LogoutDataState(loading = true)
-            logoutUseCase.invoke().collect { response ->
+            logoutUseCase.invoke(token).collect { response ->
                 when (response) {
                     is Resource.Success -> {
                         _logoutState.value = LogoutDataState(data = response.data)
