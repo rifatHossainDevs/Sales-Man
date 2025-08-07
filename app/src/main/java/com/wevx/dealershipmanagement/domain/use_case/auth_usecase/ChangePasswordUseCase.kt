@@ -11,10 +11,10 @@ import javax.inject.Inject
 class ChangePasswordUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
-    operator fun invoke(requestChangePassword: RequestChangePasswordDto): Flow<Resource<ResponseChangePasswordDTO>> = flow {
+    operator fun invoke(requestChangePassword: RequestChangePasswordDto, token: String): Flow<Resource<ResponseChangePasswordDTO>> = flow {
         try {
             emit(Resource.Loading())
-            val response = authRepository.changePassword(requestChangePassword)
+            val response = authRepository.changePassword(requestChangePassword, token)
 
             if (response.isSuccessful) {
                 val data = response.body()
