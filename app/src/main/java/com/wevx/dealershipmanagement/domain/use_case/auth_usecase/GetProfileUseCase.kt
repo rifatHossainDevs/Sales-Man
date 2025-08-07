@@ -11,10 +11,10 @@ import javax.inject.Inject
 class GetProfileUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
-    operator fun invoke(): Flow<Resource<ProfileModel>> = flow {
+    operator fun invoke(token: String): Flow<Resource<ProfileModel>> = flow {
         try {
             emit(Resource.Loading())
-            val response = authRepository.getProfile()
+            val response = authRepository.getProfile(token)
 
             if (response.isSuccessful) {
                 val data = response.body()?.data?.toProfileModel()
