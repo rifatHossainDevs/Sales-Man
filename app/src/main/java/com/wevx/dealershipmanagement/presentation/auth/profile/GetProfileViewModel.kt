@@ -18,10 +18,10 @@ class GetProfileViewModel @Inject constructor(
     private val _profileState = MutableStateFlow(GetProfileDataState())
     val profileState: StateFlow<GetProfileDataState> = _profileState
 
-    fun getProfile() {
+    fun getProfile(token: String) {
         viewModelScope.launch {
             _profileState.value = GetProfileDataState(loading = true)
-            profileUseCase.invoke().collect { response ->
+            profileUseCase.invoke(token).collect { response ->
                 when (response) {
                     is Resource.Success -> {
                         _profileState.value = GetProfileDataState(data = response.data)
