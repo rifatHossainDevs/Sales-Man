@@ -5,8 +5,8 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/_8sdp"
     android:layout_marginBottom="8dp"
-    android:backgroundTint="@color/recyclerView"
-    app:cardCornerRadius="8dp"
+    android:backgroundTint="#FFEBEE"
+    app:cardCornerRadius="@dimen/_8sdp"
     app:cardElevation="@dimen/_2sdp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,18 +27,6 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_tracking_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="Tracking: 2023-01-14t00:00:00z"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_10ssp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/tv_invoice_number"
-            app:layout_constraintTop_toBottomOf="@id/tv_invoice_number" />
-
-        <TextView
             android:id="@+id/tv_shipment_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,20 +35,37 @@
             android:textColor="@color/black"
             android:textSize="@dimen/_10ssp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/tv_tracking_number"
-            app:layout_constraintTop_toBottomOf="@id/tv_tracking_number" />
+            app:layout_constraintStart_toStartOf="@id/tv_invoice_number"
+            app:layout_constraintTop_toBottomOf="@id/tv_invoice_number" />
 
         <TextView
-            android:id="@+id/tv_order_date"
+            android:id="@+id/tv_payment_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="Order: 06-08-2025"
+            android:text="Due - $120"
             android:textColor="@color/black"
             android:textSize="@dimen/_10ssp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/tv_shipment_date"
             app:layout_constraintTop_toBottomOf="@id/tv_shipment_date" />
+
+
+
+        <TextView
+            android:id="@+id/tv_shipment_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:maxWidth="@dimen/_220sdp"
+            android:text="Mirpur-12"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_10ssp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/tv_payment_status"
+            app:layout_constraintTop_toBottomOf="@id/tv_payment_status" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnViewInvoice"
@@ -78,7 +83,7 @@
             app:cornerRadius="4dp" />
 
         <TextView
-            android:id="@+id/tv_subtotal"
+            android:id="@+id/tv_total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_2sdp"
