@@ -16,10 +16,13 @@ interface AuthRepository {
 
     suspend fun registration(requestRegistration: RequestRegistrationDto): Response<ResponseRegistrationDTO>
 
-    suspend fun getProfile(): Response<ResponseProfileDto>
+    suspend fun getProfile(token: String): Response<ResponseProfileDto>
 
-    suspend fun changePassword(requestChangePassword: RequestChangePasswordDto): Response<ResponseChangePasswordDTO>
+    suspend fun changePassword(
+        requestChangePassword: RequestChangePasswordDto,
+        token: String
+    ): Response<ResponseChangePasswordDTO>
 
-    suspend fun logout(): Response<ResponseLogoutDto>
+    suspend fun logout(token: String): Response<ResponseLogoutDto>
 
 }
