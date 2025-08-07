@@ -16,11 +16,11 @@ object Constants {
     const val CAMERA_REQUEST_CODE = 201
     const val GALLERY_REQUEST_CODE = 202
 
-    const val SEE_PROFILE = "See Profile"
+    const val EDIT_PROFILE = "Edit Profile"
     const val CHANGE_PASSWORD = "Change Password"
     const val PAYMENT_HISTORY = "Payment History"
     const val PAYMENT_COLLECTION = "Payment Collection"
-    const val VISIT_PLANNER = "Visit Planner"
+    const val TODAYS_DELIVERY = "Today's Delivery"
     const val STOCK_AVAILABILITY = "Stock Availability"
 
 
