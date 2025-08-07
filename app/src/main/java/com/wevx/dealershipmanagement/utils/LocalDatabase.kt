@@ -141,10 +141,10 @@ object LocalDatabase {
 
     val drawerItems = listOf<DrawerItems>(
         DrawerItems(drawerImage[0], "Stock Availability"),
-        DrawerItems(drawerImage[1], "Visit Planner"),
+        DrawerItems(drawerImage[1], "Today's Delivery"),
         DrawerItems(drawerImage[2], "Payment Collection"),
         DrawerItems(drawerImage[3], "Payment History"),
-        DrawerItems(drawerImage[4], "See Profile"),
+        DrawerItems(drawerImage[4], "Edit Profile"),
         DrawerItems(drawerImage[5], "Change Password")
     )
 
