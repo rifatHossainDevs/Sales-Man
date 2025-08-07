@@ -2,22 +2,22 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <!-- Location permissions (required for scanning Bluetooth devices) -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- Location permissions (required for scanning Bluetooth devices) -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-    <!-- For Android 12 and above -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- For Android 12 and above -->
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-
-    <!-- For below Android 12 -->
-    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" /> <!-- For below Android 12 -->
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
 
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
+
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -34,11 +34,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DealershipManagement">
         <activity
-            android:name=".presentation.MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.DealershipManagement.MainActivity"/>
-        <activity
-            android:name=".presentation.AuthActivity"
+            android:name=".presentation.IntroActivity"
             android:exported="true"
             android:theme="@style/Theme.DealershipManagement.MainActivity">
             <intent-filter>
@@ -47,6 +43,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".presentation.MainActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DealershipManagement.MainActivity" />
+        <activity
+            android:name=".presentation.AuthActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DealershipManagement.MainActivity"/>
     </application>
 
 </manifest>
