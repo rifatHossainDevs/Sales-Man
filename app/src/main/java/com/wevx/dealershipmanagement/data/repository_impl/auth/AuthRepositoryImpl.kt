@@ -25,16 +25,21 @@ class AuthRepositoryImpl @Inject constructor(
         return authApiService.registration(requestRegistration)
     }
 
-    override suspend fun getProfile(): Response<ResponseProfileDto> {
-        return authApiService.getProfile()
+    override suspend fun getProfile(token: String): Response<ResponseProfileDto> {
+        return authApiService.getProfile(token)
     }
 
-    override suspend fun changePassword(requestChangePassword: RequestChangePasswordDto): Response<ResponseChangePasswordDTO> {
-        return authApiService.changePassword(requestChangePassword)
+    override suspend fun changePassword(
+        requestChangePassword: RequestChangePasswordDto,
+        token: String
+    ): Response<ResponseChangePasswordDTO> {
+        return authApiService.changePassword(token, requestChangePassword)
     }
 
-    override suspend fun logout(): Response<ResponseLogoutDto> {
-        return authApiService.logout()
+    override suspend fun logout(token: String): Response<ResponseLogoutDto> {
+        return authApiService.logout(token)
+
     }
+
 
 }
