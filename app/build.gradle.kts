@@ -87,4 +87,11 @@ dependencies {
     // dagger hilt
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.compiler)
+
+    //Glide
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+    kapt ("com.github.bumptech.glide:compiler:4.16.0")
+
+    //lottie
+    implementation(libs.lottie)
 }
