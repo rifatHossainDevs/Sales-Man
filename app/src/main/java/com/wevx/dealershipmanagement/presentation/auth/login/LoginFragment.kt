@@ -1,10 +1,7 @@
 package com.wevx.dealershipmanagement.presentation.auth.login
 
-import android.content.Context.MODE_PRIVATE
 import android.content.Intent
-import android.content.SharedPreferences
 import android.widget.Toast
-import androidx.core.content.edit
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.wevx.dealershipmanagement.presentation.MainActivity
@@ -12,26 +9,22 @@ import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.core.common.BaseFragment
 import com.wevx.dealershipmanagement.data.dto.loginDto.RequestLogin
 import com.wevx.dealershipmanagement.databinding.FragmentLoginBinding
-import com.wevx.dealershipmanagement.utils.Constants.ACCESS_TOKEN
-import com.wevx.dealershipmanagement.utils.Constants.REFRESH_TOKEN
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
 import com.wevx.dealershipmanagement.utils.extract
 import dagger.hilt.android.AndroidEntryPoint
-import androidx.appcompat.app.AlertDialog
+import com.wevx.dealershipmanagement.utils.TokenManager
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
 
     private val loginViewModel: LoginViewModel by viewModels()
-    lateinit var sharedPreference: SharedPreferences
 
     override fun setAllClickListener() {
 
         allButtonClickListener()
-        sharedPreference = requireContext().getSharedPreferences("saveNote", MODE_PRIVATE)
 
     }
-
 
     override fun allObserver() {
         loginViewModel.loginState.collectInLifecycle(viewLifecycleOwner) { loginState ->
@@ -41,14 +34,17 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
 
-            loginState.data?.let {responseDTO->
+            loginState.data?.let { responseDTO ->
+                val tokenManager = TokenManager(requireContext())
 
-                sharedPreference.edit {
-                    putString(ACCESS_TOKEN, responseDTO.accessToken)
-                    putString(REFRESH_TOKEN, responseDTO.refreshToken)
-                }
+                tokenManager.saveToken(
+                    "${responseDTO.accessToken}",
+                    "${responseDTO.refreshToken}"
+                )
 
-                Toast.makeText(requireContext(), "Success : $responseDTO", Toast.LENGTH_SHORT).show()
+
+                Toast.makeText(requireContext(), "Login Successful", Toast.LENGTH_SHORT)
+                    .show()
                 startActivity(Intent(requireContext(), MainActivity::class.java))
                 requireActivity().finish()
 
@@ -65,11 +61,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                         .show()
                 }*/
 
-
             }
         }
     }
-
 
 
     private fun allButtonClickListener() {
