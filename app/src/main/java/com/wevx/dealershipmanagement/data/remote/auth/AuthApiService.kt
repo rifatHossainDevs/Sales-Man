@@ -11,6 +11,7 @@ import com.wevx.dealershipmanagement.data.dto.registrationDto.ResponseRegistrati
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface AuthApiService {
@@ -22,12 +23,15 @@ interface AuthApiService {
     suspend fun registration(@Body requestRegistration: RequestRegistrationDto): Response<ResponseRegistrationDTO>
 
     @GET("users/current-user")
-    suspend fun getProfile(): Response<ResponseProfileDto>
+    suspend fun getProfile(@Header("Authorization") token: String): Response<ResponseProfileDto>
 
     @POST("users/change-password")
-    suspend fun changePassword(@Body requestChangePassword: RequestChangePasswordDto): Response<ResponseChangePasswordDTO>
+    suspend fun changePassword(
+        @Header("Authorization") token: String,
+        @Body requestChangePassword: RequestChangePasswordDto
+    ): Response<ResponseChangePasswordDTO>
 
     @POST("users/logout")
-    suspend fun logout(): Response<ResponseLogoutDto>
+    suspend fun logout(@Header("Authorization") token: String): Response<ResponseLogoutDto>
 
 }
