@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.bumptech.glide.Glide
 import com.wevx.dealershipmanagement.databinding.ItemLayoutCustomerBinding
 import com.wevx.dealershipmanagement.domain.models.StoreOwnerModel
 
@@ -37,7 +38,10 @@ class StoreOwnerAdapter(
             tvShopName.text = storeOwner.storeName
             tvOwner.text = storeOwner.storeOwnerName
             tvAddress.text = storeOwner.address
-            ivStore.load(storeOwner.storeImg)
+
+            Glide.with(holder.itemView.context)
+                .load(storeOwner.storeImg)
+                .into(ivStore)
 
             root.setOnClickListener {
                 listener.selectCustomer(storeOwner.userId, storeOwner.id)
