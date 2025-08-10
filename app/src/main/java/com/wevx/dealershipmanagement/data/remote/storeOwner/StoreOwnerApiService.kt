@@ -13,4 +13,6 @@ interface StoreOwnerApiService {
     @GET("stores/get-store-by-area/{areaId}")
     suspend fun getStoreOwnerByArea(@Path("areaId") areaId: Int): Response<ResponseStoreOwnerDto>
 
+
+
 }
