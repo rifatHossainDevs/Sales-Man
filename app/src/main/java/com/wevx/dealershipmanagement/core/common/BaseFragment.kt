@@ -26,12 +26,15 @@ abstract class BaseFragment<VB : ViewBinding>(
         _binding = bindingInflater.invoke(inflater)
 
         //loading = ProgressDialog(requireContext())
+        if (shouldInitialize()) {
+            setAllClickListener()
+            allObserver()
+        }
 
-        setAllClickListener()
-        allObserver()
         return binding.root
     }
 
+    protected open fun shouldInitialize(): Boolean = true
     abstract fun setAllClickListener()
     abstract fun allObserver()
 }
