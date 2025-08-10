@@ -8,6 +8,8 @@ import com.wevx.dealershipmanagement.data.dto.logoutDTO.ResponseLogoutDto
 import com.wevx.dealershipmanagement.data.dto.profileDTO.ResponseProfileDto
 import com.wevx.dealershipmanagement.data.dto.registrationDto.RequestRegistrationDto
 import com.wevx.dealershipmanagement.data.dto.registrationDto.ResponseRegistrationDTO
+import com.wevx.dealershipmanagement.data.dto.updateProfileDto.RequestUpdateProfile
+import com.wevx.dealershipmanagement.data.dto.updateProfileDto.ResponseUpdateProfileDto
 import retrofit2.Response
 
 interface AuthRepository {
@@ -24,5 +26,10 @@ interface AuthRepository {
     ): Response<ResponseChangePasswordDTO>
 
     suspend fun logout(token: String): Response<ResponseLogoutDto>
+
+    suspend fun updateProfile(
+        requestUpdateProfile: RequestUpdateProfile,
+        token: String
+    ): Response<ResponseUpdateProfileDto>
 
 }
