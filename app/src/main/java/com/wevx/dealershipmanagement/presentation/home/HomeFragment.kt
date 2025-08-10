@@ -18,6 +18,8 @@ import com.wevx.dealershipmanagement.presentation.adapter.CustomSpinnerAdapter
 import com.wevx.dealershipmanagement.presentation.adapter.StoreOwnerAdapter
 import com.wevx.dealershipmanagement.presentation.home.getArea.AreaViewModel
 import com.wevx.dealershipmanagement.presentation.home.getDistrict.DistrictViewModel
+import com.wevx.dealershipmanagement.presentation.home.getStoreOwnerByArea.StoreOwnerViewModel
+import com.wevx.dealershipmanagement.presentation.home.getStoreOwnerByDistrict.StoreOwnerByDistrictViewModel
 import com.wevx.dealershipmanagement.presentation.home.getSubDistrict.SubDistrictViewModel
 import com.wevx.dealershipmanagement.utils.LocalDatabase.divisions
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
@@ -31,6 +33,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private val subDistrictViewModel: SubDistrictViewModel by viewModels()
     private val areaViewModel: AreaViewModel by viewModels()
     private val homeViewModel: HomeViewModel by viewModels()
+
+    private val storeOwnerViewModel: StoreOwnerViewModel by viewModels()
+
+    private val storeByDisViewModel: StoreOwnerByDistrictViewModel by viewModels()
+
 
     private lateinit var storeOwnerAdapter: StoreOwnerAdapter
 
@@ -95,20 +102,26 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                     binding.spinnerDistrict.setSelection(homeViewModel.selectedDistrictIndex)
                 }
 
-                binding.spinnerDistrict.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                        homeViewModel.selectedDistrictIndex = position
-                        if (position == 0) {
-                            resetSpinners("district")
-                            return
+                binding.spinnerDistrict.onItemSelectedListener =
+                    object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(
+                            parent: AdapterView<*>,
+                            view: View?,
+                            position: Int,
+                            id: Long
+                        ) {
+                            homeViewModel.selectedDistrictIndex = position
+                            if (position == 0) {
+                                resetSpinners("district")
+                                return
+                            }
+                            homeViewModel.selectedDistrictId = list[position - 1].disNo
+                            subDistrictViewModel.getSubDistrict(homeViewModel.selectedDistrictId)
+                            resetSpinners("subdistrict")
                         }
-                        homeViewModel.selectedDistrictId = list[position - 1].disNo
-                        subDistrictViewModel.getSubDistrict(homeViewModel.selectedDistrictId)
-                        resetSpinners("subdistrict")
-                    }
 
-                    override fun onNothingSelected(parent: AdapterView<*>) {}
-                }
+                        override fun onNothingSelected(parent: AdapterView<*>) {}
+                    }
             }
         }
     }
@@ -125,20 +138,26 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                     binding.spinnerSubdistrict.setSelection(homeViewModel.selectedSubDistrictIndex)
                 }
 
-                binding.spinnerSubdistrict.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                        homeViewModel.selectedSubDistrictIndex = position
-                        if (position == 0) {
-                            resetSpinners("subdistrict")
-                            return
+                binding.spinnerSubdistrict.onItemSelectedListener =
+                    object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(
+                            parent: AdapterView<*>,
+                            view: View?,
+                            position: Int,
+                            id: Long
+                        ) {
+                            homeViewModel.selectedSubDistrictIndex = position
+                            if (position == 0) {
+                                resetSpinners("subdistrict")
+                                return
+                            }
+                            homeViewModel.selectedSubDistrictId = list[position - 1].subDisNo
+                            areaViewModel.getArea(homeViewModel.selectedSubDistrictId)
+                            resetSpinners("area")
                         }
-                        homeViewModel.selectedSubDistrictId = list[position - 1].subDisNo
-                        areaViewModel.getArea(homeViewModel.selectedSubDistrictId)
-                        resetSpinners("area")
-                    }
 
-                    override fun onNothingSelected(parent: AdapterView<*>) {}
-                }
+                        override fun onNothingSelected(parent: AdapterView<*>) {}
+                    }
             }
         }
     }
@@ -155,20 +174,26 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                     binding.spinnerArea.setSelection(homeViewModel.selectedAreaIndex)
                 }
 
-                binding.spinnerArea.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                        homeViewModel.selectedAreaIndex = position
-                        if (position == 0) {
-                            binding.rvAllCustomer.visibility = View.GONE
-                            binding.tvNoStoreFound.visibility = View.GONE
-                            return
+                binding.spinnerArea.onItemSelectedListener =
+                    object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(
+                            parent: AdapterView<*>,
+                            view: View?,
+                            position: Int,
+                            id: Long
+                        ) {
+                            homeViewModel.selectedAreaIndex = position
+                            if (position == 0) {
+                                binding.rvAllCustomer.visibility = View.GONE
+                                binding.tvNoStoreFound.visibility = View.GONE
+                                return
+                            }
+                            homeViewModel.selectedAreaId = list[position - 1].areaNo
+                            homeViewModel.fetchStoreOwners(homeViewModel.selectedAreaId)
                         }
-                        homeViewModel.selectedAreaId = list[position - 1].areaNo
-                        homeViewModel.fetchStoreOwners(homeViewModel.selectedAreaId)
-                    }
 
-                    override fun onNothingSelected(parent: AdapterView<*>) {}
-                }
+                        override fun onNothingSelected(parent: AdapterView<*>) {}
+                    }
             }
         }
     }
@@ -181,23 +206,29 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             binding.spinnerDivision.setSelection(homeViewModel.selectedDivisionIndex)
         }
 
-        binding.spinnerDivision.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                rotateIcon(binding.divisionDropdownIcon, false)
-                homeViewModel.selectedDivisionIndex = position
+        binding.spinnerDivision.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    rotateIcon(binding.divisionDropdownIcon, false)
+                    homeViewModel.selectedDivisionIndex = position
 
-                if (position == 0) {
-                    resetSpinners("division")
-                    return
+                    if (position == 0) {
+                        resetSpinners("division")
+                        return
+                    }
+
+                    homeViewModel.selectedDivisionId = divisions[position - 1].divisionId
+                    districtViewModel.getDistrict(homeViewModel.selectedDivisionId)
+                    resetSpinners("district")
                 }
 
-                homeViewModel.selectedDivisionId = divisions[position - 1].divisionId
-                districtViewModel.getDistrict(homeViewModel.selectedDivisionId)
-                resetSpinners("district")
+                override fun onNothingSelected(parent: AdapterView<*>) {}
             }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-        }
     }
 
     private fun setupInitialSpinners() {
@@ -262,6 +293,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 disableSpinner(binding.spinnerSubdistrict)
                 disableSpinner(binding.spinnerArea)
             }
+
             "district" -> {
                 homeViewModel.selectedSubDistrictIndex = 0
                 homeViewModel.selectedAreaIndex = 0
@@ -271,6 +303,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 disableSpinner(binding.spinnerSubdistrict)
                 disableSpinner(binding.spinnerArea)
             }
+
             "subdistrict" -> {
                 homeViewModel.selectedAreaIndex = 0
 
@@ -281,9 +314,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     override fun selectCustomer(userId: String, id: String) {
-        findNavController().navigate(R.id.action_homeFragment_to_storeOwnerDetailsFragment)
+        val action = HomeFragmentDirections.actionHomeFragmentToStoreOwnerDetailsFragment(id)
+        findNavController().navigate(action)
     }
 
-    override fun editClickListener(storeOwnerModel: StoreOwnerModel) {}
-    override fun deleteClickListener(storeOwnerModel: StoreOwnerModel) {}
+    override fun editClickListener(storeOwnerModel: StoreOwnerModel) {
+
+    }
+
+    override fun deleteClickListener(storeOwnerModel: StoreOwnerModel) {
+
+    }
 }
