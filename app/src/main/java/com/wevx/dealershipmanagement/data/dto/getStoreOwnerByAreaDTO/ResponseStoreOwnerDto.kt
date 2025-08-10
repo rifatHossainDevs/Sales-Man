@@ -1,4 +1,4 @@
-package com.wevx.dealershipmanagement.data.dto.getStoreOwnerDTO
+package com.wevx.dealershipmanagement.data.dto.getStoreOwnerByAreaDTO
 
 import kotlinx.serialization.Serializable
 import androidx.annotation.Keep
