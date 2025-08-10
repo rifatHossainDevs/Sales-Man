@@ -1,5 +1,6 @@
 package com.wevx.dealershipmanagement.data.remote.storeOwner
 
+import com.wevx.dealershipmanagement.data.dto.getStoreById.ResponseGetStoreById
 import com.wevx.dealershipmanagement.data.dto.getStoreOwnerByAreaDTO.ResponseStoreOwnerDto
 import com.wevx.dealershipmanagement.data.dto.getStoreOwnerBySubDisDto.ResponseGetStoreOwnerBySubDistrictDTO
 import retrofit2.Response
@@ -15,5 +16,5 @@ interface StoreOwnerApiService {
     suspend fun getStoreOwnerBySubDis(@Path("disId") disId: Int): Response<ResponseGetStoreOwnerBySubDistrictDTO>
 
     @GET("stores/get-store-by-id/{id}")
-    suspend fun getStoreOwnerById(@Path("id") id: String): Response<ResponseGetStoreOwnerBySubDistrictDTO>
+    suspend fun getStoreOwnerById(@Path("id") id: String): Response<ResponseGetStoreById>
 }
