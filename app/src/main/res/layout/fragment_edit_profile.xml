@@ -1,22 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".presentation.profile.EditProfileFragment">
+    android:background="@color/white"
+    android:padding="@dimen/_16sdp"
+    tools:context=".presentation.auth.updateProfile.UpdateProfileFragment">
 
-    <TextView
+    <ImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="@dimen/_120sdp"
+        android:src="@drawable/logo1"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_32sdp"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:fontFamily="@font/bebas_neue"
+        android:gravity="center"
+        android:text="Update Profile"
+        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+        android:textColor="@color/primary"
+        android:textSize="@dimen/_24sdp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:id="@+id/textView"
-        android:textSize="@dimen/_16ssp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_logo" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title">
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/et_full_name_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_24sdp"
+            android:hint="Full Name"
+            android:textColorHint="#A9A9A9"
+            app:boxStrokeWidth="2dp"
+            app:counterTextAppearance="@style/TextAppearance.Material3.TitleSmall"
+            app:endIconMode="clear_text"
+            app:helperTextTextColor="#FF0000">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_full_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableStart="@drawable/ic_user_name_24"
+                android:drawablePadding="4dp"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/et_email_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:hint="Email"
+            android:textColorHint="#A9A9A9"
+            app:boxStrokeWidth="2dp"
+            app:counterTextAppearance="@style/TextAppearance.Material3.TitleSmall"
+            app:endIconMode="clear_text"
+            app:helperTextTextColor="#FF0000">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_email"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableStart="@drawable/ic_email_24"
+                android:drawablePadding="4dp"
+                android:inputType="textEmailAddress" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/et_phone_number_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:hint="Phone Number"
+            android:textColorHint="#A9A9A9"
+            app:boxStrokeWidth="2dp"
+            app:counterTextAppearance="@style/TextAppearance.Material3.TitleSmall"
+            app:endIconMode="clear_text"
+            app:helperTextTextColor="#FF0000">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_phone_number"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableStart="@drawable/ic_phone_24"
+                android:drawablePadding="4dp"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/et_nid_number_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:hint="@string/national_id_card"
+            android:textColorHint="#A9A9A9"
+            app:boxStrokeWidth="2dp"
+            app:counterTextAppearance="@style/TextAppearance.Material3.TitleSmall"
+            app:endIconMode="clear_text"
+            app:helperTextTextColor="#FF0000">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_nid_number"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableStart="@drawable/ic_nid_24"
+                android:drawablePadding="4dp"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_update"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Edit Profile"/>
+        android:layout_marginTop="@dimen/_24sdp"
+        android:layout_marginBottom="@dimen/_16sdp"
+        android:background="@drawable/btn_create_account"
+        android:paddingHorizontal="@dimen/_8sdp"
+        android:text="Update Profile"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_14sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
