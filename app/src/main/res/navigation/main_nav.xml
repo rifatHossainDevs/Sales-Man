@@ -63,6 +63,11 @@
         android:name="com.wevx.dealershipmanagement.presentation.storeOwnerDetails.StoreOwnerDetailsFragment"
         android:label="fragment_store_owner_details"
         tools:layout="@layout/fragment_store_owner_details" >
+
+        <argument
+            android:name="id"
+            app:argType="string" />
+
         <action
             android:id="@+id/action_storeOwnerDetailsFragment_to_productsFragment"
             app:destination="@id/productsFragment" />
