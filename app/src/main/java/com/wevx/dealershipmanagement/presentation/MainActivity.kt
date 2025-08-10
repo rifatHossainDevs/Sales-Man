@@ -19,6 +19,7 @@ import com.wevx.dealershipmanagement.presentation.adapter.DrawerItemAdapter
 import com.wevx.dealershipmanagement.presentation.auth.logout.LogoutViewModel
 import com.wevx.dealershipmanagement.presentation.auth.profile.GetProfileViewModel
 import com.wevx.dealershipmanagement.utils.Constants.CHANGE_PASSWORD
+import com.wevx.dealershipmanagement.utils.Constants.EDIT_PROFILE
 import com.wevx.dealershipmanagement.utils.Constants.STOCK_AVAILABILITY
 import com.wevx.dealershipmanagement.utils.TokenManager
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
@@ -34,12 +35,13 @@ class MainActivity : AppCompatActivity() {
 
     private val logoutViewModel: LogoutViewModel by viewModels()
     private lateinit var token: String
+    private lateinit var tokenManager: TokenManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val tokenManager = TokenManager(this)
+        tokenManager = TokenManager(this)
         token = "Bearer ${tokenManager.getAccessToken()}"
         profileViewModel.getProfile(token)
 
@@ -88,6 +90,7 @@ class MainActivity : AppCompatActivity() {
             logoutState.data?.let { logoutModel ->
                 if (logoutModel.success == true) {
                     Toast.makeText(this, "Logout Successfully", Toast.LENGTH_SHORT).show()
+                    tokenManager.clearTokens()
                     startActivity(Intent(this@MainActivity, AuthActivity::class.java))
                     finish()
                 }
@@ -128,13 +131,19 @@ class MainActivity : AppCompatActivity() {
                     drawerLayout.closeDrawer(GravityCompat.START)
                 }*/
 
-                STOCK_AVAILABILITY->{
+                STOCK_AVAILABILITY -> {
                     navController.navigate(R.id.stockAvailabilityFragment)
                     drawerLayout.closeDrawer(GravityCompat.START)
 
                 }
+
                 CHANGE_PASSWORD -> {
                     navController.navigate(R.id.changePasswordFragment)
+                    drawerLayout.closeDrawer(GravityCompat.START)
+                }
+
+                EDIT_PROFILE -> {
+                    navController.navigate(R.id.editProfileFragment)
                     drawerLayout.closeDrawer(GravityCompat.START)
                 }
 
