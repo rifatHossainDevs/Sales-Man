@@ -1,5 +1,6 @@
 package com.wevx.dealershipmanagement.data.repository_impl.storeOwner
 
+import com.wevx.dealershipmanagement.data.dto.getStoreById.ResponseGetStoreById
 import com.wevx.dealershipmanagement.data.dto.getStoreOwnerByAreaDTO.ResponseStoreOwnerDto
 import com.wevx.dealershipmanagement.data.dto.getStoreOwnerBySubDisDto.ResponseGetStoreOwnerBySubDistrictDTO
 import com.wevx.dealershipmanagement.data.remote.storeOwner.StoreOwnerApiService
@@ -20,8 +21,9 @@ class StoreOwnerRepositoryImpl @Inject constructor(
         return storeOwnerApiService.getStoreOwnerBySubDis(disId)
     }
 
-    override suspend fun getStoreOwnerId(id: String): Response<ResponseGetStoreOwnerBySubDistrictDTO> {
+    override suspend fun getStoreOwnerId(id: String): Response<ResponseGetStoreById> {
         return storeOwnerApiService.getStoreOwnerById(id)
+
 
     }
 
