@@ -20,6 +20,16 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
     private val loginViewModel: LoginViewModel by viewModels()
 
+    override fun shouldInitialize(): Boolean {
+        val tokenManager = TokenManager(requireContext())
+        if (tokenManager.hasValidTokens()) {
+            startActivity(Intent(requireContext(), MainActivity::class.java))
+            requireActivity().finish()
+            return false
+        }
+        return true
+    }
+
     override fun setAllClickListener() {
 
         allButtonClickListener()
