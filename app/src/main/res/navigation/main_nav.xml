@@ -89,7 +89,11 @@
         tools:layout="@layout/fragment_payment_history" />
     <fragment
         android:id="@+id/editProfileFragment"
-        android:name="com.wevx.dealershipmanagement.presentation.profile.EditProfileFragment"
+        android:name="com.wevx.dealershipmanagement.presentation.auth.updateProfile.UpdateProfileFragment"
         android:label="fragment_edit_profile"
-        tools:layout="@layout/fragment_edit_profile" />
+        tools:layout="@layout/fragment_edit_profile" >
+        <action
+            android:id="@+id/action_editProfileFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>
