@@ -8,6 +8,8 @@ import com.wevx.dealershipmanagement.data.dto.logoutDTO.ResponseLogoutDto
 import com.wevx.dealershipmanagement.data.dto.profileDTO.ResponseProfileDto
 import com.wevx.dealershipmanagement.data.dto.registrationDto.RequestRegistrationDto
 import com.wevx.dealershipmanagement.data.dto.registrationDto.ResponseRegistrationDTO
+import com.wevx.dealershipmanagement.data.dto.updateProfileDto.RequestUpdateProfile
+import com.wevx.dealershipmanagement.data.dto.updateProfileDto.ResponseUpdateProfileDto
 import com.wevx.dealershipmanagement.data.remote.auth.AuthApiService
 import com.wevx.dealershipmanagement.domain.repository.auth.AuthRepository
 import jakarta.inject.Inject
@@ -38,6 +40,14 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun logout(token: String): Response<ResponseLogoutDto> {
         return authApiService.logout(token)
+
+    }
+
+    override suspend fun updateProfile(
+        requestUpdateProfile: RequestUpdateProfile,
+        token: String
+    ): Response<ResponseUpdateProfileDto> {
+        return authApiService.updateProfile(token, requestUpdateProfile)
 
     }
 
