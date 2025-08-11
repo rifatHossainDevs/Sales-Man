@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.bumptech.glide.Glide
+import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.databinding.ItemLayoutProductBinding
 import com.wevx.dealershipmanagement.domain.models.CartItem
 
@@ -39,14 +40,16 @@ class ProductAdapter(
             tvProductName.text = cartItem.product.productName
             tvBrandName.text = cartItem.product.brandName
             tvPrice.text = "Price: ${cartItem.product.price}"
-            Glide.with(holder.itemView.context)
-                .load(cartItem.product.imageUrl)
-                .into(ivProduct)
 
             // Remove previous TextWatcher if any
             if (etQuantity.tag is TextWatcher) {
                 etQuantity.removeTextChangedListener(etQuantity.tag as TextWatcher)
             }
+            Glide.with(holder.itemView.context)
+                .load(cartItem.product.imageUrl.replace("http://", "https://"))
+                .placeholder(R.drawable.ic_product_24)
+                .error(R.drawable.ic_product_24)
+                .into(ivProduct)
 
             // Update EditText text only if not focused (to avoid cursor jumping)
             if (!etQuantity.hasFocus()) {

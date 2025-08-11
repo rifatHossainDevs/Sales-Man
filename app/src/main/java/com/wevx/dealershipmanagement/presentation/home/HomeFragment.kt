@@ -2,7 +2,6 @@ package com.wevx.dealershipmanagement.presentation.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
@@ -18,7 +17,6 @@ import com.wevx.dealershipmanagement.presentation.adapter.CustomSpinnerAdapter
 import com.wevx.dealershipmanagement.presentation.adapter.StoreOwnerAdapter
 import com.wevx.dealershipmanagement.presentation.home.getArea.AreaViewModel
 import com.wevx.dealershipmanagement.presentation.home.getDistrict.DistrictViewModel
-import com.wevx.dealershipmanagement.presentation.home.getStoreOwnerByArea.StoreOwnerViewModel
 import com.wevx.dealershipmanagement.presentation.home.getStoreOwnerByDistrict.StoreOwnerByDistrictViewModel
 import com.wevx.dealershipmanagement.presentation.home.getSubDistrict.SubDistrictViewModel
 import com.wevx.dealershipmanagement.utils.LocalDatabase.divisions
@@ -34,8 +32,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private val areaViewModel: AreaViewModel by viewModels()
     private val homeViewModel: HomeViewModel by viewModels()
 
-    private val storeOwnerViewModel: StoreOwnerViewModel by viewModels()
-
     private val storeByDisViewModel: StoreOwnerByDistrictViewModel by viewModels()
 
 
@@ -45,6 +41,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         binding.btnAddUser.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_addCustomerFragment)
         }
+
     }
 
     override fun allObserver() {
@@ -52,6 +49,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         observeSubDistricts()
         observeAreas()
         observeStoreOwners()
+        observeStoreOwnersBySubDis()
+    }
+
+    private fun observeStoreOwnersBySubDis() {
+        storeByDisViewModel.storeOwnerByDisState.collectInLifecycle(viewLifecycleOwner){storeOwnerByDisState->
+            if (storeOwnerByDisState.loading) return@collectInLifecycle
+            storeOwnerByDisState.data?.let { storeOwnerBySubDisList ->
+                storeOwnerAdapter.updateData(storeOwnerBySubDisList)
+            }
+            storeOwnerByDisState.error?.let {
+                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+            }
+
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

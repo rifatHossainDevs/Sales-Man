@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.bumptech.glide.Glide
+import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.databinding.ItemLayoutCustomerBinding
 import com.wevx.dealershipmanagement.domain.models.StoreOwnerModel
 
@@ -40,7 +41,9 @@ class StoreOwnerAdapter(
             tvAddress.text = storeOwner.address
 
             Glide.with(holder.itemView.context)
-                .load(storeOwner.storeImg)
+                .load(storeOwner.storeImg.replace("http://", "https://"))
+                .placeholder(R.drawable.ic_store_24)
+                .error(R.drawable.ic_store_24)
                 .into(ivStore)
 
             root.setOnClickListener {

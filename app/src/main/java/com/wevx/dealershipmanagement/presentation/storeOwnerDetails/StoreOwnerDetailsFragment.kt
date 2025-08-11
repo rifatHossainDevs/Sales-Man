@@ -5,6 +5,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.load
+import com.bumptech.glide.Glide
 import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.core.common.BaseFragment
 import com.wevx.dealershipmanagement.databinding.FragmentStoreOwnerDetailsBinding
@@ -52,10 +53,17 @@ class StoreOwnerDetailsFragment : BaseFragment<FragmentStoreOwnerDetailsBinding>
             }
 
             storeOwnerByIdState.data?.let {
-                binding.tvStoreName.text = it.storeName
-                binding.tvOwnerName.text = it.storeOwnerName
-                binding.tvAddress.text = it.address
-                binding.ivStoreOwner.load(it.storeOwnerAvatar)
+                binding.apply {
+                    tvStoreName.text = it.storeName
+                    tvOwnerName.text = it.storeOwnerName
+                    tvAddress.text = it.address
+                    Glide.with(requireContext())
+                        .load(it.storeOwnerAvatar.replace("http://", "https://"))
+                        .placeholder(R.drawable.ic_profile_image_24)
+                        .error(R.drawable.ic_edit_profile)
+                        .into(ivStoreOwner)
+                }
+
 
             }
         }

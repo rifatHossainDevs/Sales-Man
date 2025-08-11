@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.databinding.ItemLayoutProductStockAvailabilityBinding
 import com.wevx.dealershipmanagement.domain.models.ProductModel
 
@@ -45,7 +46,9 @@ class StockAvailabilityAdapter(val products: List<ProductModel>) :
                     tvIsActive.text = "Inactive"
                 }
                 Glide.with(holder.itemView.context)
-                    .load(product.imageUrl)
+                    .load(product.imageUrl.replace("http://", "https://"))
+                    .placeholder(R.drawable.ic_product_24)
+                    .error(R.drawable.ic_product_24)
                     .into(ivProduct)
             }
         }

@@ -2,6 +2,7 @@ package com.wevx.dealershipmanagement.presentation
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -12,6 +13,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import coil.load
+import com.bumptech.glide.Glide
 import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.databinding.ActivityMainBinding
 import com.wevx.dealershipmanagement.utils.LocalDatabase
@@ -109,7 +111,13 @@ class MainActivity : AppCompatActivity() {
                 binding.tvSellerName.text = profileModel.name
                 binding.tvSellerEmail.text = profileModel.email
                 binding.tvSellerPhone.text = profileModel.phone
-                binding.ivSeller.load(profileModel.avatar)
+                Log.d("profileImage", "profileObserver: ${profileModel.avatar}")
+                Glide.with(this@MainActivity)
+                    .load(profileModel.avatar.replace("http://", "https://"))
+                    .placeholder(R.drawable.ic_profile_image_24)
+                    .error(R.drawable.ic_edit_profile)
+                    .into(binding.ivSeller)
+
             }
         }
     }
