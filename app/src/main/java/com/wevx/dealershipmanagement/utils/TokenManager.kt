@@ -9,7 +9,7 @@ class TokenManager(context: Context) {
     private val sharedPreferences = context.getSharedPreferences("saveNote", Context.MODE_PRIVATE)
 
     fun saveToken(accessToken: String, refreshToken: String) {
-        sharedPreferences.edit {
+        sharedPreferences.edit(commit = true) {
             putString(ACCESS_TOKEN, accessToken)
             putString(REFRESH_TOKEN, refreshToken)
         }

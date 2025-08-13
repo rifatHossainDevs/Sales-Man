@@ -9,6 +9,7 @@ import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.core.common.BaseFragment
 import com.wevx.dealershipmanagement.data.dto.loginDto.RequestLogin
 import com.wevx.dealershipmanagement.databinding.FragmentLoginBinding
+import com.wevx.dealershipmanagement.presentation.auth.refreshToken.RefreshTokenViewModel
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
 import com.wevx.dealershipmanagement.utils.extract
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,6 +19,7 @@ import com.wevx.dealershipmanagement.utils.TokenManager
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
 
     private val loginViewModel: LoginViewModel by viewModels()
+    private val refreshTokenViewModel: RefreshTokenViewModel by viewModels ()
 
     override fun shouldInitialize(): Boolean {
         val tokenManager = TokenManager(requireContext())
@@ -36,6 +38,26 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     }
 
     override fun allObserver() {
+        loginObserver()
+        refreshTokenObserver()
+
+    }
+
+    private fun refreshTokenObserver() {
+        refreshTokenViewModel.refreshTokenState.collectInLifecycle(viewLifecycleOwner) { refreshTokenState ->
+            if (refreshTokenState.loading) return@collectInLifecycle
+
+            refreshTokenState.error?.let {
+                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+            }
+
+            refreshTokenState.data?.let {
+
+            }
+        }
+    }
+
+    private fun loginObserver() {
         loginViewModel.loginState.collectInLifecycle(viewLifecycleOwner) { loginState ->
             if (loginState.loading) return@collectInLifecycle
 

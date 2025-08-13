@@ -6,6 +6,7 @@ import com.wevx.dealershipmanagement.data.dto.loginDto.RequestLogin
 import com.wevx.dealershipmanagement.data.dto.loginDto.ResponseLoginDTO
 import com.wevx.dealershipmanagement.data.dto.logoutDTO.ResponseLogoutDto
 import com.wevx.dealershipmanagement.data.dto.profileDTO.ResponseProfileDto
+import com.wevx.dealershipmanagement.data.dto.refreshTokenDto.ResponseRefreshTokenDTO
 import com.wevx.dealershipmanagement.data.dto.registrationDto.RequestRegistrationDto
 import com.wevx.dealershipmanagement.data.dto.registrationDto.ResponseRegistrationDTO
 import com.wevx.dealershipmanagement.data.dto.updateProfileDto.RequestUpdateProfile
@@ -42,5 +43,8 @@ interface AuthApiService {
         @Header("Authorization") token: String,
         @Body requestUpdateProfile: RequestUpdateProfile
     ): Response<ResponseUpdateProfileDto>
+
+    @POST("users/refresh-token")
+    suspend fun refreshToken(@Header("Authorization") token: String): Response<ResponseRefreshTokenDTO>
 
 }

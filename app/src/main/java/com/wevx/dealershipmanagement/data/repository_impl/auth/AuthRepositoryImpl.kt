@@ -6,6 +6,7 @@ import com.wevx.dealershipmanagement.data.dto.loginDto.RequestLogin
 import com.wevx.dealershipmanagement.data.dto.loginDto.ResponseLoginDTO
 import com.wevx.dealershipmanagement.data.dto.logoutDTO.ResponseLogoutDto
 import com.wevx.dealershipmanagement.data.dto.profileDTO.ResponseProfileDto
+import com.wevx.dealershipmanagement.data.dto.refreshTokenDto.ResponseRefreshTokenDTO
 import com.wevx.dealershipmanagement.data.dto.registrationDto.RequestRegistrationDto
 import com.wevx.dealershipmanagement.data.dto.registrationDto.ResponseRegistrationDTO
 import com.wevx.dealershipmanagement.data.dto.updateProfileDto.RequestUpdateProfile
@@ -41,6 +42,10 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun logout(token: String): Response<ResponseLogoutDto> {
         return authApiService.logout(token)
 
+    }
+
+    override suspend fun refreshToken(token: String): Response<ResponseRefreshTokenDTO> {
+        return authApiService.refreshToken(token)
     }
 
     override suspend fun updateProfile(
