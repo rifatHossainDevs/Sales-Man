@@ -1,4 +1,4 @@
-package com.wevx.dealershipmanagement.data.paymentDto
+package com.wevx.dealershipmanagement.data.dto.paymentDto
 
 
 import kotlinx.serialization.SerialName

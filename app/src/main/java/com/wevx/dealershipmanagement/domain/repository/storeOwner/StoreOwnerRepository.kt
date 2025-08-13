@@ -1,11 +1,9 @@
 package com.wevx.dealershipmanagement.domain.repository.storeOwner
 
-import com.wevx.dealershipmanagement.data.createStoreDTO.ResponseCreateStoreDTO
+import com.wevx.dealershipmanagement.data.dto.createStoreDTO.ResponseCreateStoreDTO
 import com.wevx.dealershipmanagement.data.dto.getStoreById.ResponseGetStoreById
 import com.wevx.dealershipmanagement.data.dto.getStoreOwnerByAreaDTO.ResponseStoreOwnerDto
 import com.wevx.dealershipmanagement.data.dto.getStoreOwnerBySubDisDto.ResponseGetStoreOwnerBySubDistrictDTO
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import retrofit2.Response
 import java.io.File
 

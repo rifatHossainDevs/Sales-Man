@@ -1,7 +1,6 @@
-package com.wevx.dealershipmanagement.data.createStoreDTO
+package com.wevx.dealershipmanagement.data.dto.createStoreDTO
 
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName

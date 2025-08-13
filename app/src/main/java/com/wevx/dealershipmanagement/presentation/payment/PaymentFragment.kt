@@ -12,24 +12,28 @@ import androidx.navigation.fragment.navArgs
 import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.utils.SharedData
 import com.wevx.dealershipmanagement.core.common.BaseFragment
-import com.wevx.dealershipmanagement.data.createOrderDto.RequestCreateOrderDTO
+import com.wevx.dealershipmanagement.data.dto.createOrderDto.RequestCreateOrderDTO
+import com.wevx.dealershipmanagement.data.dto.paymentDto.RequestPaymentDTO
+import com.wevx.dealershipmanagement.data.dto.shipmentDto.RequestShipmentDTO
 import com.wevx.dealershipmanagement.databinding.FragmentPaymentBinding
-import com.wevx.dealershipmanagement.utils.LocalDatabase.products
 import com.wevx.dealershipmanagement.domain.models.CartItem
 import com.wevx.dealershipmanagement.presentation.adapter.ProductCartAdapter
 import com.wevx.dealershipmanagement.presentation.auth.profile.GetProfileViewModel
 import com.wevx.dealershipmanagement.presentation.order.createOrder.CreateOrderViewModel
+import com.wevx.dealershipmanagement.presentation.order.createPayment.CreatePaymentViewModel
+import com.wevx.dealershipmanagement.presentation.order.createShipment.CreateShipmentViewModel
 import com.wevx.dealershipmanagement.presentation.product.ProductsFragmentArgs
 import com.wevx.dealershipmanagement.utils.TokenManager
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
 import com.wevx.dealershipmanagement.utils.extract
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.internal.SingleCheck
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 import kotlin.getValue
 import kotlin.properties.Delegates
+
 @AndroidEntryPoint
 class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBinding::inflate) {
     private lateinit var adapter: ProductCartAdapter
@@ -37,12 +41,15 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
     private lateinit var selectedDate: String
     private val createOrderViewModel: CreateOrderViewModel by viewModels()
     private val currentUserViewModel: GetProfileViewModel by viewModels()
+    private val createPaymentViewModel: CreatePaymentViewModel by viewModels()
+    private val createShipmentViewModel: CreateShipmentViewModel by viewModels()
     private val args: ProductsFragmentArgs by navArgs()
     private lateinit var customerId: String
     private lateinit var salesManId: String
     lateinit var token: String
     private var total by Delegates.notNull<Double>()
     private lateinit var expectedShipDateIso: String
+    private lateinit var orderId: String
 
     override fun setAllClickListener() {
         customerId = args.id
@@ -57,6 +64,35 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
     override fun allObserver() {
         createOrderObserver()
         currentUserObserver()
+        createPaymentObserver()
+        createShipmentObserver()
+    }
+
+    private fun createShipmentObserver() {
+        createShipmentViewModel.createShipmentState.collectInLifecycle(viewLifecycleOwner) { createShipmentState ->
+            if (createShipmentState.loading) return@collectInLifecycle
+
+            createShipmentState.error?.let {
+                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+            }
+            createShipmentState.data?.let {
+                Toast.makeText(requireContext(), "Shipment Created", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+    }
+
+    private fun createPaymentObserver() {
+        createPaymentViewModel.createPaymentState.collectInLifecycle(viewLifecycleOwner) { createPaymentState ->
+            if (createPaymentState.loading) return@collectInLifecycle
+            createPaymentState.error?.let {
+                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+            }
+            createPaymentState.data?.let {
+                Toast.makeText(requireContext(), "Payment Created", Toast.LENGTH_SHORT).show()
+            }
+
+        }
     }
 
     private fun currentUserObserver() {
@@ -79,6 +115,18 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
             createOrderState.data?.let {
+                orderId = it.data?.id.toString()
+
+                val requestPaymentDTO =
+                    RequestPaymentDTO(total, orderId, "Cash", "Pending", salesManId)
+
+                val requestShipmentDTO = RequestShipmentDTO(expectedShipDateIso, orderId, "Pending")
+
+                val bearerToken = "Bearer $token"
+
+                createPaymentViewModel.createPayment(requestPaymentDTO, bearerToken)
+                createShipmentViewModel.createShipment(requestShipmentDTO, bearerToken)
+
                 Toast.makeText(requireContext(), "Order Created", Toast.LENGTH_SHORT).show()
                 findNavController().navigate(R.id.action_paymentFragment_to_receiptFragment)
             }
@@ -115,10 +163,20 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
                     )
                 }
 
+                fun generateInvoiceNumber(): String {
+                    val dateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+                    val datePart = dateFormat.format(Date())
+                    val timePartBase36 = System.currentTimeMillis().toString(36).uppercase()
+                    val chars = ('A'..'Z') + ('0'..'9')
+                    val randomPart = (1..2).map { chars.random() }.joinToString("")
+
+                    return "INV-$datePart-$timePartBase36$randomPart"
+                }
+
                 val requestCreateOrderDTO = RequestCreateOrderDTO(
                     customerId = customerId,
                     salesmanId = salesManId,
-                    invoiceNumber = "demoinvoiceNumber${System.currentTimeMillis()}",
+                    invoiceNumber = generateInvoiceNumber(), //INV-20250814-KF4Z9AX7, INV-20250814-KF4Z9B2P
                     totalPrice = total,
                     amountPaid = 0.0,
                     paymentDue = total,
@@ -127,9 +185,10 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
                     expectedShipDate = expectedShipDateIso
                 )
 
-                val bearerToken = "Bearer $token"
 
+                val bearerToken = "Bearer $token"
                 createOrderViewModel.createOrder(requestCreateOrderDTO, bearerToken)
+
 
             }
 
@@ -162,10 +221,7 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
 
 
     private fun checkAllFieldValidity(
-        expectedShipmentDate: String,
-        shippingAddress: String,
-        cash: RadioButton,
-        check: CheckBox
+        expectedShipmentDate: String, shippingAddress: String, cash: RadioButton, check: CheckBox
     ): Boolean {
 
         if (expectedShipmentDate.isEmpty()) {

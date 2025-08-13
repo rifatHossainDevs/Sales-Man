@@ -1,6 +1,6 @@
 package com.wevx.dealershipmanagement.data.remote.storeOwner
 
-import com.wevx.dealershipmanagement.data.createStoreDTO.ResponseCreateStoreDTO
+import com.wevx.dealershipmanagement.data.dto.createStoreDTO.ResponseCreateStoreDTO
 import com.wevx.dealershipmanagement.data.dto.getStoreById.ResponseGetStoreById
 import com.wevx.dealershipmanagement.data.dto.getStoreOwnerByAreaDTO.ResponseStoreOwnerDto
 import com.wevx.dealershipmanagement.data.dto.getStoreOwnerBySubDisDto.ResponseGetStoreOwnerBySubDistrictDTO

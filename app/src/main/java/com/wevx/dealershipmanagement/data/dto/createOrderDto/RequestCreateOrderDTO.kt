@@ -1,4 +1,4 @@
-package com.wevx.dealershipmanagement.data.createOrderDto
+package com.wevx.dealershipmanagement.data.dto.createOrderDto
 
 import kotlinx.serialization.Serializable
 import androidx.annotation.Keep
