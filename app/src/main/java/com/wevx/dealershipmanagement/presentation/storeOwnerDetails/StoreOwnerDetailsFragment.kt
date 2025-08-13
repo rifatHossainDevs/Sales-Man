@@ -34,10 +34,14 @@ class StoreOwnerDetailsFragment : BaseFragment<FragmentStoreOwnerDetailsBinding>
 
     private fun allButtonClickListener() {
         binding.btnCreateOrder.setOnClickListener {
-            findNavController().navigate(R.id.action_storeOwnerDetailsFragment_to_productsFragment)
+            val action =
+                StoreOwnerDetailsFragmentDirections.actionStoreOwnerDetailsFragmentToProductsFragment(
+                    userId
+                )
+            findNavController().navigate(action)
         }
         storeOwnerByIdViewModel.getStoreById(userId)
-        pendingOrderViewModel.getAllProduct("6892625886d113d59994c48a")
+        pendingOrderViewModel.getPendingOder("6892625886d113d59994c48a")
     }
 
     override fun allObserver() {

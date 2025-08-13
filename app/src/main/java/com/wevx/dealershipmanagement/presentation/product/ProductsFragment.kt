@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.wevx.dealershipmanagement.R
@@ -24,8 +25,10 @@ import com.wevx.dealershipmanagement.presentation.adapter.ProductCartAdapter
 import com.wevx.dealershipmanagement.presentation.product.getAllProduct.AllProductViewModel
 import com.wevx.dealershipmanagement.presentation.product.getCategory.CategoryViewModel
 import com.wevx.dealershipmanagement.presentation.product.productByCategory.ProductByCategoryViewModel
+import com.wevx.dealershipmanagement.presentation.storeOwnerDetails.StoreOwnerDetailsFragmentArgs
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.getValue
 
 @AndroidEntryPoint
 class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsBinding::inflate) {
@@ -43,13 +46,18 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
     private val productByCategoryViewModel: ProductByCategoryViewModel by viewModels()
 
     private val productViewModel: ProductViewModel by activityViewModels()
+    private val args: ProductsFragmentArgs by navArgs()
+    private lateinit var customerId: String
 
     private val cartItemMap = mutableMapOf<String, CartItem>()
 
     override fun setAllClickListener() {
+        customerId = args.id
         bottomSheetClickListener()
         categoryViewModel.getCategory()
         allProductViewModel.getAllProduct()
+
+
     }
 
     override fun allObserver() {
@@ -165,7 +173,8 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
 
         bottomSheetBinding.btnConfirm.setOnClickListener {
             bottomSheetDialog.dismiss()
-            findNavController().navigate(R.id.action_productsFragment_to_paymentFragment)
+            val action = ProductsFragmentDirections.actionProductsFragmentToPaymentFragment(customerId)
+            findNavController().navigate(action)
         }
     }
 

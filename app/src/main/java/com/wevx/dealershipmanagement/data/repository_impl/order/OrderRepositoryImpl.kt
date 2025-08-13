@@ -1,5 +1,7 @@
 package com.wevx.dealershipmanagement.data.repository_impl.order
 
+import com.wevx.dealershipmanagement.data.createOrderDto.RequestCreateOrderDTO
+import com.wevx.dealershipmanagement.data.createOrderDto.ResponseCreateOrderDTO
 import com.wevx.dealershipmanagement.data.dto.categoryDTO.ResponseCategoryDTO
 import com.wevx.dealershipmanagement.data.dto.pendingOrderDto.ResponsePendingOrderDTO
 import com.wevx.dealershipmanagement.data.dto.productDto.ResponseProductDTO
@@ -15,6 +17,10 @@ class OrderRepositoryImpl @Inject constructor(
 ): OrderRepository {
     override suspend fun getPendingOrdersByCustomer(customerId: String): Response<ResponsePendingOrderDTO> {
         return orderApiService.getPendingOrderByCustomer(customerId)
+    }
+
+    override suspend fun createOrder(requestCreateOrderDTO: RequestCreateOrderDTO, token: String): Response<ResponseCreateOrderDTO> {
+        return orderApiService.createOrder(requestCreateOrderDTO, token)
     }
 
 

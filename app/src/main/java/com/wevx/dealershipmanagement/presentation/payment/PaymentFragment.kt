@@ -3,43 +3,136 @@ package com.wevx.dealershipmanagement.presentation.payment
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.icu.util.Calendar
+import android.widget.CheckBox
+import android.widget.RadioButton
+import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.utils.SharedData
 import com.wevx.dealershipmanagement.core.common.BaseFragment
+import com.wevx.dealershipmanagement.data.createOrderDto.RequestCreateOrderDTO
 import com.wevx.dealershipmanagement.databinding.FragmentPaymentBinding
 import com.wevx.dealershipmanagement.utils.LocalDatabase.products
 import com.wevx.dealershipmanagement.domain.models.CartItem
 import com.wevx.dealershipmanagement.presentation.adapter.ProductCartAdapter
+import com.wevx.dealershipmanagement.presentation.auth.profile.GetProfileViewModel
+import com.wevx.dealershipmanagement.presentation.order.createOrder.CreateOrderViewModel
+import com.wevx.dealershipmanagement.presentation.product.ProductsFragmentArgs
+import com.wevx.dealershipmanagement.utils.TokenManager
+import com.wevx.dealershipmanagement.utils.collectInLifecycle
+import com.wevx.dealershipmanagement.utils.extract
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.internal.SingleCheck
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
-
+import java.util.TimeZone
+import kotlin.getValue
+import kotlin.properties.Delegates
+@AndroidEntryPoint
 class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBinding::inflate) {
     private lateinit var adapter: ProductCartAdapter
     lateinit var selectedItems: List<CartItem>
     private lateinit var selectedDate: String
+    private val createOrderViewModel: CreateOrderViewModel by viewModels()
+    private val currentUserViewModel: GetProfileViewModel by viewModels()
+    private val args: ProductsFragmentArgs by navArgs()
+    private lateinit var customerId: String
+    private lateinit var salesManId: String
+    lateinit var token: String
+    private var total by Delegates.notNull<Double>()
+    private lateinit var expectedShipDateIso: String
 
     override fun setAllClickListener() {
+        customerId = args.id
+        val tokenManager = TokenManager(requireContext())
+        token = tokenManager.getAccessToken().toString()
+        currentUserViewModel.getProfile(token)
         allSelectedProducts()
         buttonClickListener()
 
     }
 
     override fun allObserver() {
+        createOrderObserver()
+        currentUserObserver()
+    }
 
+    private fun currentUserObserver() {
+        currentUserViewModel.profileState.collectInLifecycle(viewLifecycleOwner) { currentUserState ->
+            if (currentUserState.loading) return@collectInLifecycle
+            currentUserState.error?.let {
+                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+            }
+
+            currentUserState.data?.let {
+                salesManId = it.id
+            }
+        }
+    }
+
+    private fun createOrderObserver() {
+        createOrderViewModel.createOrderState.collectInLifecycle(viewLifecycleOwner) { createOrderState ->
+            if (createOrderState.loading) return@collectInLifecycle
+            createOrderState.error?.let {
+                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+            }
+            createOrderState.data?.let {
+                Toast.makeText(requireContext(), "Order Created", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.action_paymentFragment_to_receiptFragment)
+            }
+
+        }
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    fun allSelectedProducts() {
+        selectedItems = SharedData.selectedProductList
+
+        adapter = ProductCartAdapter(selectedItems)
+        binding.recyclerProducts.adapter = adapter
+
+        total = SharedData.selectedProductList.sumOf { it.subtotal }
+        binding.tvTotal.text = "Total: %.2f".format(total)
     }
 
     private fun buttonClickListener() {
         binding.btnPayment.setOnClickListener {
-            if (selectedDate.isEmpty()){
-                val calendar = Calendar.getInstance()
-                calendar.add(Calendar.DAY_OF_YEAR, 1) // tomorrow
-                val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                selectedDate = sdf.format(calendar.time)
+
+            val expectedShipmentDate = binding.etExpectedShipmentDate.extract()
+            val shippingAddress = binding.etShippingAddress.extract()
+            val cash = binding.rbCash
+            val check = binding.checkboxConfirmation
+            if (checkAllFieldValidity(expectedShipmentDate, shippingAddress, cash, check)) {
+                val orderItems = SharedData.selectedProductList.map { cartItem ->
+                    RequestCreateOrderDTO.OrderItem(
+                        productId = cartItem.product.productId,
+                        purchaseQuantity = cartItem.purchaseQuantity.toInt(),
+                        priceAtPurchase = cartItem.product.price
+
+                    )
+                }
+
+                val requestCreateOrderDTO = RequestCreateOrderDTO(
+                    customerId = customerId,
+                    salesmanId = salesManId,
+                    invoiceNumber = "demoinvoiceNumber${System.currentTimeMillis()}",
+                    totalPrice = total,
+                    amountPaid = 0.0,
+                    paymentDue = total,
+                    shippingAddress = shippingAddress,
+                    orderItems = orderItems,
+                    expectedShipDate = expectedShipDateIso
+                )
+
+                val bearerToken = "Bearer $token"
+
+                createOrderViewModel.createOrder(requestCreateOrderDTO, bearerToken)
+
             }
 
-            findNavController().navigate(R.id.action_paymentFragment_to_receiptFragment)
         }
         binding.etExpectedShipmentDate.setOnClickListener {
             showDatePicker()
@@ -54,24 +147,45 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
         DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
-            val sdf =
-                SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             calendar.set(selectedYear, selectedMonth, selectedDay)
-            selectedDate = sdf.format(calendar.time)
+
+            val displayFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            selectedDate = displayFormat.format(calendar.time)
             binding.etExpectedShipmentDate.setText(selectedDate)
+
+
+            val isoFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
+            isoFormat.timeZone = TimeZone.getTimeZone("UTC")
+            expectedShipDateIso = isoFormat.format(calendar.time)
         }, year, month, day).show()
     }
 
 
-    @SuppressLint("SetTextI18n")
-    fun allSelectedProducts() {
-        selectedItems = SharedData.selectedProductList
+    private fun checkAllFieldValidity(
+        expectedShipmentDate: String,
+        shippingAddress: String,
+        cash: RadioButton,
+        check: CheckBox
+    ): Boolean {
 
-        adapter = ProductCartAdapter(selectedItems)
-        binding.recyclerProducts.adapter = adapter
+        if (expectedShipmentDate.isEmpty()) {
+            binding.etShipmentDateLayout.error = "This field must be filled"
+            return false
+        }
+        if (shippingAddress.isEmpty()) {
+            binding.etShippingAddressLayout.error = "This field must be filled"
+            return false
+        }
+        if (!cash.isChecked) {
+            binding.rbCash.error = "This field must be filled"
+            return false
+        }
+        if (!check.isChecked) {
+            Toast.makeText(requireContext(), "Check Box must be checked", Toast.LENGTH_SHORT).show()
+            return false
+        }
 
-        val total = products.sumOf { it.subtotal }
-        binding.tvTotal.text = "Total: %.2f".format(total)
+        return true
     }
 
 }

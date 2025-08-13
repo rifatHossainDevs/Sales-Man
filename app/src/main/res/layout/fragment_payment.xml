@@ -159,9 +159,9 @@
         app:endIconDrawable="@drawable/calendar_24"
         app:endIconMode="custom"
         app:endIconTint="@color/black"
+        app:hintAnimationEnabled="true"
         app:layout_constraintStart_toStartOf="@id/payment_by"
-        app:layout_constraintTop_toBottomOf="@id/payment_by"
-        app:hintAnimationEnabled="true">
+        app:layout_constraintTop_toBottomOf="@id/payment_by">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_expected_shipment_date"
@@ -172,35 +172,61 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:hint="Expected Shipment Date"
-            android:textColorHint="#A9A9A9"
             android:inputType="date"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textColorHint="#A9A9A9" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/et_shipping_address_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:hint="Shipping Address"
+        android:textColorHint="#A9A9A9"
+        app:boxStrokeWidth="2dp"
+        app:counterTextAppearance="@style/TextAppearance.Material3.TitleSmall"
+        app:endIconMode="clear_text"
+        app:helperTextTextColor="#FF0000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_shipment_date_layout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_shipping_address"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableStart="@drawable/ic_pressent_address_24"
+            android:drawablePadding="4dp"
+            android:inputType="text" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <CheckBox
-        android:id="@+id/checkbox_cheese"
+        android:id="@+id/checkbox_confirmation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="I Have Received Cash succesfully"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_shipment_date_layout" />
+        app:layout_constraintTop_toBottomOf="@id/et_shipping_address_layout" />
 
     <androidx.appcompat.widget.AppCompatButton
+
         android:id="@+id/btn_payment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/_16sdp"
+        android:layout_gravity="center"
         android:layout_marginTop="@dimen/_4sdp"
         android:layout_marginBottom="@dimen/_4sdp"
         android:background="@drawable/btn_create_account"
+        android:paddingHorizontal="@dimen/_16sdp"
         android:text="Payment"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_gravity="center"
         android:textColor="@color/white"
-        android:textSize="@dimen/_16ssp" />
+        android:textSize="@dimen/_16ssp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,7 +21,7 @@ class PendingOrderViewModel @Inject constructor(
     val pendingOrderState: StateFlow<PendingOrderDataState> = _pendingOrderState
 
 
-    fun getAllProduct(customerId: String) {
+    fun getPendingOder(customerId: String) {
         viewModelScope.launch {
             _pendingOrderState.value = PendingOrderDataState(loading = true)
             pendingOrderUseCase.invoke(customerId).collect { response ->
