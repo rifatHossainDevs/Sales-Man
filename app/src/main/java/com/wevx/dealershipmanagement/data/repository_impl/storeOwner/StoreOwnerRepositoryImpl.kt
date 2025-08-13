@@ -1,16 +1,20 @@
 package com.wevx.dealershipmanagement.data.repository_impl.storeOwner
 
+import com.wevx.dealershipmanagement.data.createStoreDTO.ResponseCreateStoreDTO
 import com.wevx.dealershipmanagement.data.dto.getStoreById.ResponseGetStoreById
 import com.wevx.dealershipmanagement.data.dto.getStoreOwnerByAreaDTO.ResponseStoreOwnerDto
 import com.wevx.dealershipmanagement.data.dto.getStoreOwnerBySubDisDto.ResponseGetStoreOwnerBySubDistrictDTO
 import com.wevx.dealershipmanagement.data.remote.storeOwner.StoreOwnerApiService
 import com.wevx.dealershipmanagement.domain.repository.storeOwner.StoreOwnerRepository
+import com.wevx.dealershipmanagement.utils.toImagePart
+import com.wevx.dealershipmanagement.utils.toPart
 import jakarta.inject.Inject
 import retrofit2.Response
+import java.io.File
 
 class StoreOwnerRepositoryImpl @Inject constructor(
     private val storeOwnerApiService: StoreOwnerApiService
-): StoreOwnerRepository {
+) : StoreOwnerRepository {
 
     override suspend fun getStoreOwnerByArea(areaId: Int): Response<ResponseStoreOwnerDto> {
         return storeOwnerApiService.getStoreOwnerByArea(areaId)
@@ -26,5 +30,36 @@ class StoreOwnerRepositoryImpl @Inject constructor(
 
 
     }
+
+    override suspend fun createStore(
+        userId: String,
+        storeName: String,
+        storePictureFile: File,
+        coordinate1: String,
+        coordinate2: String,
+        areaNo: String,
+        address: String,
+        storeOwnerName: String,
+        phone: String,
+        avatarFile: File,
+        subDisNo: String,
+        token: String
+    ): Response<ResponseCreateStoreDTO> {
+        return storeOwnerApiService.createStore(
+            userId.toPart(),
+            storeName.toPart(),
+            storePictureFile.toImagePart("storePictures"),
+            coordinate1.toPart(),
+            coordinate2.toPart(),
+            areaNo.toPart(),
+            address.toPart(),
+            storeOwnerName.toPart(),
+            phone.toPart(),
+            avatarFile.toImagePart("avatar"),
+            subDisNo.toPart(),
+            token
+        )
+    }
+
 
 }

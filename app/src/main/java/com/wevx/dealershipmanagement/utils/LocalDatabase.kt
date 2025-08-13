@@ -7,7 +7,7 @@ import com.wevx.dealershipmanagement.domain.models.DrawerItems
 import com.wevx.dealershipmanagement.domain.models.Products
 
 object LocalDatabase {
-    val customers = listOf(
+    /*val customers = listOf(
         Customers(
             "1",
             "M/s Malik Store",
@@ -108,11 +108,11 @@ object LocalDatabase {
             "Mirpur",
             "Mirpur-10"
         )
-    )
+    )*/
 
 
 
-    val cityList = listOf("Select City", "Dhaka", "Chittagong", "Khulna")
+    /*val cityList = listOf("Select City", "Dhaka", "Chittagong", "Khulna")
     val areaMap = mapOf(
         "Dhaka" to listOf("Select Area", "Mirpur", "Uttara", "Dhanmondi"),
         "Chittagong" to listOf("Select Area", "Pahartali", "Agrabad"),
@@ -126,7 +126,7 @@ object LocalDatabase {
         "Agrabad" to listOf("Select Zone", "Zone F"),
         "Sonadanga" to listOf("Select Zone", "Zone G"),
         "Khalishpur" to listOf("Select Zone", "Zone H")
-    )
+    )*/
 
 
     val drawerImage = listOf(
@@ -139,7 +139,7 @@ object LocalDatabase {
         R.drawable.ic_sync_data_24
     )
 
-    val drawerItems = listOf<DrawerItems>(
+    val drawerItems = listOf(
         DrawerItems(drawerImage[0], "Stock Availability"),
         DrawerItems(drawerImage[1], "Today's Delivery"),
         DrawerItems(drawerImage[2], "Payment Collection"),

@@ -20,8 +20,12 @@ data class ResponseProfileDto(
     @Keep
     @Serializable
     data class Data(
+        @SerializedName("active")
+        val active: Boolean? = null,
         @SerializedName("avatar")
         val avatar: String? = null,
+        @SerializedName("companyId")
+        val companyId: String? = null,
         @SerializedName("createdAt")
         val createdAt: String? = null,
         @SerializedName("email")
@@ -43,6 +47,7 @@ data class ResponseProfileDto(
     )
 }
 
+
 fun ResponseProfileDto.Data.toProfileModel(): ProfileModel {
     return ProfileModel(
         id = this.id ?: "",
@@ -51,7 +56,7 @@ fun ResponseProfileDto.Data.toProfileModel(): ProfileModel {
         phone = this.phone ?: "",
         nid = this.nidNumber ?: "",
         avatar = this.avatar ?: "",
-        userType = this.userType ?: ""
+        userType = this.userType ?: "",
+        companyId = this.companyId ?: ""
     )
 }
-

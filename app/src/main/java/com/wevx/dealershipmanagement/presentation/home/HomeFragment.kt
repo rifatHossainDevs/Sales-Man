@@ -42,6 +42,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             findNavController().navigate(R.id.action_homeFragment_to_addCustomerFragment)
         }
 
+        storeByDisViewModel.getStoreOwnerByDis(1)
     }
 
     override fun allObserver() {
@@ -56,7 +57,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         storeByDisViewModel.storeOwnerByDisState.collectInLifecycle(viewLifecycleOwner){storeOwnerByDisState->
             if (storeOwnerByDisState.loading) return@collectInLifecycle
             storeOwnerByDisState.data?.let { storeOwnerBySubDisList ->
-                storeOwnerAdapter.updateData(storeOwnerBySubDisList)
+
             }
             storeOwnerByDisState.error?.let {
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()

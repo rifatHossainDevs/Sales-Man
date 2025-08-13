@@ -1,9 +1,13 @@
 package com.wevx.dealershipmanagement.domain.repository.storeOwner
 
+import com.wevx.dealershipmanagement.data.createStoreDTO.ResponseCreateStoreDTO
 import com.wevx.dealershipmanagement.data.dto.getStoreById.ResponseGetStoreById
 import com.wevx.dealershipmanagement.data.dto.getStoreOwnerByAreaDTO.ResponseStoreOwnerDto
 import com.wevx.dealershipmanagement.data.dto.getStoreOwnerBySubDisDto.ResponseGetStoreOwnerBySubDistrictDTO
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
+import java.io.File
 
 interface StoreOwnerRepository {
 
@@ -12,6 +16,21 @@ interface StoreOwnerRepository {
     suspend fun getStoreOwnerBySubDistrict(disId: Int): Response<ResponseGetStoreOwnerBySubDistrictDTO>
     suspend fun getStoreOwnerId(id: String): Response<ResponseGetStoreById>
 
+
+    suspend fun createStore(
+        userId: String,
+        storeName: String,
+        storePictureFile: File,
+        coordinate1: String,
+        coordinate2: String,
+        areaNo: String,
+        address: String,
+        storeOwnerName: String,
+        phone: String,
+        avatarFile: File,
+        subDisNo: String,
+        token : String
+    ): Response<ResponseCreateStoreDTO>
 
 
 }

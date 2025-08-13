@@ -7,5 +7,6 @@ data class ProfileModel(
     val phone: String,
     val nid: String,
     val avatar: String,
-    val userType: String
+    val userType: String,
+    val companyId : String
 )

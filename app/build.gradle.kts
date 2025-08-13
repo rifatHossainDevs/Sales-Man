@@ -94,4 +94,6 @@ dependencies {
 
     //lottie
     implementation(libs.lottie)
+
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 }
