@@ -23,6 +23,7 @@ import com.wevx.dealershipmanagement.presentation.auth.profile.GetProfileViewMod
 import com.wevx.dealershipmanagement.utils.Constants.CHANGE_PASSWORD
 import com.wevx.dealershipmanagement.utils.Constants.EDIT_PROFILE
 import com.wevx.dealershipmanagement.utils.Constants.STOCK_AVAILABILITY
+import com.wevx.dealershipmanagement.utils.Constants.TODAYS_DELIVERY
 import com.wevx.dealershipmanagement.utils.TokenManager
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
 import dagger.hilt.android.AndroidEntryPoint
@@ -152,6 +153,11 @@ class MainActivity : AppCompatActivity() {
 
                 EDIT_PROFILE -> {
                     navController.navigate(R.id.editProfileFragment)
+                    drawerLayout.closeDrawer(GravityCompat.START)
+                }
+
+                TODAYS_DELIVERY -> {
+                    navController.navigate(R.id.todaysDeliveryFragment)
                     drawerLayout.closeDrawer(GravityCompat.START)
                 }
 

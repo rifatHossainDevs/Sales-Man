@@ -39,7 +39,7 @@ class ProductAdapter(
         holder.binding.apply {
             tvProductName.text = cartItem.product.productName
             tvBrandName.text = cartItem.product.brandName
-            tvPrice.text = "Price: ${cartItem.product.price}"
+            tvPrice.text = "Price: ৳${cartItem.product.price}"
 
             // Remove previous TextWatcher if any
             if (etQuantity.tag is TextWatcher) {
@@ -60,7 +60,7 @@ class ProductAdapter(
                 etQuantity.setSelection(etQuantity.text.length)
             }
 
-            tvSubtotal.text = "Sub total: %.2f".format(cartItem.subtotal)
+            tvSubtotal.text = "Sub total: ৳%.2f".format(cartItem.subtotal)
 
             var isEditing = false
             val watcher = object : TextWatcher {
@@ -85,7 +85,7 @@ class ProductAdapter(
                         // User cleared EditText - set qty = 0 but do NOT reset EditText text here
                         cartItem.purchaseQuantity = 0.0
                     }
-                    tvSubtotal.text = "Sub total: %.2f".format(cartItem.subtotal)
+                    tvSubtotal.text = "Sub total: ৳%.2f".format(cartItem.subtotal)
                     listener.onQuantityChangedListener()
 
                     isEditing = false
@@ -99,7 +99,7 @@ class ProductAdapter(
                 cartItem.purchaseQuantity += 1
                 etQuantity.setText(cartItem.purchaseQuantity.toInt().toString())
                 etQuantity.setSelection(etQuantity.text.length)
-                tvSubtotal.text = "Sub total: %.2f".format(cartItem.subtotal)
+                tvSubtotal.text = "Sub total: ৳%.2f".format(cartItem.subtotal)
                 listener.onQuantityChangedListener()
             }
 
@@ -108,7 +108,7 @@ class ProductAdapter(
                     cartItem.purchaseQuantity -= 1
                     etQuantity.setText(cartItem.purchaseQuantity.toInt().toString())
                     etQuantity.setSelection(etQuantity.text.length)
-                    tvSubtotal.text = "Sub total: %.2f".format(cartItem.subtotal)
+                    tvSubtotal.text = "Sub total: ৳%.2f".format(cartItem.subtotal)
                     listener.onQuantityChangedListener()
                 }
             }

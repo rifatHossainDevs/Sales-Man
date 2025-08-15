@@ -38,16 +38,16 @@ class PendingOrderAdapter(val pendingOrders: List<PendingAndCompleteOrderModel>,
             val shipmentDate = dateFormatter.formatDateToDDMMYY(item.shipmentDate)
             holder.binding.apply {
                 tvInvoiceNumber.text = "Invoice: ${item.invoiceNumber}"
-                tvShipmentDate.text = "Shipment: ${shipmentDate}"
-                if (item.paymentStatus == "Pending") {
+                tvShipmentDate.text = "Shipment: $shipmentDate"
+                /*if (item.paymentStatus == "Pending") {
                     tvPaymentStatus.text = "Status: ${item.paymentStatus} - ${item.due}"
                     tvPaymentStatus.setTextColor(Color.RED)
                 } else {
                     tvPaymentStatus.text = "Status: ${item.paymentStatus}"
                     tvPaymentStatus.setTextColor(Color.GREEN)
-                }
+                }*/
                 tvShipmentAddress.text = item.shipmentAddress
-                tvTotal.text = "Total: ${item.totalPrice}"
+                tvTotal.text = "Total: ৳${item.totalPrice}"
 
                 if (type == "pending"){
                     holder.itemView.setBackgroundColor("#FFEBEE".toColorInt())

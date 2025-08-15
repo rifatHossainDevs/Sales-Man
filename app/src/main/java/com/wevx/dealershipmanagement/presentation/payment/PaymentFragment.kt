@@ -49,6 +49,10 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
     private var total by Delegates.notNull<Double>()
     private lateinit var expectedShipDateIso: String
     private lateinit var orderId: String
+    private var isOrderCreated = false
+    private var isPaymentCreated = false
+    private var isShipmentCreated = false
+    lateinit var invoiceNumber: String
 
     override fun setAllClickListener() {
         customerId = args.id
@@ -72,12 +76,14 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
             if (createShipmentState.loading) return@collectInLifecycle
 
             createShipmentState.error?.let {
-                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Shipment Error: $it", Toast.LENGTH_SHORT).show()
+                return@collectInLifecycle
             }
             createShipmentState.data?.let {
-                Toast.makeText(requireContext(), "Shipment Created", Toast.LENGTH_SHORT).show()
-            }
+                isShipmentCreated = true
+                checkAllOperationsSuccess()
 
+            }
         }
     }
 
@@ -85,12 +91,14 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
         createPaymentViewModel.createPaymentState.collectInLifecycle(viewLifecycleOwner) { createPaymentState ->
             if (createPaymentState.loading) return@collectInLifecycle
             createPaymentState.error?.let {
-                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Payment Error: $it", Toast.LENGTH_SHORT).show()
+                return@collectInLifecycle
             }
             createPaymentState.data?.let {
-                Toast.makeText(requireContext(), "Payment Created", Toast.LENGTH_SHORT).show()
-            }
+                isPaymentCreated = true
+                checkAllOperationsSuccess()
 
+            }
         }
     }
 
@@ -110,16 +118,18 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
     private fun createOrderObserver() {
         createOrderViewModel.createOrderState.collectInLifecycle(viewLifecycleOwner) { createOrderState ->
             if (createOrderState.loading) {
-                //loading.show()
+                loading.show()
                 return@collectInLifecycle
             }
             createOrderState.error?.let {
-                //loading.dismiss()
-                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+                loading.dismiss()
+                Toast.makeText(requireContext(), "Order Error: $it", Toast.LENGTH_SHORT).show()
+                return@collectInLifecycle
             }
             createOrderState.data?.let {
                 //loading.dismiss()
                 orderId = it.data?.id.toString()
+                isOrderCreated = true
 
                 val requestPaymentDTO =
                     RequestPaymentDTO(total, orderId, "Cash", "Pending", salesManId)
@@ -130,18 +140,30 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
 
                 createPaymentViewModel.createPayment(requestPaymentDTO, bearerToken)
                 createShipmentViewModel.createShipment(requestShipmentDTO, bearerToken)
+                //Toast.makeText(requireContext(), "Order Created", Toast.LENGTH_SHORT).show()
+                invoiceNumber = it.data?.invoiceNumber.toString()
 
-                Toast.makeText(requireContext(), "Order Created", Toast.LENGTH_SHORT).show()
-                val invoiceNumber = it.data?.invoiceNumber.toString()
-                val action =
-                    PaymentFragmentDirections.actionPaymentFragmentToReceiptFragment(
-                        id = customerId,
-                        invoice = invoiceNumber
-                    )
+                checkAllOperationsSuccess()
 
-                findNavController().navigate(action)
             }
+        }
+    }
 
+    private fun checkAllOperationsSuccess() {
+        if (isPaymentCreated && isShipmentCreated && isOrderCreated) {
+            loading.dismiss()
+            Toast.makeText(
+                requireContext(),
+                "Order, Payment, and Shipment successfully created!",
+                Toast.LENGTH_SHORT
+            ).show()
+            val action =
+                PaymentFragmentDirections.actionPaymentFragmentToReceiptFragment(
+                    id = customerId,
+                    invoice = invoiceNumber
+                )
+
+            findNavController().navigate(action)
         }
     }
 
@@ -153,7 +175,7 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
         binding.recyclerProducts.adapter = adapter
 
         total = SharedData.selectedProductList.sumOf { it.subtotal }
-        binding.tvTotal.text = "Total: %.2f".format(total)
+        binding.tvTotal.text = "Total: ৳%.2f".format(total)
     }
 
     private fun buttonClickListener() {
@@ -169,7 +191,6 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
                         productId = cartItem.product.productId,
                         purchaseQuantity = cartItem.purchaseQuantity.toInt(),
                         priceAtPurchase = cartItem.product.price
-
                     )
                 }
 
@@ -199,9 +220,7 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
 
                 val bearerToken = "Bearer $token"
                 createOrderViewModel.createOrder(requestCreateOrderDTO, bearerToken)
-
             }
-
         }
         binding.etExpectedShipmentDate.setOnClickListener {
             showDatePicker()
@@ -227,7 +246,6 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
         }, year, month, day).show()
     }
 
-
     private fun checkAllFieldValidity(
         expectedShipmentDate: String, shippingAddress: String, cash: RadioButton, check: CheckBox
     ): Boolean {
@@ -251,5 +269,4 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
 
         return true
     }
-
 }

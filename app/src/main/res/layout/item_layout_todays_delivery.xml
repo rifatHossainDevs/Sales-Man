@@ -27,28 +27,34 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_shipment_date"
+            android:id="@+id/tv_storeName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="Shipment: 06-08-2025"
+            android:maxWidth="@dimen/_192sdp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="Store: M/s Khalid Store"
             android:textColor="@color/black"
-            android:textSize="@dimen/_10ssp"
+            android:textSize="@dimen/_8ssp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/tv_invoice_number"
             app:layout_constraintTop_toBottomOf="@id/tv_invoice_number" />
 
-        <!--<TextView
-            android:id="@+id/tv_payment_status"
+        <TextView
+            android:id="@+id/tv_storeOwnerName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="Due - $120"
+            android:text="Customer: Khalid Ahmed"
             android:textColor="@color/black"
-            android:textSize="@dimen/_10ssp"
+            android:textSize="@dimen/_8ssp"
+            android:maxWidth="@dimen/_192sdp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/tv_shipment_date"
-            app:layout_constraintTop_toBottomOf="@id/tv_shipment_date" />-->
+            app:layout_constraintStart_toStartOf="@id/tv_storeName"
+            app:layout_constraintTop_toBottomOf="@id/tv_storeName" />
 
 
 
@@ -62,10 +68,10 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:textColor="@color/black"
-            android:textSize="@dimen/_10ssp"
+            android:textSize="@dimen/_8ssp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/tv_shipment_date"
-            app:layout_constraintTop_toBottomOf="@id/tv_shipment_date" />
+            app:layout_constraintStart_toStartOf="@id/tv_storeOwnerName"
+            app:layout_constraintTop_toBottomOf="@id/tv_storeOwnerName" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnViewInvoice"
@@ -87,7 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_2sdp"
-            android:text="Total: $12000.00"
+            android:text="Total: ৳12000.00"
             android:textColor="#F41450"
             android:textSize="@dimen/_12ssp"
             android:textStyle="bold"

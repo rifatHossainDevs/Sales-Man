@@ -164,7 +164,7 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
             bottomSheetBinding.recyclerProducts.adapter = adapter
 
             val total = selectedItems.sumOf { it.subtotal }
-            bottomSheetBinding.tvTotal.text = "Total: %.2f".format(total)
+            bottomSheetBinding.tvTotal.text = "Total: ৳%.2f".format(total)
 
             bottomSheetDialog.apply {
                 setContentView(bottomSheetBinding.root)
