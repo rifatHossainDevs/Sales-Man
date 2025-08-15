@@ -39,17 +39,17 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
     private lateinit var adapter: ProductCartAdapter
     lateinit var selectedItems: List<CartItem>
     private lateinit var selectedDate: String
-    private val createOrderViewModel: CreateOrderViewModel by viewModels()
+    //private val createOrderViewModel: CreateOrderViewModel by viewModels()
     private val currentUserViewModel: GetProfileViewModel by viewModels()
-    private val createPaymentViewModel: CreatePaymentViewModel by viewModels()
-    private val createShipmentViewModel: CreateShipmentViewModel by viewModels()
+    //private val createPaymentViewModel: CreatePaymentViewModel by viewModels()
+    //private val createShipmentViewModel: CreateShipmentViewModel by viewModels()
     private val args: ProductsFragmentArgs by navArgs()
     private lateinit var customerId: String
     private lateinit var salesManId: String
     lateinit var token: String
     private var total by Delegates.notNull<Double>()
     private lateinit var expectedShipDateIso: String
-    private lateinit var orderId: String
+    //private lateinit var orderId: String
 
     override fun setAllClickListener() {
         customerId = args.id
@@ -62,13 +62,13 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
     }
 
     override fun allObserver() {
-        createOrderObserver()
-        currentUserObserver()
-        createPaymentObserver()
-        createShipmentObserver()
+       // createOrderObserver()
+        //currentUserObserver()
+       // createPaymentObserver()
+        //createShipmentObserver()
     }
 
-    private fun createShipmentObserver() {
+    /*private fun createShipmentObserver() {
         createShipmentViewModel.createShipmentState.collectInLifecycle(viewLifecycleOwner) { createShipmentState ->
             if (createShipmentState.loading) return@collectInLifecycle
 
@@ -80,9 +80,9 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
             }
 
         }
-    }
+    }*/
 
-    private fun createPaymentObserver() {
+    /*private fun createPaymentObserver() {
         createPaymentViewModel.createPaymentState.collectInLifecycle(viewLifecycleOwner) { createPaymentState ->
             if (createPaymentState.loading) return@collectInLifecycle
             createPaymentState.error?.let {
@@ -94,7 +94,7 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
 
         }
     }
-
+*/
     private fun currentUserObserver() {
         currentUserViewModel.profileState.collectInLifecycle(viewLifecycleOwner) { currentUserState ->
             if (currentUserState.loading) return@collectInLifecycle
@@ -108,7 +108,7 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
         }
     }
 
-    private fun createOrderObserver() {
+    /*private fun createOrderObserver() {
         createOrderViewModel.createOrderState.collectInLifecycle(viewLifecycleOwner) { createOrderState ->
             if (createOrderState.loading) return@collectInLifecycle
             createOrderState.error?.let {
@@ -132,7 +132,7 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
             }
 
         }
-    }
+    }*/
 
 
     @SuppressLint("SetTextI18n")
@@ -153,7 +153,7 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
             val shippingAddress = binding.etShippingAddress.extract()
             val cash = binding.rbCash
             val check = binding.checkboxConfirmation
-            if (checkAllFieldValidity(expectedShipmentDate, shippingAddress, cash, check)) {
+            /*if (checkAllFieldValidity(expectedShipmentDate, shippingAddress, cash, check)) {
                 val orderItems = SharedData.selectedProductList.map { cartItem ->
                     RequestCreateOrderDTO.OrderItem(
                         productId = cartItem.product.productId,
@@ -187,10 +187,12 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
 
 
                 val bearerToken = "Bearer $token"
-                createOrderViewModel.createOrder(requestCreateOrderDTO, bearerToken)
+                //createOrderViewModel.createOrder(requestCreateOrderDTO, bearerToken)
 
 
-            }
+            }*/
+val action = PaymentFragmentDirections.actionPaymentFragmentToReceiptFragment(customerId)
+            findNavController().navigate(action)
 
         }
         binding.etExpectedShipmentDate.setOnClickListener {

@@ -1,4 +1,4 @@
-package com.wevx.dealershipmanagement
+package com.wevx.dealershipmanagement.presentation.todaysDelivery
 
 import com.wevx.dealershipmanagement.core.common.BaseFragment
 import com.wevx.dealershipmanagement.databinding.FragmentTodaysDeliveryBinding

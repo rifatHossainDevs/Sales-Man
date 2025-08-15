@@ -4,7 +4,8 @@ import com.wevx.dealershipmanagement.data.dto.createOrderDto.RequestCreateOrderD
 import com.wevx.dealershipmanagement.data.dto.createOrderDto.ResponseCreateOrderDTO
 import com.wevx.dealershipmanagement.data.dto.paymentDto.RequestPaymentDTO
 import com.wevx.dealershipmanagement.data.dto.paymentDto.ResponsePaymentDTO
-import com.wevx.dealershipmanagement.data.dto.pendingOrderDto.ResponsePendingOrderDTO
+import com.wevx.dealershipmanagement.data.dto.pendingAndCompleteOrderDto.RequestPendingAndCompleteOrder
+import com.wevx.dealershipmanagement.data.dto.pendingAndCompleteOrderDto.ResponsePendingAndCompleteOrderDTO
 import com.wevx.dealershipmanagement.data.dto.shipmentDto.RequestShipmentDTO
 import com.wevx.dealershipmanagement.data.dto.shipmentDto.ResponseShipmentDTO
 import retrofit2.Response
@@ -16,8 +17,8 @@ import retrofit2.http.Path
 
 interface OrderApiService {
 
-    @GET("orders/get-pending-orders-by-customer/{customerId}")
-    suspend fun getPendingOrderByCustomer(@Path("customerId") customerId: String): Response<ResponsePendingOrderDTO>
+    @GET("orders/get-orders-by-customer-paymentStatus/{customerId}")
+    suspend fun getPendingAndCompleteOrderByCustomer(@Path("customerId") customerId: String, @Body requestPendingAndCompleteOrder: RequestPendingAndCompleteOrder): Response<ResponsePendingAndCompleteOrderDTO>
 
     @POST("orders/create-order")
     suspend fun createOrder(@Body requestCreateOrderDTO: RequestCreateOrderDTO, @Header("Authorization") token: String): Response<ResponseCreateOrderDTO>

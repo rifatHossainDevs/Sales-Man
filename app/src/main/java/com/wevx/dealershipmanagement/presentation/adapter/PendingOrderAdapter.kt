@@ -5,14 +5,12 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.wevx.dealershipmanagement.databinding.ItemDrawerItemsBinding
 import com.wevx.dealershipmanagement.databinding.ItemLayoutPendingAndCompleteOrderBinding
-import com.wevx.dealershipmanagement.domain.models.DrawerItems
-import com.wevx.dealershipmanagement.domain.models.PendingOrderModel
+import com.wevx.dealershipmanagement.domain.models.PendingAndCompleteOrderModel
 import androidx.core.graphics.toColorInt
 import com.wevx.dealershipmanagement.utils.DateFormatter
 
-class PendingOrderAdapter(val pendingOrders: List<PendingOrderModel>, val type: String) :
+class PendingOrderAdapter(val pendingOrders: List<PendingAndCompleteOrderModel>, val type: String) :
     RecyclerView.Adapter<PendingOrderAdapter.ViewHolder>() {
 
 

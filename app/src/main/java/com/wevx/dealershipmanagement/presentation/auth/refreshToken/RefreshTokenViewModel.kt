@@ -1,5 +1,6 @@
 package com.wevx.dealershipmanagement.presentation.auth.refreshToken
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wevx.dealershipmanagement.core.common.Resource
@@ -18,6 +19,7 @@ class RefreshTokenViewModel @Inject constructor(
     val refreshTokenState: StateFlow<RefreshTokenDataState> = _refreshTokenState
 
     fun refreshTokenUser(token: String) {
+        Log.d("RefreshTokenViewModel", "refreshTokenUser() called with: $token")
         viewModelScope.launch {
             _refreshTokenState.value = RefreshTokenDataState(loading = true)
             refreshTokenUseCase.invoke(token).collect { response ->

@@ -1,6 +1,11 @@
 package com.wevx.dealershipmanagement.presentation.auth.login
 
 import android.content.Intent
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -19,17 +24,19 @@ import com.wevx.dealershipmanagement.utils.TokenManager
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
 
     private val loginViewModel: LoginViewModel by viewModels()
-    private val refreshTokenViewModel: RefreshTokenViewModel by viewModels ()
+    private val refreshTokenViewModel: RefreshTokenViewModel by viewModels()
 
     override fun shouldInitialize(): Boolean {
+
+
+
+        refreshTokenObserver()
         val tokenManager = TokenManager(requireContext())
-        if (tokenManager.hasValidTokens()) {
-            startActivity(Intent(requireContext(), MainActivity::class.java))
-            requireActivity().finish()
-            return false
-        }
+        val refreshToken = tokenManager.getRefreshToken()
+        refreshTokenViewModel.refreshTokenUser(refreshToken.toString())
         return true
     }
+
 
     override fun setAllClickListener() {
 
@@ -49,10 +56,19 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
             refreshTokenState.error?.let {
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+                return@collectInLifecycle
             }
 
             refreshTokenState.data?.let {
-
+                if (it.data?.accessToken?.isNotEmpty() == true) {
+                    val tokenManager = TokenManager(requireContext())
+                    tokenManager.saveToken(
+                        it.data.accessToken, "${it.data.refreshToken}"
+                    )
+                    Toast.makeText(requireContext(), "Login Successful", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(requireContext(), MainActivity::class.java))
+                    requireActivity().finish()
+                }
             }
         }
     }
@@ -69,13 +85,13 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                 val tokenManager = TokenManager(requireContext())
 
                 tokenManager.saveToken(
-                    "${responseDTO.accessToken}",
-                    "${responseDTO.refreshToken}"
+                    "${responseDTO.accessToken}", "${responseDTO.refreshToken}"
                 )
 
+                Log.d("refresh", "loginObserver: ${responseDTO.accessToken}")
 
-                Toast.makeText(requireContext(), "Login Successful", Toast.LENGTH_SHORT)
-                    .show()
+
+                Toast.makeText(requireContext(), "Login Successful", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(requireContext(), MainActivity::class.java))
                 requireActivity().finish()
 
@@ -105,8 +121,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                 val confirmPassword = etConfirmPassword.extract()
                 if (checkAllFieldValidity(phone, password, confirmPassword)) {
                     val data = RequestLogin(
-                        phone = phone,
-                        password = password
+                        phone = phone, password = password
                     )
                     loginViewModel.loginUser(data)
                 }
@@ -124,9 +139,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     }
 
     private fun checkAllFieldValidity(
-        phone: String,
-        password: String,
-        confirmPassword: String
+        phone: String, password: String, confirmPassword: String
     ): Boolean {
         binding.etPhoneNumberLayout.error = null
         binding.etPasswordLayout.error = null

@@ -24,6 +24,8 @@ class TokenManager(context: Context) {
     }
 
     fun hasValidTokens(): Boolean {
-        return !getAccessToken().isNullOrBlank() && !getRefreshToken().isNullOrBlank()
+        val access = getAccessToken()
+        val refresh = getRefreshToken()
+        return !access.isNullOrBlank() && !refresh.isNullOrBlank()
     }
 }

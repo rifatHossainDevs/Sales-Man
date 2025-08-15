@@ -45,6 +45,6 @@ interface AuthApiService {
     ): Response<ResponseUpdateProfileDto>
 
     @POST("users/refresh-token")
-    suspend fun refreshToken(@Header("Authorization") token: String): Response<ResponseRefreshTokenDTO>
+    suspend fun refreshToken(@Body token: String): Response<ResponseRefreshTokenDTO>
 
 }

@@ -4,7 +4,8 @@ import com.wevx.dealershipmanagement.data.dto.createOrderDto.RequestCreateOrderD
 import com.wevx.dealershipmanagement.data.dto.createOrderDto.ResponseCreateOrderDTO
 import com.wevx.dealershipmanagement.data.dto.paymentDto.RequestPaymentDTO
 import com.wevx.dealershipmanagement.data.dto.paymentDto.ResponsePaymentDTO
-import com.wevx.dealershipmanagement.data.dto.pendingOrderDto.ResponsePendingOrderDTO
+import com.wevx.dealershipmanagement.data.dto.pendingAndCompleteOrderDto.RequestPendingAndCompleteOrder
+import com.wevx.dealershipmanagement.data.dto.pendingAndCompleteOrderDto.ResponsePendingAndCompleteOrderDTO
 import com.wevx.dealershipmanagement.data.dto.shipmentDto.RequestShipmentDTO
 import com.wevx.dealershipmanagement.data.dto.shipmentDto.ResponseShipmentDTO
 import com.wevx.dealershipmanagement.data.remote.order.OrderApiService
@@ -14,12 +15,18 @@ import retrofit2.Response
 
 class OrderRepositoryImpl @Inject constructor(
     private val orderApiService: OrderApiService
-): OrderRepository {
-    override suspend fun getPendingOrdersByCustomer(customerId: String): Response<ResponsePendingOrderDTO> {
-        return orderApiService.getPendingOrderByCustomer(customerId)
+) : OrderRepository {
+    override suspend fun getPendingAndCompleteOrderByCustomer(
+        customerId: String,
+        requestPendingAndCompleteOrder: RequestPendingAndCompleteOrder
+    ): Response<ResponsePendingAndCompleteOrderDTO> {
+        return orderApiService.getPendingAndCompleteOrderByCustomer(customerId, requestPendingAndCompleteOrder)
     }
 
-    override suspend fun createOrder(requestCreateOrderDTO: RequestCreateOrderDTO, token: String): Response<ResponseCreateOrderDTO> {
+    override suspend fun createOrder(
+        requestCreateOrderDTO: RequestCreateOrderDTO,
+        token: String
+    ): Response<ResponseCreateOrderDTO> {
         return orderApiService.createOrder(requestCreateOrderDTO, token)
     }
 

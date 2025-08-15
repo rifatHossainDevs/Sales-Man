@@ -1,79 +1,75 @@
-package com.wevx.dealershipmanagement.data.dto.pendingOrderDto
+package com.wevx.dealershipmanagement.data.dto.pendingAndCompleteOrderDto
 
-
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import androidx.annotation.Keep
-import com.wevx.dealershipmanagement.data.dto.productDto.ResponseProductDTO
-import com.wevx.dealershipmanagement.data.dto.productDto.toProductModel
-import com.wevx.dealershipmanagement.domain.models.PendingOrderModel
-import com.wevx.dealershipmanagement.domain.models.ProductModel
+import com.google.gson.annotations.SerializedName
+import com.wevx.dealershipmanagement.domain.models.PendingAndCompleteOrderModel
 
 @Keep
 @Serializable
-data class ResponsePendingOrderDTO(
-    @SerialName("data")
+data class ResponsePendingAndCompleteOrderDTO(
+    @SerializedName("data")
     val `data`: List<Data?>? = null,
-    @SerialName("message")
+    @SerializedName("message")
     val message: String? = null,
-    @SerialName("statusCode")
+    @SerializedName("statusCode")
     val statusCode: Int? = null,
-    @SerialName("success")
+    @SerializedName("success")
     val success: Boolean? = null
 ) {
     @Keep
     @Serializable
     data class Data(
-        @SerialName("amountPaid")
+        @SerializedName("amountPaid")
         val amountPaid: Int? = null,
-        @SerialName("createdAt")
+        @SerializedName("createdAt")
         val createdAt: String? = null,
-        @SerialName("customerId")
+        @SerializedName("customerId")
         val customerId: String? = null,
-        @SerialName("expectedShipDate")
+        @SerializedName("expectedShipDate")
         val expectedShipDate: String? = null,
-        @SerialName("_id")
+        @SerializedName("_id")
         val id: String? = null,
-        @SerialName("invoiceNumber")
+        @SerializedName("invoiceNumber")
         val invoiceNumber: String? = null,
-        @SerialName("orderItems")
+        @SerializedName("orderItems")
         val orderItems: List<OrderItem?>? = null,
-        @SerialName("paymentDue")
+        @SerializedName("paymentDue")
         val paymentDue: Int? = null,
-        @SerialName("paymentStatus")
+        @SerializedName("paymentStatus")
         val paymentStatus: String? = null,
-        @SerialName("salesmanId")
+        @SerializedName("salesmanId")
         val salesmanId: String? = null,
-        @SerialName("shippingAddress")
+        @SerializedName("shippingAddress")
         val shippingAddress: String? = null,
-        @SerialName("totalPrice")
+        @SerializedName("totalPrice")
         val totalPrice: Int? = null,
-        @SerialName("updatedAt")
+        @SerializedName("updatedAt")
         val updatedAt: String? = null,
-        @SerialName("__v")
+        @SerializedName("__v")
         val v: Int? = null
     ) {
         @Keep
         @Serializable
         data class OrderItem(
-            @SerialName("createdAt")
+            @SerializedName("createdAt")
             val createdAt: String? = null,
-            @SerialName("_id")
+            @SerializedName("_id")
             val id: String? = null,
-            @SerialName("priceAtPurchase")
+            @SerializedName("priceAtPurchase")
             val priceAtPurchase: Int? = null,
-            @SerialName("productId")
+            @SerializedName("productId")
             val productId: String? = null,
-            @SerialName("purchaseQuantity")
+            @SerializedName("purchaseQuantity")
             val purchaseQuantity: Int? = null,
-            @SerialName("updatedAt")
+            @SerializedName("updatedAt")
             val updatedAt: String? = null
         )
     }
 }
 
-fun ResponsePendingOrderDTO.Data.toPendingOrderModel(): PendingOrderModel {
-    return PendingOrderModel(
+fun ResponsePendingAndCompleteOrderDTO.Data.toPendingOrderModel(): PendingAndCompleteOrderModel {
+    return PendingAndCompleteOrderModel(
         id = id ?: "",
         customerId = customerId ?: "",
         salesmanId = salesmanId ?: "",
@@ -86,6 +82,6 @@ fun ResponsePendingOrderDTO.Data.toPendingOrderModel(): PendingOrderModel {
     )
 }
 
-fun List<ResponsePendingOrderDTO.Data?>?.toPendingOrderModelList(): List<PendingOrderModel> {
+fun List<ResponsePendingAndCompleteOrderDTO.Data?>?.toPendingAndCompleteOrderModelList(): List<PendingAndCompleteOrderModel> {
     return this?.filterNotNull()?.map { it.toPendingOrderModel() } ?: emptyList()
 }

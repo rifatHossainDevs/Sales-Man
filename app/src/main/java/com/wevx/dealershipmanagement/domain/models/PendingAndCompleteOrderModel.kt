@@ -1,6 +1,6 @@
 package com.wevx.dealershipmanagement.domain.models
 
-data class PendingOrderModel(
+data class PendingAndCompleteOrderModel(
     val id: String,
     val customerId: String,
     val salesmanId: String,
