@@ -40,13 +40,18 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(
 
     override fun allObserver() {
         viewModel.changePasswordState.collectInLifecycle(viewLifecycleOwner) { changePasswordState ->
-            if (changePasswordState.loading) return@collectInLifecycle
+            if (changePasswordState.loading) {
+                loading.show()
+                return@collectInLifecycle
+            }
 
             changePasswordState.error?.let { error ->
+                loading.dismiss()
                 Toast.makeText(requireContext(), "Error: $error", Toast.LENGTH_SHORT).show()
             }
 
             changePasswordState.data?.let { data ->
+                loading.dismiss()
 
                 if (data.success == true) {
                     Toast.makeText(

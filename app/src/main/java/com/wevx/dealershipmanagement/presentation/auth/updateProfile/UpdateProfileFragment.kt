@@ -61,11 +61,16 @@ class UpdateProfileFragment :
 
     private fun getProfileObserver() {
         getProfileViewModel.profileState.collectInLifecycle(viewLifecycleOwner) { profileState ->
-            if (profileState.loading) return@collectInLifecycle
+            if (profileState.loading){
+                loading.show()
+                return@collectInLifecycle
+            }
             profileState.error?.let {
+                loading.dismiss()
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
             profileState.data?.let { profileModel ->
+                loading.dismiss()
                 binding.etFullName.setText(profileModel.name)
                 binding.etEmail.setText(profileModel.email)
                 binding.etPhoneNumber.setText(profileModel.phone)
@@ -76,12 +81,17 @@ class UpdateProfileFragment :
 
     private fun updateProfileObserver() {
         updateProfileViewModel.updateProfileState.collectInLifecycle(viewLifecycleOwner) { updateProfileState ->
-            if (updateProfileState.loading) return@collectInLifecycle
+            if (updateProfileState.loading){
+                loading.show()
+                return@collectInLifecycle
+            }
             updateProfileState.error?.let {
+                loading.dismiss()
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
 
             updateProfileState.data?.let { updateProfileModel ->
+                loading.dismiss()
                 if (updateProfileModel.success) {
                     Toast.makeText(
                         requireContext(),

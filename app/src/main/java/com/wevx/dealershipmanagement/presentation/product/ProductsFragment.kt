@@ -40,15 +40,12 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
     private lateinit var productAdapter: ProductAdapter
     private lateinit var cartItems: List<CartItem>
     private lateinit var selectedItems: List<CartItem>
-
     private val categoryViewModel: CategoryViewModel by viewModels()
     private val allProductViewModel: AllProductViewModel by viewModels()
     private val productByCategoryViewModel: ProductByCategoryViewModel by viewModels()
-
     private val productViewModel: ProductViewModel by activityViewModels()
     private val args: ProductsFragmentArgs by navArgs()
     private lateinit var customerId: String
-
     private val cartItemMap = mutableMapOf<String, CartItem>()
 
     override fun setAllClickListener() {
@@ -56,7 +53,6 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
         bottomSheetClickListener()
         categoryViewModel.getCategory()
         allProductViewModel.getAllProduct()
-
 
     }
 
@@ -68,13 +64,18 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
 
     private fun allProductObserver() {
         allProductViewModel.allProductState.collectInLifecycle(viewLifecycleOwner) { productState ->
-            if (productState.loading) return@collectInLifecycle
+            if (productState.loading){
+                loading.show()
+                return@collectInLifecycle
+            }
 
             productState.error?.let {
+                loading.dismiss()
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
 
             productState.data?.let { allProductList ->
+                loading.dismiss()
                 productViewModel.allProducts = allProductList
                 selectedCategoryId = ""
                 setProductRecyclerView()
@@ -84,13 +85,18 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
 
     private fun productByCategoryObserver() {
         productByCategoryViewModel.productByCategoryState.collectInLifecycle(viewLifecycleOwner) { productState ->
-            if (productState.loading) return@collectInLifecycle
+            if (productState.loading){
+                loading.show()
+                return@collectInLifecycle
+            }
 
             productState.error?.let {
+                loading.dismiss()
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
 
             productState.data?.let { filteredProductList ->
+                loading.dismiss()
                 productViewModel.filteredProducts = filteredProductList
                 setProductRecyclerView()
             }

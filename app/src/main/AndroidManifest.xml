@@ -22,6 +22,7 @@
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".core.di.MyApp"
@@ -36,11 +37,8 @@
         <activity
             android:name=".presentation.IntroActivity"
             android:exported="true"
-            android:theme="@style/Theme.DealershipManagement.MainActivity"/>
-        <activity
-            android:name=".presentation.MainActivity"
-            android:exported="true"
             android:theme="@style/Theme.DealershipManagement.MainActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -48,8 +46,12 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".presentation.MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.DealershipManagement.MainActivity"/>
+        <activity
             android:name=".presentation.AuthActivity"
-            android:exported="false"
+            android:exported="true"
             android:theme="@style/Theme.DealershipManagement.MainActivity"/>
     </application>
 

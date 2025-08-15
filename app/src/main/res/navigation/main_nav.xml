@@ -39,7 +39,8 @@
 
         <argument
             android:name="id"
-            app:argType="string" />
+            app:argType="string"
+            />
 
         <action
             android:id="@+id/action_paymentFragment_to_receiptFragment"
@@ -53,6 +54,11 @@
         <argument
             android:name="id"
             app:argType="string" />
+
+        <argument
+            android:name="invoice"
+            app:argType="string"
+            />
 
         <action
             android:id="@+id/action_receiptFragment_to_homeFragment"

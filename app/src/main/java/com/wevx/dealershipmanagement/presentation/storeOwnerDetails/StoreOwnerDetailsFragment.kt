@@ -77,14 +77,20 @@ class StoreOwnerDetailsFragment : BaseFragment<FragmentStoreOwnerDetailsBinding>
     }
 
     private fun pendingOderObserver() {
+
         pendingOrderViewModel.pendingOrderState.collectInLifecycle(viewLifecycleOwner) { pendingOrderState ->
-            if (pendingOrderState.loading) return@collectInLifecycle
+            if (pendingOrderState.loading) {
+                loading.show()
+                return@collectInLifecycle
+            }
 
             pendingOrderState.error?.let {
+                loading.dismiss()
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
                 Log.d("pending", "pendingOderObserver: $it")
             }
             pendingOrderState.data?.let { pendingOrderList ->
+                loading.dismiss()
                 //type use for color change
                 pendingOrderAdapter = PendingOrderAdapter(pendingOrderList, "pending")
                 binding.rvPendingOrder.adapter = pendingOrderAdapter

@@ -150,12 +150,37 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/et_company_id_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Company Id"
+                android:textColorHint="#A9A9A9"
+                app:boxStrokeWidth="2dp"
+                app:counterTextAppearance="@style/TextAppearance.Material3.TitleSmall"
+                app:endIconMode="clear_text"
+                app:helperTextTextColor="#FF0000"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_nid_layout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_company_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableStart="@drawable/ic_company_id_24"
+                    android:drawablePadding="4dp"
+                    android:inputType="text" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/et_password_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/password"
+                android:layout_marginTop="@dimen/_8sdp"
                 android:textColorHint="#A9A9A9"
                 app:boxStrokeWidth="2dp"
                 app:counterEnabled="true"
@@ -164,7 +189,7 @@
                 app:helperTextTextColor="#FF0000"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_nid_layout">
+                app:layout_constraintTop_toBottomOf="@+id/et_company_id_layout">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_password"

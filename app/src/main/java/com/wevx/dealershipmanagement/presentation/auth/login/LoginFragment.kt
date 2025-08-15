@@ -52,15 +52,20 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
     private fun refreshTokenObserver() {
         refreshTokenViewModel.refreshTokenState.collectInLifecycle(viewLifecycleOwner) { refreshTokenState ->
-            if (refreshTokenState.loading) return@collectInLifecycle
+            if (refreshTokenState.loading){
+                loading.show()
+                return@collectInLifecycle
+            }
 
             refreshTokenState.error?.let {
+                loading.dismiss()
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
                 return@collectInLifecycle
             }
 
             refreshTokenState.data?.let {
                 if (it.data?.accessToken?.isNotEmpty() == true) {
+                    loading.dismiss()
                     val tokenManager = TokenManager(requireContext())
                     tokenManager.saveToken(
                         it.data.accessToken, "${it.data.refreshToken}"
@@ -75,13 +80,18 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
     private fun loginObserver() {
         loginViewModel.loginState.collectInLifecycle(viewLifecycleOwner) { loginState ->
-            if (loginState.loading) return@collectInLifecycle
+            if (loginState.loading){
+                loading.show()
+                return@collectInLifecycle
+            }
 
             loginState.error?.let {
+                loading.dismiss()
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
 
             loginState.data?.let { responseDTO ->
+                loading.dismiss()
                 val tokenManager = TokenManager(requireContext())
 
                 tokenManager.saveToken(

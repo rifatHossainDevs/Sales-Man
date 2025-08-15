@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.utils.SharedData
 import com.wevx.dealershipmanagement.core.common.BaseFragment
 import com.wevx.dealershipmanagement.data.dto.createOrderDto.RequestCreateOrderDTO
@@ -39,17 +38,17 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
     private lateinit var adapter: ProductCartAdapter
     lateinit var selectedItems: List<CartItem>
     private lateinit var selectedDate: String
-    //private val createOrderViewModel: CreateOrderViewModel by viewModels()
+    private val createOrderViewModel: CreateOrderViewModel by viewModels()
     private val currentUserViewModel: GetProfileViewModel by viewModels()
-    //private val createPaymentViewModel: CreatePaymentViewModel by viewModels()
-    //private val createShipmentViewModel: CreateShipmentViewModel by viewModels()
+    private val createPaymentViewModel: CreatePaymentViewModel by viewModels()
+    private val createShipmentViewModel: CreateShipmentViewModel by viewModels()
     private val args: ProductsFragmentArgs by navArgs()
     private lateinit var customerId: String
     private lateinit var salesManId: String
     lateinit var token: String
     private var total by Delegates.notNull<Double>()
     private lateinit var expectedShipDateIso: String
-    //private lateinit var orderId: String
+    private lateinit var orderId: String
 
     override fun setAllClickListener() {
         customerId = args.id
@@ -62,13 +61,13 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
     }
 
     override fun allObserver() {
-       // createOrderObserver()
-        //currentUserObserver()
-       // createPaymentObserver()
-        //createShipmentObserver()
+        createOrderObserver()
+        currentUserObserver()
+        createPaymentObserver()
+        createShipmentObserver()
     }
 
-    /*private fun createShipmentObserver() {
+    private fun createShipmentObserver() {
         createShipmentViewModel.createShipmentState.collectInLifecycle(viewLifecycleOwner) { createShipmentState ->
             if (createShipmentState.loading) return@collectInLifecycle
 
@@ -80,9 +79,9 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
             }
 
         }
-    }*/
+    }
 
-    /*private fun createPaymentObserver() {
+    private fun createPaymentObserver() {
         createPaymentViewModel.createPaymentState.collectInLifecycle(viewLifecycleOwner) { createPaymentState ->
             if (createPaymentState.loading) return@collectInLifecycle
             createPaymentState.error?.let {
@@ -94,7 +93,7 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
 
         }
     }
-*/
+
     private fun currentUserObserver() {
         currentUserViewModel.profileState.collectInLifecycle(viewLifecycleOwner) { currentUserState ->
             if (currentUserState.loading) return@collectInLifecycle
@@ -108,13 +107,18 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
         }
     }
 
-    /*private fun createOrderObserver() {
+    private fun createOrderObserver() {
         createOrderViewModel.createOrderState.collectInLifecycle(viewLifecycleOwner) { createOrderState ->
-            if (createOrderState.loading) return@collectInLifecycle
+            if (createOrderState.loading) {
+                //loading.show()
+                return@collectInLifecycle
+            }
             createOrderState.error?.let {
+                //loading.dismiss()
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
             createOrderState.data?.let {
+                //loading.dismiss()
                 orderId = it.data?.id.toString()
 
                 val requestPaymentDTO =
@@ -128,12 +132,18 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
                 createShipmentViewModel.createShipment(requestShipmentDTO, bearerToken)
 
                 Toast.makeText(requireContext(), "Order Created", Toast.LENGTH_SHORT).show()
-                findNavController().navigate(R.id.action_paymentFragment_to_receiptFragment)
+                val invoiceNumber = it.data?.invoiceNumber.toString()
+                val action =
+                    PaymentFragmentDirections.actionPaymentFragmentToReceiptFragment(
+                        id = customerId,
+                        invoice = invoiceNumber
+                    )
+
+                findNavController().navigate(action)
             }
 
         }
-    }*/
-
+    }
 
     @SuppressLint("SetTextI18n")
     fun allSelectedProducts() {
@@ -153,7 +163,7 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
             val shippingAddress = binding.etShippingAddress.extract()
             val cash = binding.rbCash
             val check = binding.checkboxConfirmation
-            /*if (checkAllFieldValidity(expectedShipmentDate, shippingAddress, cash, check)) {
+            if (checkAllFieldValidity(expectedShipmentDate, shippingAddress, cash, check)) {
                 val orderItems = SharedData.selectedProductList.map { cartItem ->
                     RequestCreateOrderDTO.OrderItem(
                         productId = cartItem.product.productId,
@@ -173,10 +183,12 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
                     return "INV-$datePart-$timePartBase36$randomPart"
                 }
 
+                val invoiceNumber = generateInvoiceNumber()
                 val requestCreateOrderDTO = RequestCreateOrderDTO(
                     customerId = customerId,
                     salesmanId = salesManId,
-                    invoiceNumber = generateInvoiceNumber(), //INV-20250814-KF4Z9AX7, INV-20250814-KF4Z9B2P
+                    invoiceNumber = invoiceNumber,
+                    //Invoice Format : INV-20250814-KF4Z9AX7, INV-20250814-KF4Z9B2P
                     totalPrice = total,
                     amountPaid = 0.0,
                     paymentDue = total,
@@ -185,21 +197,16 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
                     expectedShipDate = expectedShipDateIso
                 )
 
-
                 val bearerToken = "Bearer $token"
-                //createOrderViewModel.createOrder(requestCreateOrderDTO, bearerToken)
+                createOrderViewModel.createOrder(requestCreateOrderDTO, bearerToken)
 
-
-            }*/
-val action = PaymentFragmentDirections.actionPaymentFragmentToReceiptFragment(customerId)
-            findNavController().navigate(action)
+            }
 
         }
         binding.etExpectedShipmentDate.setOnClickListener {
             showDatePicker()
         }
     }
-
 
     private fun showDatePicker() {
         val calendar = Calendar.getInstance()
@@ -213,7 +220,6 @@ val action = PaymentFragmentDirections.actionPaymentFragmentToReceiptFragment(cu
             val displayFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             selectedDate = displayFormat.format(calendar.time)
             binding.etExpectedShipmentDate.setText(selectedDate)
-
 
             val isoFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
             isoFormat.timeZone = TimeZone.getTimeZone("UTC")

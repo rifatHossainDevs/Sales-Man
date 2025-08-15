@@ -56,7 +56,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     //image picker
-    implementation (libs.imagepicker)
+    implementation(libs.imagepicker)
 
     //Fragment
     implementation(libs.androidx.navigation.fragment.ktx)
@@ -82,18 +82,21 @@ dependencies {
     implementation(libs.lifecycle.livedata)
 
     //Circle Image View
-    implementation (libs.circleimageview)
+    implementation(libs.circleimageview)
 
     // dagger hilt
     implementation(libs.dagger.hilt.android)
     kapt(libs.dagger.hilt.compiler)
 
     //Glide
-    implementation ("com.github.bumptech.glide:glide:4.16.0")
-    kapt ("com.github.bumptech.glide:compiler:4.16.0")
+    implementation(libs.glide)
+    kapt(libs.compiler)
 
     //lottie
     implementation(libs.lottie)
 
+    //location
     implementation("com.google.android.gms:play-services-location:21.0.1")
+
+    implementation(libs.material)
 }

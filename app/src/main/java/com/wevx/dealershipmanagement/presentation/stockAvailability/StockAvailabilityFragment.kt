@@ -23,11 +23,16 @@ class StockAvailabilityFragment : BaseFragment<FragmentStockAvailabilityBinding>
 
     override fun allObserver() {
         allProductViewModel.allProductState.collectInLifecycle(viewLifecycleOwner){ allProductDataState->
-            if (allProductDataState.loading) return@collectInLifecycle
+            if (allProductDataState.loading) {
+                loading.show()
+                return@collectInLifecycle
+            }
             allProductDataState.error?.let {
+                loading.dismiss()
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
             allProductDataState.data?.let { allProductList->
+                loading.dismiss()
                 if (!allProductList.isEmpty()){
                     allProductAdapter = StockAvailabilityAdapter(allProductList)
                     binding.rvAllProduct.adapter = allProductAdapter

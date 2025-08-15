@@ -66,12 +66,17 @@ class RegistrationFragment :
 
     override fun allObserver() {
         registrationViewModel.registrationState.collectInLifecycle(viewLifecycleOwner) { registrationState ->
-            if (registrationState.loading) return@collectInLifecycle
+            if (registrationState.loading){
+                loading.show()
+                return@collectInLifecycle
+            }
             registrationState.error?.let {
+                loading.dismiss()
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
 
             registrationState.data?.let {
+                loading.dismiss()
                 Toast.makeText(requireContext(), "Success: $it", Toast.LENGTH_SHORT).show()
                 bottomSheetDialog.show()
             }
@@ -87,6 +92,7 @@ class RegistrationFragment :
                 val nid = etNid.extract()
                 val password = etPassword.extract()
                 val confirmPassword = etConfirmPassword.extract()
+                val companyId = etCompanyId.extract()
 
 
                 if (checkAllFieldValidity(
@@ -95,7 +101,8 @@ class RegistrationFragment :
                         email,
                         nid,
                         password,
-                        confirmPassword
+                        confirmPassword,
+                        companyId
                     )
                 ) {
                     val requestRegistration = RequestRegistrationDto(
@@ -166,7 +173,8 @@ class RegistrationFragment :
         email: String,
         nid: String,
         password: String,
-        confirmPassword: String
+        confirmPassword: String,
+        companyId: String
     ): Boolean {
         val emailPattern = "^[a-z0-9+_.-]+@[a-z.-]{4,7}\\.[a-z]{2,5}$"
         val passwordPattern =
@@ -222,6 +230,10 @@ class RegistrationFragment :
         if (nid.length != 10 && nid.length != 17) {
             binding.etNidLayout.error = "NID Should have 10 or 17 Digit"
             return false
+        }
+
+        if (companyId == ""){
+            binding.etConfirmPasswordLayout.error = "This field must be filled"
         }
 
 

@@ -201,13 +201,18 @@ class AddCustomerFragment :
 
     private fun createStoreObserver() {
         createStoreViewModel.createStoreState.collectInLifecycle(viewLifecycleOwner) { createStoreState ->
-            if (createStoreState.loading) return@collectInLifecycle
+            if (createStoreState.loading){
+                loading.show()
+                return@collectInLifecycle
+            }
             createStoreState.error?.let {
+                loading.dismiss()
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
                 Log.d("failled", "createStoreObserver: $it")
             }
 
             createStoreState.data?.let {
+                loading.dismiss()
                 Toast.makeText(requireContext(), "Store Created Successfully", Toast.LENGTH_SHORT)
                     .show()
                 findNavController().navigate(R.id.action_addCustomerFragment_to_homeFragment)

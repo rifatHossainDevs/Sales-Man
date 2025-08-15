@@ -22,7 +22,6 @@ import com.wevx.dealershipmanagement.core.common.BaseFragment
 import com.wevx.dealershipmanagement.databinding.FragmentReceiptBinding
 import com.wevx.dealershipmanagement.domain.models.CartItem
 import com.wevx.dealershipmanagement.presentation.auth.profile.GetProfileViewModel
-import com.wevx.dealershipmanagement.presentation.product.ProductsFragmentArgs
 import com.wevx.dealershipmanagement.presentation.storeOwnerDetails.GetStoreByIdViewModel
 import com.wevx.dealershipmanagement.utils.TokenManager
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
@@ -82,11 +81,16 @@ class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBind
 
     private fun storeOwnerObserver() {
         storeOwnerViewModel.getStoreByIdState.collectInLifecycle(viewLifecycleOwner) { storeByIdState ->
-            if (storeByIdState.loading) return@collectInLifecycle
+            if (storeByIdState.loading) {
+                loading.show()
+                return@collectInLifecycle
+            }
             storeByIdState.error?.let {
+                loading.dismiss()
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
             storeByIdState.data?.let {
+                loading.dismiss()
                 storeName = it.storeName
                 customerAddress = it.address
 
@@ -252,25 +256,35 @@ class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBind
         sb.appendLine(centerText("DEALERSHIP MANAGEMENT", lineWidth))
         sb.appendLine(centerText("Sales Receipt", lineWidth))
         sb.appendLine()
-        val displayAddress = if (customerAddress.length > 26)
+        val displayAddress = if (customerAddress.length > 26){
             customerAddress.take(25) + "..."
-        else
+        }
+        else{
             customerAddress
-        val displayStoreName = if (storeName.length > 26)
-            storeName.take(25) + "..."
-        else
-            storeName
-        val displaySalesmanName = if (salesmanName.length > 26)
-            salesmanName.take(25) + "..."
-        else
-            salesmanName
+        }
 
+        val displayStoreName = if (storeName.length > 26){
+            storeName.take(25) + "..."
+        }
+        else{
+            storeName
+        }
+
+        val displaySalesmanName = if (salesmanName.length > 26){
+            salesmanName.take(25) + "..."
+        }
+        else{
+            salesmanName
+        }
+        val invoiceNumber = args.invoice
 
         // Customer & Sales Info
+        sb.appendLine("Invoice : $invoiceNumber")
         sb.appendLine("Store   : $displayStoreName")
         sb.appendLine("Address : $displayAddress")
         sb.appendLine("Salesman: $displaySalesmanName")
         sb.appendLine("Date    : $date")
+        sb.appendLine()
 
         // column name
         sb.appendLine(String.format("%-20s %-10s %10s", "Item", "Qty", "Amount"))
@@ -313,7 +327,6 @@ class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBind
         val padding = (width - text.length) / 2
         return " ".repeat(padding) + text
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
