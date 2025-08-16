@@ -1,17 +1,14 @@
 package com.wevx.dealershipmanagement.presentation.auth.login
 
 import android.content.Intent
-import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.wevx.dealershipmanagement.presentation.MainActivity
 import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.core.common.BaseFragment
+import com.wevx.dealershipmanagement.data.dto.RequestRefreshToken
 import com.wevx.dealershipmanagement.data.dto.loginDto.RequestLogin
 import com.wevx.dealershipmanagement.databinding.FragmentLoginBinding
 import com.wevx.dealershipmanagement.presentation.auth.refreshToken.RefreshTokenViewModel
@@ -27,13 +24,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     private val refreshTokenViewModel: RefreshTokenViewModel by viewModels()
 
     override fun shouldInitialize(): Boolean {
-
-
-
         refreshTokenObserver()
         val tokenManager = TokenManager(requireContext())
-        val refreshToken = tokenManager.getRefreshToken()
-        refreshTokenViewModel.refreshTokenUser(refreshToken.toString())
+        val refreshToken = tokenManager.getRefreshToken().toString()
+        refreshTokenViewModel.getRefreshAccessToken(RequestRefreshToken(refreshToken))
         return true
     }
 
@@ -54,13 +48,13 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         refreshTokenViewModel.refreshTokenState.collectInLifecycle(viewLifecycleOwner) { refreshTokenState ->
             if (refreshTokenState.loading){
                 loading.show()
-                return@collectInLifecycle
+                //return@collectInLifecycle
             }
 
             refreshTokenState.error?.let {
                 loading.dismiss()
-                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
-                return@collectInLifecycle
+                //Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+                //return@collectInLifecycle
             }
 
             refreshTokenState.data?.let {
@@ -126,15 +120,27 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     private fun allButtonClickListener() {
         binding.apply {
             btnLogin.setOnClickListener {
-                val phone = etPhoneNumber.extract()
+                val userEmailOrPass = etEmailOrPhone.extract()
                 val password = etPassword.extract()
-                val confirmPassword = etConfirmPassword.extract()
+                /*val confirmPassword = etConfirmPassword.extract()
                 if (checkAllFieldValidity(phone, password, confirmPassword)) {
                     val data = RequestLogin(
                         phone = phone, password = password
                     )
                     loginViewModel.loginUser(data)
+                }*/
+                val emailPattern = Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
+
+                if (userEmailOrPass.isNotEmpty() && password.isNotEmpty()) {
+                    if (emailPattern.matches(userEmailOrPass)){
+                        loginViewModel.loginUser(RequestLogin(email = userEmailOrPass, password = password))
+                    }else{
+                        loginViewModel.loginUser(RequestLogin(phone = userEmailOrPass, password = password))
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "Please enter email and password", Toast.LENGTH_SHORT).show()
                 }
+
             }
         }
 
@@ -153,7 +159,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     ): Boolean {
         binding.etPhoneNumberLayout.error = null
         binding.etPasswordLayout.error = null
-        binding.etConfirmPasswordLayout.error = null
+        //binding.etConfirmPasswordLayout.error = null
 
         if (phone == "") {
             binding.etPhoneNumberLayout.error = "This field must be filled"
@@ -174,7 +180,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             return false
         }
 
-        if (confirmPassword == "") {
+        /*if (confirmPassword == "") {
             binding.etConfirmPasswordLayout.error = "This field must be filled"
             return false
         }
@@ -182,7 +188,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         if (password != confirmPassword) {
             binding.etConfirmPasswordLayout.error = "Password and Confirm Password are not match!"
             return false
-        }
+        }*/
 
         return true
     }

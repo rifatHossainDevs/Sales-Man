@@ -1,5 +1,6 @@
 package com.wevx.dealershipmanagement.data.remote.auth
 
+import com.wevx.dealershipmanagement.data.dto.RequestRefreshToken
 import com.wevx.dealershipmanagement.data.dto.changePasswordDTO.RequestChangePasswordDto
 import com.wevx.dealershipmanagement.data.dto.changePasswordDTO.ResponseChangePasswordDTO
 import com.wevx.dealershipmanagement.data.dto.loginDto.RequestLogin
@@ -45,6 +46,6 @@ interface AuthApiService {
     ): Response<ResponseUpdateProfileDto>
 
     @POST("users/refresh-token")
-    suspend fun refreshToken(@Body token: String): Response<ResponseRefreshTokenDTO>
+    suspend fun refreshToken(@Body request: RequestRefreshToken): Response<ResponseRefreshTokenDTO>
 
 }

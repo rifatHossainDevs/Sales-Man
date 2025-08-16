@@ -37,4 +37,5 @@
     <string name="current_orders">Current Orders:</string>
     <string name="complete_orders">Complete Orders:</string>
     <string name="m_s_khalid_store">M/S Khalid Store</string>
+    <string name="email_or_phone">Email or Phone</string>
 </resources>

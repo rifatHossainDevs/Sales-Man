@@ -1,5 +1,6 @@
 package com.wevx.dealershipmanagement.domain.repository.auth
 
+import com.wevx.dealershipmanagement.data.dto.RequestRefreshToken
 import com.wevx.dealershipmanagement.data.dto.changePasswordDTO.RequestChangePasswordDto
 import com.wevx.dealershipmanagement.data.dto.changePasswordDTO.ResponseChangePasswordDTO
 import com.wevx.dealershipmanagement.data.dto.loginDto.RequestLogin
@@ -28,7 +29,7 @@ interface AuthRepository {
 
     suspend fun logout(token: String): Response<ResponseLogoutDto>
 
-    suspend fun refreshToken(token: String): Response<ResponseRefreshTokenDTO>
+    suspend fun refreshToken(requestRefreshToken: RequestRefreshToken): Response<ResponseRefreshTokenDTO>
 
     suspend fun updateProfile(
         requestUpdateProfile: RequestUpdateProfile,

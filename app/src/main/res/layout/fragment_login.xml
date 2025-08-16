@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_24sdp"
-            android:hint="@string/phone_number1"
+            android:hint="@string/email_or_phone"
             android:textColorHint="#A9A9A9"
             app:boxStrokeWidth="2dp"
             app:counterTextAppearance="@style/TextAppearance.Material3.TitleSmall"
@@ -60,12 +60,12 @@
             app:helperTextTextColor="#FF0000">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_phone_number"
+                android:id="@+id/et_email_or_phone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:drawableStart="@drawable/ic_phone_24"
                 android:drawablePadding="4dp"
-                android:inputType="phone" />
+                android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -74,7 +74,7 @@
             android:id="@+id/et_password_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_4sdp"
             android:hint="@string/password"
             android:textColorHint="#A9A9A9"
             app:boxStrokeWidth="2dp"
@@ -92,32 +92,11 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/et_confirm_password_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_16sdp"
-            android:hint="@string/confirm_password"
-            android:textColorHint="#A9A9A9"
-            app:boxStrokeWidth="2dp"
-            app:counterTextAppearance="@style/TextAppearance.Material3.TitleSmall"
-            app:endIconMode="password_toggle"
-            app:helperTextTextColor="#FF0000">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_confirm_password"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawableStart="@drawable/ic_confirm_password_24"
-                android:drawablePadding="4dp"
-                android:inputType="textPassword" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
         <TextView
             android:id="@+id/forgetPasswordTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="@string/forgetPassword"
             android:textColor="#079BE0" />
 

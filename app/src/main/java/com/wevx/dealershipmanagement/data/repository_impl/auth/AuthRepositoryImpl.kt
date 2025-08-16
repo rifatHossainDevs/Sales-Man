@@ -1,5 +1,6 @@
 package com.wevx.dealershipmanagement.data.repository_impl.auth
 
+import com.wevx.dealershipmanagement.data.dto.RequestRefreshToken
 import com.wevx.dealershipmanagement.data.dto.changePasswordDTO.RequestChangePasswordDto
 import com.wevx.dealershipmanagement.data.dto.changePasswordDTO.ResponseChangePasswordDTO
 import com.wevx.dealershipmanagement.data.dto.loginDto.RequestLogin
@@ -44,8 +45,8 @@ class AuthRepositoryImpl @Inject constructor(
 
     }
 
-    override suspend fun refreshToken(token: String): Response<ResponseRefreshTokenDTO> {
-        return authApiService.refreshToken(token)
+    override suspend fun refreshToken(requestRefreshToken: RequestRefreshToken): Response<ResponseRefreshTokenDTO> {
+        return authApiService.refreshToken(requestRefreshToken)
     }
 
     override suspend fun updateProfile(
