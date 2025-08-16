@@ -1,7 +1,6 @@
 package com.wevx.dealershipmanagement.utils
 
 import com.wevx.dealershipmanagement.R
-import com.wevx.dealershipmanagement.domain.models.Customers
 import com.wevx.dealershipmanagement.domain.models.Divisions
 import com.wevx.dealershipmanagement.domain.models.DrawerItems
 import com.wevx.dealershipmanagement.domain.models.Products
@@ -201,5 +200,7 @@ object LocalDatabase {
         Divisions(7, "Rangpur"),
         Divisions(8, "Mymensingh")
     )
+
+    val divisionList = listOf("Dhaka", "Chattogram", "Rajshahi", "Khulna", "Barishal", "Sylhet", "Rangpur", "Mymensingh")
 
 }

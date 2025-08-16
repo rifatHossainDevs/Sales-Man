@@ -16,7 +16,7 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     // Spinner positions
-    var selectedDivisionIndex: Int = 0
+    /*var selectedDivisionIndex: Int = 0
     var selectedDivisionId: Int = 0
 
     var selectedDistrictIndex: Int = 0
@@ -49,5 +49,5 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
-    }
+    }*/
 }

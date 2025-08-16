@@ -1,6 +1,5 @@
 package com.wevx.dealershipmanagement.presentation.home.getStoreOwnerByArea
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wevx.dealershipmanagement.core.common.Resource
@@ -19,7 +18,6 @@ class StoreOwnerViewModel @Inject constructor(
     private val _storeOwnerState = MutableStateFlow(StoreOwnerDataState())
     val storeOwnerState: StateFlow<StoreOwnerDataState> = _storeOwnerState
 
-
     fun getStoreOwnerByArea(areaId: Int) {
         viewModelScope.launch {
             _storeOwnerState.value = StoreOwnerDataState(loading = true)
@@ -27,16 +25,12 @@ class StoreOwnerViewModel @Inject constructor(
                 when (response) {
                     is Resource.Success -> {
                         _storeOwnerState.value = StoreOwnerDataState(data = response.data)
-                        Log.d("storeOwner", "Store Owner: ${response.data}")
                     }
-
                     is Resource.Loading -> {
                         _storeOwnerState.value = StoreOwnerDataState(loading = true)
                     }
-
                     is Resource.Error -> {
                         _storeOwnerState.value = StoreOwnerDataState(error = response.message)
-                        Log.d("TAG", "error: ${response.message}")
                     }
                 }
 
