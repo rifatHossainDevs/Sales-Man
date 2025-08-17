@@ -1,15 +1,26 @@
 package com.wevx.dealershipmanagement.presentation.home
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.DialogInterface
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.annotation.RequiresPermission
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.core.common.BaseFragment
 import com.wevx.dealershipmanagement.databinding.FragmentHomeBinding
@@ -21,9 +32,9 @@ import com.wevx.dealershipmanagement.presentation.home.getDistrict.DistrictViewM
 import com.wevx.dealershipmanagement.presentation.home.getStoreOwnerByArea.StoreOwnerViewModel
 import com.wevx.dealershipmanagement.presentation.home.getStoreOwnerByDistrict.StoreOwnerByDistrictViewModel
 import com.wevx.dealershipmanagement.presentation.home.getSubDistrict.SubDistrictViewModel
+import com.wevx.dealershipmanagement.utils.Constants
 import com.wevx.dealershipmanagement.utils.LocalDatabase.divisionList
-import com.wevx.dealershipmanagement.utils.LocalDatabase.divisions
-import com.wevx.dealershipmanagement.utils.collectInLifecycle
+import com.wevx.dealershipmanagement.utils.handleMultiplePermissionsResult
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlin.getValue
@@ -31,13 +42,13 @@ import kotlin.getValue
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate),
     StoreOwnerAdapter.HandleCustomerClickListener {
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private val districtViewModel: DistrictViewModel by viewModels()
     private val subDistrictViewModel: SubDistrictViewModel by viewModels()
     private val areaViewModel: AreaViewModel by viewModels()
     private val storeOwnerViewModel: StoreOwnerViewModel by viewModels()
     private val homeViewModel: HomeViewModel by viewModels()
-
     private val storeByDisViewModel: StoreOwnerByDistrictViewModel by viewModels()
 
 
@@ -46,9 +57,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private var districtList: MutableList<String> = mutableListOf()
     private var subDistrictList: MutableList<String> = mutableListOf()
     private var areaList: MutableList<String> = mutableListOf()
+    private var storeOwnerList: MutableList<StoreOwnerModel> = mutableListOf()
+
+    private val multiplePermissionList = arrayListOf(
+        Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION
+    )
 
 
     override fun setAllClickListener() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        checkMultiplePermission()
+
         binding.btnAddUser.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_addCustomerFragment)
         }
@@ -66,10 +85,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         observeSubDistricts()
         observeAreas()
         observeStoreOwners()
-        observeStoreOwnersBySubDis()
+        //observeStoreOwnersBySubDis()
     }
 
-    private fun observeStoreOwnersBySubDis() {
+    /*private fun observeStoreOwnersBySubDis() {
         storeByDisViewModel.storeOwnerByDisState.collectInLifecycle(viewLifecycleOwner){storeOwnerByDisState->
             if (storeOwnerByDisState.loading) return@collectInLifecycle
             storeOwnerByDisState.data?.let { storeOwnerBySubDisList ->
@@ -80,7 +99,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             }
 
         }
-    }
+    }*/
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -112,16 +131,75 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 }
                 if (response.data != null) {
                     loading.dismiss()
-                    storeOwnerAdapter.updateData(response.data)
-                    binding.tvNoStoreFound.visibility = if (response.data.isEmpty()) View.VISIBLE else View.GONE
-                    binding.rvAllCustomer.visibility = if (response.data.isEmpty()) View.GONE else View.VISIBLE
-                    binding.tvAllCustomer.visibility = if (response.data.isEmpty()) View.GONE else View.VISIBLE
+                    //storeOwnerAdapter.updateData(response.data)
+                    storeOwnerList = response.data as MutableList<StoreOwnerModel>
+                    //setStoreOwnerAdapterData()
+                    nearByStoreOwner()
+                    Log.d("TAG", "observeStoreOwners: ${response.data} ")
                 }
                 if (response.error != null) {
                     loading.dismiss()
-                    Toast.makeText(requireContext(), response.error, Toast.LENGTH_SHORT).show()
+                    storeOwnerList.clear()
+                    binding.tvNoStoreFound.visibility = View.VISIBLE
+                    binding.rvAllCustomer.visibility = View.GONE
+                    binding.tvAllCustomer.visibility = View.GONE
                 }
             }
+        }
+    }
+
+    //near by store
+    @SuppressLint("MissingPermission")
+    private fun nearByStoreOwner() {
+        if (storeOwnerList.isNotEmpty()) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { currentLocation: Location? ->
+                if (currentLocation != null) {
+                    val storesWithDistance =
+                        storeOwnerList.filter { it.coordinates?.size == 2 }.mapNotNull { store ->
+                            val lat = store.coordinates?.getOrNull(0)?.toDoubleOrNull()
+                            val lon = store.coordinates?.getOrNull(1)?.toDoubleOrNull()
+
+                            if (lat != null && lon != null) {
+                                val storeLocation = Location("").apply {
+                                    latitude = lat
+                                    longitude = lon
+                                }
+                                val distanceInMeters = currentLocation.distanceTo(storeLocation)
+                                if (distanceInMeters <= 50) {
+                                    val roundedDistance = String.format("%.2f", distanceInMeters).toDouble()
+                                    store.copy(distance = roundedDistance)
+                                } else {
+                                    null // If the store is further than 50 meters, exclude it
+                                }
+                            } else null
+                        }.sortedBy { it.distance }
+
+                    storeOwnerList = storesWithDistance.toMutableList()
+                    setStoreOwnerAdapterData()
+                } else {
+                    warningPermissionDialog(
+                        requireContext(),
+                        "Unable to get current location. Please ensure location services are enabled For get Near By Home List"
+                    ) { _, _ -> }
+
+                }
+            }.addOnFailureListener {
+                Toast.makeText(
+                    requireContext(),
+                    "Failed to get location, Please turn on location. ${it.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private fun setStoreOwnerAdapterData() {
+        if (storeOwnerList.isNotEmpty()) {
+            storeOwnerAdapter = StoreOwnerAdapter(storeOwnerList, this)
+            binding.rvAllCustomer.adapter = storeOwnerAdapter
+            binding.tvNoStoreFound.visibility = View.GONE
+            binding.rvAllCustomer.visibility = View.VISIBLE
+            binding.tvAllCustomer.visibility = View.VISIBLE
         }
     }
 
@@ -349,5 +427,64 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     override fun deleteClickListener(storeOwnerModel: StoreOwnerModel) {
 
+    }
+
+
+    private fun checkMultiplePermission() {
+        val needListOfPermission = ArrayList<String>()
+        for (permission in multiplePermissionList) {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    permission
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                needListOfPermission.add(permission)
+            }
+        }
+        if (needListOfPermission.isNotEmpty()) {
+            requestPermissions(
+                needListOfPermission.toTypedArray(), Constants.MULTIPLE_PERMISSIONS_CODE
+            )
+        }
+    }
+
+
+    @Deprecated("Deprecated in Java")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray,
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        handleMultiplePermissionsResult(
+            context = requireContext(),
+            activity = requireActivity(),
+            requestCode = requestCode,
+            expectedRequestCode = Constants.MULTIPLE_PERMISSIONS_CODE,
+            permissions = permissions,
+            grantResults = grantResults,
+            onGranted = {
+                // Permissions granted, proceed
+                nearByStoreOwner()
+            },
+            onDeniedRetry = {
+                // Retry permission request
+                checkMultiplePermission()
+            })
+    }
+
+
+    fun warningPermissionDialog(
+        context: Context,
+        message: String,
+        listener: DialogInterface.OnClickListener
+    ) {
+        MaterialAlertDialogBuilder(context)
+            .setMessage(message)
+            .setCancelable(false)
+            .setPositiveButton("OK", listener)
+            .create()
+            .show()
     }
 }

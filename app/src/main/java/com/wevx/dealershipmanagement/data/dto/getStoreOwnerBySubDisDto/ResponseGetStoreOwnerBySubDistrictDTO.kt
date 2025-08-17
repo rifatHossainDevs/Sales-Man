@@ -66,10 +66,7 @@ fun ResponseGetStoreOwnerBySubDistrictDTO.Data.toStoreOwnerModel():  StoreOwnerM
         storeOwnerAvatar = this.avatar ?: "",
         storeName = this.storeName ?: "",
         storeImg = this.storePictures ?: "",
-        coordinates = Coordinates(
-            this.coordinates?.getOrNull(0)?.toDoubleOrNull() ?: 0.0,
-            this.coordinates?.getOrNull(1)?.toDoubleOrNull() ?: 0.0
-        ),
+        coordinates = coordinates,
         areaNo = this.areaNo ?: 0,
         address = this.address ?: ""
 

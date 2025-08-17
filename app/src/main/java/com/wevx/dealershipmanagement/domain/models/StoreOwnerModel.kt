@@ -8,7 +8,8 @@ data class StoreOwnerModel(
     val storeOwnerAvatar: String,
     val storeName: String,
     val storeImg: String,
-    val coordinates: Coordinates,
+    val coordinates: List<String?>? = null,
     val areaNo: Int,
-    val address: String
+    val address: String,
+    val distance: Double? = null
 )
