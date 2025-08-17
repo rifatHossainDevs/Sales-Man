@@ -125,25 +125,9 @@ class AddCustomerFragment :
                 val storeName = etStoreName.extract()
                 val storeAddress = etStoreAddress.extract()
 
-                val subDistrictIdToSend = if (currentSubdistricts.isNotEmpty()) {
-                    if (spinnerSubdistrict.selectedItemPosition == 0) {
-                        currentSubdistricts[0].subDisNo
-                    } else {
-                        currentSubdistricts[spinnerSubdistrict.selectedItemPosition - 1].subDisNo
-                    }
-                } else {
-                    0
-                }
+                val subDistrictIdToSend = currentSubdistricts[spinnerSubdistrict.selectedItemPosition-1].subDisNo
 
-                val areaIdToSend = if (currentAreaList.isNotEmpty()) {
-                    if (spinnerArea.selectedItemPosition == 0) {
-                        currentAreaList[0].areaNo
-                    } else {
-                        currentAreaList[spinnerArea.selectedItemPosition - 1].areaNo
-                    }
-                } else {
-                    0
-                }
+                val areaIdToSend = currentAreaList[spinnerArea.selectedItemPosition-1].areaNo
 
                 val storeImageFile = storeImageUri?.let { uriToFile(it, requireContext()) }
                 val storeOwnerImageFile =
@@ -158,6 +142,9 @@ class AddCustomerFragment :
                     return@setOnClickListener
                 }
                 val bearerToken = "Bearer ${tokenManager.getAccessToken()}"
+
+                Log.d("TAG", "areaIdToSend: ${areaIdToSend}")
+                Log.d("TAG", "subDistrictIdToSend: ${subDistrictIdToSend}")
                 createStoreViewModel.createStore(
                     currentUser,
                     storeName,
@@ -359,6 +346,7 @@ class AddCustomerFragment :
         areaViewModel.areaState.collectInLifecycle(viewLifecycleOwner) {
             if (it.loading) return@collectInLifecycle
             it.data?.let { list ->
+                currentAreaList = list
                 val names = listOf("Select Area") + list.map { a -> a.areaName }
                 binding.spinnerArea.adapter =
                     CustomSpinnerAdapter(requireContext(), names, setOf("Select Area"))
