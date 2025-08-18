@@ -50,13 +50,13 @@ class StoreOwnerAdapter(
                 listener.selectCustomer(storeOwner.userId, storeOwner.id)
             }
 
-            ivEdit.setOnClickListener {
+            /*ivEdit.setOnClickListener {
                 listener.editClickListener(storeOwner)
             }
 
             ivDelete.setOnClickListener {
                 listener.deleteClickListener(storeOwner)
-            }
+            }*/
         }
     }
 

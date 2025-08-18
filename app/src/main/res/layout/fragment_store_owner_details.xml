@@ -112,6 +112,7 @@
         android:id="@+id/rv_pending_order"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="@dimen/_32sdp"
         android:maxHeight="@dimen/_240sdp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/tv_complete_order"
@@ -121,21 +122,18 @@
         tools:listitem="@layout/item_layout_pending_order" />
 
     <TextView
-        android:visibility="gone"
         android:id="@+id/tv_no_pending_order"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_4sdp"
-        android:layout_marginTop="@dimen/_16sdp"
         android:fontFamily="@font/poppins_semibold"
         android:text="No Pending Order Found"
         android:textColor="@color/gray"
         android:textSize="@dimen/_12sdp"
-        app:layout_constraintEnd_toEndOf="@+id/rv_pending_order"
-        app:layout_constraintStart_toStartOf="@id/rv_pending_order"
-        app:layout_constraintTop_toTopOf="@id/rv_pending_order"
-
-        />
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_pending_order" />
 
     <TextView
         android:id="@+id/tv_complete_order"
@@ -162,19 +160,19 @@
         tools:listitem="@layout/item_layout_pending_order" />
 
     <TextView
-        android:visibility="gone"
         android:id="@+id/tv_no_complete_order"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_4sdp"
-        android:layout_marginTop="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_8sdp"
         android:fontFamily="@font/poppins_semibold"
         android:text="No Complete Order Found"
         android:textColor="@color/gray"
         android:textSize="@dimen/_12sdp"
-        app:layout_constraintEnd_toEndOf="@+id/rv_complete_order"
-        app:layout_constraintStart_toStartOf="@id/rv_complete_order"
-        app:layout_constraintTop_toTopOf="@id/rv_complete_order"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_complete_order"
 
         />
 

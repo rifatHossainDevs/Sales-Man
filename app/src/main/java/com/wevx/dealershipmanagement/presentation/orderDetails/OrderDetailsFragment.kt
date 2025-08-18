@@ -11,7 +11,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
-import com.google.gson.annotations.SerializedName
 import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.core.common.BaseFragment
 import com.wevx.dealershipmanagement.data.dto.RequestUpdateOrder
@@ -21,10 +20,8 @@ import com.wevx.dealershipmanagement.data.dto.shipmentDto.RequestUpdateShipment
 import com.wevx.dealershipmanagement.databinding.FragmentOrderDetailsBinding
 import com.wevx.dealershipmanagement.presentation.adapter.OrderDetailsAdapter
 import com.wevx.dealershipmanagement.presentation.storeOwnerDetails.GetStoreByIdViewModel
-import com.wevx.dealershipmanagement.utils.TokenManager
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -37,22 +34,18 @@ class OrderDetailsFragment :
     val orderDetailsViewModel: OrderDetailsViewModel by viewModels()
     private val getPaymentViewModel: GetPaymentViewModel by viewModels()
     private val updatePaymentViewModel: UpdatePaymentViewModel by viewModels()
-
     private val args: OrderDetailsFragmentArgs by navArgs()
     lateinit var orderDetailsAdapter: OrderDetailsAdapter
     private val storeOwnerByIdViewModel: GetStoreByIdViewModel by viewModels()
     private val updateOrderViewModel: UpdateOrderViewModel by viewModels()
     private val getShipmentViewModel: GetShipmentViewModel by viewModels()
     private val updateShipmentViewModel: UpdateShipmentViewModel by viewModels()
-
     private var paymentID: String? = null
     private var paymentAmount: Double? = null
     private var shipmentID: String? = null
     private var expectedShipDate: String? = null
-
     private var shipmentStatus: String? = null
     private var paymentStatus: String? = null
-
     private var orderDetail: ResponseOderDetailsDTO? = null
 
     var customerId: String? = null
