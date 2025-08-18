@@ -205,17 +205,16 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <CheckBox
+    <!--<CheckBox
         android:id="@+id/checkbox_confirmation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="I Have Received Cash succesfully"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_shipping_address_layout" />
+        app:layout_constraintTop_toBottomOf="@id/et_shipping_address_layout" />-->
 
     <androidx.appcompat.widget.AppCompatButton
-
-        android:id="@+id/btn_payment"
+        android:id="@+id/btn_order_confirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -223,7 +222,8 @@
         android:layout_marginBottom="@dimen/_4sdp"
         android:background="@drawable/btn_create_account"
         android:paddingHorizontal="@dimen/_16sdp"
-        android:text="Payment"
+        android:text="Corfirm Order"
+        android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="@dimen/_16ssp"
         app:layout_constraintBottom_toBottomOf="parent"

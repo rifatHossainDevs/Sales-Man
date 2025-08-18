@@ -10,12 +10,12 @@
         android:id="@+id/tv_select_customer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_8sdp"
-        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_4sdp"
         android:fontFamily="@font/poppins_semibold"
+        android:layout_marginStart="@dimen/_4sdp"
         android:text="@string/selected_store"
         android:textColor="@color/black"
-        android:textSize="@dimen/_20sdp"
+        android:textSize="@dimen/_16sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,7 +23,7 @@
         android:id="@+id/cv_selected_store"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_8sdp"
+        android:layout_marginHorizontal="@dimen/_4sdp"
         android:layout_marginBottom="8dp"
         android:background="@color/recyclerView"
         android:backgroundTint="@color/recyclerView"
@@ -40,8 +40,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_store_owner"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
+                android:layout_width="76dp"
+                android:layout_height="76dp"
                 android:src="@drawable/ic_profile_image_24"
                 app:civ_border_color="#FF000000"
                 app:civ_border_width="2dp"
@@ -54,12 +54,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_6sdp"
-                android:ellipsize="end"
-                android:maxWidth="@dimen/_168sdp"
-                android:maxLines="1"
                 android:text="@string/m_s_khalid_store"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_16ssp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="@dimen/_14ssp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@id/iv_store_owner"
                 app:layout_constraintTop_toTopOf="@id/iv_store_owner" />
@@ -68,13 +67,12 @@
                 android:id="@+id/tv_owner_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxWidth="@dimen/_168sdp"
                 android:maxLines="1"
                 android:text="@string/md_khalid_hasan_jibon"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12ssp"
+                android:textSize="@dimen/_10ssp"
                 android:textStyle="bold"
+                android:ellipsize="end"
                 app:layout_constraintStart_toStartOf="@id/tv_store_name"
                 app:layout_constraintTop_toBottomOf="@id/tv_store_name" />
 
@@ -82,13 +80,12 @@
                 android:id="@+id/tv_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_2sdp"
                 android:ellipsize="end"
-                android:maxWidth="@dimen/_168sdp"
+                android:maxWidth="@dimen/_220sdp"
                 android:maxLines="2"
                 android:text="@string/address_shop_store_details_fragment"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12ssp"
+                android:textSize="@dimen/_10ssp"
                 app:layout_constraintStart_toStartOf="@id/tv_owner_name"
                 app:layout_constraintTop_toBottomOf="@id/tv_owner_name" />
 
@@ -101,12 +98,12 @@
         android:id="@+id/tv_current_order"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_8sdp"
-        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginStart="@dimen/_4sdp"
+        android:layout_marginTop="@dimen/_4sdp"
         android:fontFamily="@font/poppins_semibold"
-        android:text="@string/current_orders"
+        android:text="Pending Order"
         android:textColor="@color/black"
-        android:textSize="@dimen/_20sdp"
+        android:textSize="@dimen/_14sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cv_selected_store" />
 
@@ -114,25 +111,23 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_pending_order"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_240sdp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/tv_complete_order"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_current_order"
-        tools:listitem="@layout/item_layout_pending_and_complete_order" />
-
+        tools:listitem="@layout/item_layout_pending_order" />
 
     <TextView
         android:id="@+id/tv_complete_order"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_8sdp"
-        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginStart="@dimen/_4sdp"
         android:fontFamily="@font/poppins_semibold"
         android:text="@string/complete_orders"
         android:textColor="@color/black"
-        android:textSize="@dimen/_20sdp"
+        android:textSize="@dimen/_14sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rv_pending_order" />
 
@@ -146,7 +141,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_complete_order"
-        tools:listitem="@layout/item_layout_pending_and_complete_order" />
+        tools:listitem="@layout/item_layout_pending_order" />
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

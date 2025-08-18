@@ -22,6 +22,7 @@ import com.wevx.dealershipmanagement.presentation.auth.logout.LogoutViewModel
 import com.wevx.dealershipmanagement.presentation.auth.profile.GetProfileViewModel
 import com.wevx.dealershipmanagement.utils.Constants.CHANGE_PASSWORD
 import com.wevx.dealershipmanagement.utils.Constants.EDIT_PROFILE
+import com.wevx.dealershipmanagement.utils.Constants.HOME
 import com.wevx.dealershipmanagement.utils.Constants.STOCK_AVAILABILITY
 import com.wevx.dealershipmanagement.utils.Constants.TODAYS_DELIVERY
 import com.wevx.dealershipmanagement.utils.TokenManager
@@ -135,10 +136,11 @@ class MainActivity : AppCompatActivity() {
 
         adapter = DrawerItemAdapter(LocalDatabase.drawerItems) { selectedItem ->
             when (selectedItem.name) {
-                /*EDIT_PROFILE -> {
-                    navController.navigate(R.id.editProfileFragment)
+
+                HOME -> {
+                    navController.navigate(R.id.homeFragment)
                     drawerLayout.closeDrawer(GravityCompat.START)
-                }*/
+                }
 
                 STOCK_AVAILABILITY -> {
                     navController.navigate(R.id.stockAvailabilityFragment)
@@ -160,6 +162,8 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.todaysDeliveryFragment)
                     drawerLayout.closeDrawer(GravityCompat.START)
                 }
+
+
 
                 else -> {
                     Toast.makeText(this, "Coming soon: ${selectedItem.name}", Toast.LENGTH_SHORT)

@@ -179,13 +179,13 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
     }
 
     private fun buttonClickListener() {
-        binding.btnPayment.setOnClickListener {
+        binding.btnOrderConfirm.setOnClickListener {
 
             val expectedShipmentDate = binding.etExpectedShipmentDate.extract()
             val shippingAddress = binding.etShippingAddress.extract()
             val cash = binding.rbCash
-            val check = binding.checkboxConfirmation
-            if (checkAllFieldValidity(expectedShipmentDate, shippingAddress, cash, check)) {
+            //val check = binding.checkboxConfirmation
+            if (checkAllFieldValidity(expectedShipmentDate, shippingAddress, cash)) {
                 val orderItems = SharedData.selectedProductList.map { cartItem ->
                     RequestCreateOrderDTO.OrderItem(
                         productId = cartItem.product.productId,
@@ -247,7 +247,7 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
     }
 
     private fun checkAllFieldValidity(
-        expectedShipmentDate: String, shippingAddress: String, cash: RadioButton, check: CheckBox
+        expectedShipmentDate: String, shippingAddress: String, cash: RadioButton
     ): Boolean {
 
         if (expectedShipmentDate.isEmpty()) {
@@ -262,10 +262,10 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
             binding.rbCash.error = "This field must be filled"
             return false
         }
-        if (!check.isChecked) {
+        /*if (!check.isChecked) {
             Toast.makeText(requireContext(), "Check Box must be checked", Toast.LENGTH_SHORT).show()
             return false
-        }
+        }*/
 
         return true
     }

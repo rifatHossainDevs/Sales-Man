@@ -2,6 +2,7 @@ package com.wevx.dealershipmanagement.data.remote.product
 
 import com.wevx.dealershipmanagement.data.dto.categoryDTO.ResponseCategoryDTO
 import com.wevx.dealershipmanagement.data.dto.districtDto.ResponseDisDTO
+import com.wevx.dealershipmanagement.data.dto.productById.ResponseProductByIdDTO
 import com.wevx.dealershipmanagement.data.dto.productDto.ResponseProductDTO
 import retrofit2.Response
 import retrofit2.http.GET
@@ -17,5 +18,8 @@ interface ProductApiService {
 
     @GET("products/get-product-by-category/{categoryId}")
     suspend fun getProductByCategory(@Path("categoryId") categoryId: String): Response<ResponseProductDTO>
+
+    @GET("products/get-product/{productId}")
+    suspend fun getProductById(@Path("productId") productId: String): Response<ResponseProductByIdDTO>
 
 }

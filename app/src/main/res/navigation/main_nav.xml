@@ -91,6 +91,9 @@
         <action
             android:id="@+id/action_storeOwnerDetailsFragment_to_productsFragment"
             app:destination="@id/productsFragment" />
+        <action
+            android:id="@+id/action_storeOwnerDetailsFragment_to_orderDetailsFragment"
+            app:destination="@id/orderDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/stockAvailabilityFragment"
@@ -99,7 +102,7 @@
         tools:layout="@layout/fragment_stock_availability" />
     <fragment
         android:id="@+id/todaysDeliveryFragment"
-        android:name="com.wevx.dealershipmanagement.presentation.todaysDelivery.TodaysDeliveryFragment"
+        android:name="com.wevx.dealershipmanagement.presentation.order.sellerPendingOrder.TodaysDeliveryFragment"
         android:label="fragment_todays_delivery"
         tools:layout="@layout/fragment_todays_delivery" />
     <fragment
@@ -120,5 +123,21 @@
         <action
             android:id="@+id/action_editProfileFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/orderDetailsFragment"
+        android:name="com.wevx.dealershipmanagement.presentation.orderDetails.OrderDetailsFragment"
+        android:label="fragment_order_details"
+        tools:layout="@layout/fragment_order_details" >
+        <argument
+            android:name="orderId"
+            app:argType="string" />
+
+        <argument
+            android:name="customerId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_orderDetailsFragment_to_storeOwnerDetailsFragment"
+            app:destination="@id/storeOwnerDetailsFragment" />
     </fragment>
 </navigation>

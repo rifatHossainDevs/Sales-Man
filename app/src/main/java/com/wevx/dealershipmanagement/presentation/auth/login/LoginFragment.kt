@@ -31,7 +31,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         return true
     }
 
-
     override fun setAllClickListener() {
 
         allButtonClickListener()
@@ -122,13 +121,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             btnLogin.setOnClickListener {
                 val userEmailOrPass = etEmailOrPhone.extract()
                 val password = etPassword.extract()
-                /*val confirmPassword = etConfirmPassword.extract()
-                if (checkAllFieldValidity(phone, password, confirmPassword)) {
-                    val data = RequestLogin(
-                        phone = phone, password = password
-                    )
-                    loginViewModel.loginUser(data)
-                }*/
+
                 val emailPattern = Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
 
                 if (userEmailOrPass.isNotEmpty() && password.isNotEmpty()) {
@@ -154,42 +147,5 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
     }
 
-    private fun checkAllFieldValidity(
-        phone: String, password: String, confirmPassword: String
-    ): Boolean {
-        binding.etPhoneNumberLayout.error = null
-        binding.etPasswordLayout.error = null
-        //binding.etConfirmPasswordLayout.error = null
 
-        if (phone == "") {
-            binding.etPhoneNumberLayout.error = "This field must be filled"
-            return false
-        }
-        if (phone.length < 11) {
-            binding.etPhoneNumberLayout.error = "Phone number Should have at least 11 Digit"
-            return false
-        }
-
-        if (password == "") {
-            binding.etPasswordLayout.error = "This field must be filled"
-            return false
-        }
-
-        if (password.length < 8) {
-            binding.etPasswordLayout.error = "Password Should have at least 8 Characters"
-            return false
-        }
-
-        /*if (confirmPassword == "") {
-            binding.etConfirmPasswordLayout.error = "This field must be filled"
-            return false
-        }
-
-        if (password != confirmPassword) {
-            binding.etConfirmPasswordLayout.error = "Password and Confirm Password are not match!"
-            return false
-        }*/
-
-        return true
-    }
 }

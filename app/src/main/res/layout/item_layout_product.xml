@@ -58,19 +58,32 @@
             app:layout_constraintTop_toBottomOf="@id/tv_product_name" />
 
         <TextView
+            android:id="@+id/tv_stock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxWidth="@dimen/_168sdp"
+            android:maxLines="2"
+            android:text="Stock: 100 pcs"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_10ssp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/tv_brand_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_brand_name" />
+
+        <TextView
             android:id="@+id/tv_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_2sdp"
             android:ellipsize="end"
             android:maxWidth="@dimen/_168sdp"
             android:maxLines="2"
             android:text="Price: ৳100"
             android:textColor="#F41450"
-            android:textSize="@dimen/_12ssp"
+            android:textSize="@dimen/_10ssp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/tv_brand_name"
-            app:layout_constraintTop_toBottomOf="@id/tv_brand_name" />
+            app:layout_constraintStart_toStartOf="@id/tv_stock"
+            app:layout_constraintTop_toBottomOf="@id/tv_stock" />
 
         <LinearLayout
             android:id="@+id/layout_increment_decrement"
@@ -123,7 +136,6 @@
                 android:background="@drawable/shape_increment_decrement"
                 android:padding="@dimen/_4sdp"
                 android:src="@drawable/ic_add_black_24" />
-
 
         </LinearLayout>
 

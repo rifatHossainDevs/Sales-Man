@@ -22,6 +22,7 @@ object Constants {
     const val PAYMENT_COLLECTION = "Payment Collection"
     const val TODAYS_DELIVERY = "Today's Delivery"
     const val STOCK_AVAILABILITY = "Stock Availability"
+    const val HOME = "Home"
 
 
 

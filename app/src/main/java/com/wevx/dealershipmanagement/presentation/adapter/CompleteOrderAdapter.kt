@@ -5,21 +5,24 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.wevx.dealershipmanagement.domain.models.PendingAndCompleteOrderModel
+import androidx.core.graphics.toColorInt
+import com.wevx.dealershipmanagement.databinding.ItemLayoutCompleteOrderBinding
 import com.wevx.dealershipmanagement.databinding.ItemLayoutPendingOrderBinding
 import com.wevx.dealershipmanagement.utils.DateFormatter
 
-class PendingOrderAdapter(val pendingOrders: List<PendingAndCompleteOrderModel>, val listener: PendingHandleClickListener) :
-    RecyclerView.Adapter<PendingOrderAdapter.ViewHolder>() {
+class CompleteOrderAdapter(val completeOrders: List<PendingAndCompleteOrderModel>, val listener: CompleteHandleClickListener) :
+    RecyclerView.Adapter<CompleteOrderAdapter.ViewHolder>() {
 
-    interface PendingHandleClickListener{
-        fun selectPendingOrder(pendingOderId: String)
+    interface CompleteHandleClickListener{
+        fun selectCompleteOrder(completeOrderid: String)
     }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
         return ViewHolder(
-            ItemLayoutPendingOrderBinding.inflate(
+            ItemLayoutCompleteOrderBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -33,7 +36,7 @@ class PendingOrderAdapter(val pendingOrders: List<PendingAndCompleteOrderModel>,
         position: Int
     ) {
 
-        pendingOrders[position].let { item ->
+        completeOrders[position].let { item ->
             val dateFormatter = DateFormatter()
             val shipmentDate = dateFormatter.formatDateToDDMMYY(item.shipmentDate)
             holder.binding.apply {
@@ -49,19 +52,17 @@ class PendingOrderAdapter(val pendingOrders: List<PendingAndCompleteOrderModel>,
                 tvShipmentAddress.text = item.shipmentAddress
                 tvTotal.text = "Total: ৳${item.totalPrice}"
 
-
                 root.setOnClickListener {
-                    listener.selectPendingOrder(item.id)
+                    listener.selectCompleteOrder(item.id)
                 }
+
             }
-
         }
-
 
     }
 
-    override fun getItemCount(): Int = pendingOrders.size
+    override fun getItemCount(): Int = completeOrders.size
 
-    class ViewHolder(val binding: ItemLayoutPendingOrderBinding) :
+    class ViewHolder(val binding: ItemLayoutCompleteOrderBinding) :
         RecyclerView.ViewHolder(binding.root)
 }

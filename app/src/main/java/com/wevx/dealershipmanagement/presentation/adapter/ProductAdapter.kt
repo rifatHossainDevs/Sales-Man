@@ -41,7 +41,6 @@ class ProductAdapter(
             tvBrandName.text = cartItem.product.brandName
             tvPrice.text = "Price: ৳${cartItem.product.price}"
 
-            // Remove previous TextWatcher if any
             if (etQuantity.tag is TextWatcher) {
                 etQuantity.removeTextChangedListener(etQuantity.tag as TextWatcher)
             }
@@ -51,7 +50,6 @@ class ProductAdapter(
                 .error(R.drawable.ic_product_24)
                 .into(ivProduct)
 
-            // Update EditText text only if not focused (to avoid cursor jumping)
             if (!etQuantity.hasFocus()) {
                 if (cartItem.purchaseQuantity % 1.0 == 0.0)
                     etQuantity.setText(cartItem.purchaseQuantity.toInt().toString())
@@ -60,6 +58,7 @@ class ProductAdapter(
                 etQuantity.setSelection(etQuantity.text.length)
             }
 
+            tvStock.text = "Stock: ${cartItem.product.stockQuantity} ${cartItem.product.unit}"
             tvSubtotal.text = "Sub total: ৳%.2f".format(cartItem.subtotal)
 
             var isEditing = false
