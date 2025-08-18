@@ -1,8 +1,11 @@
 package com.wevx.dealershipmanagement.presentation.storeOwnerDetails
 
+import android.annotation.SuppressLint
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.VIEW_MODEL_STORE_OWNER_KEY
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -56,6 +59,7 @@ class StoreOwnerDetailsFragment : BaseFragment<FragmentStoreOwnerDetailsBinding>
         storeOwnerByIdObserver()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun completeOderObserver() {
         completeOrderViewModel.completeOrderState.collectInLifecycle(viewLifecycleOwner) { completeOrderState ->
 
@@ -66,19 +70,30 @@ class StoreOwnerDetailsFragment : BaseFragment<FragmentStoreOwnerDetailsBinding>
 
             completeOrderState.error?.let {
                 loading.dismiss()
-                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
-                //Toast.makeText(requireContext(), "Error: hello", Toast.LENGTH_SHORT).show()
+                binding.tvCompleteOrder.visibility = View.INVISIBLE
+                binding.rvCompleteOrder.visibility = View.INVISIBLE
+                binding.tvNoCompleteOrder.visibility = View.VISIBLE
+                //Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+
 
             }
 
             completeOrderState.data?.let { completeOrderList ->
                 loading.dismiss()
-                completeOrderAdapter = CompleteOrderAdapter(completeOrderList, this)
-                binding.rvCompleteOrder.adapter = completeOrderAdapter
+                if (completeOrderList.isNotEmpty()){
+                    completeOrderAdapter = CompleteOrderAdapter(completeOrderList, this)
+                    binding.rvCompleteOrder.adapter = completeOrderAdapter
+                }else{
+                    binding.tvCompleteOrder.visibility = View.INVISIBLE
+                    binding.rvCompleteOrder.visibility = View.INVISIBLE
+                    binding.tvNoCompleteOrder.visibility = View.VISIBLE
+                }
+
             }
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun pendingOderObserver() {
         pendingOrderViewModel.pendingOrderState.collectInLifecycle(viewLifecycleOwner) { pendingOrderState ->
             if (pendingOrderState.loading) {
@@ -88,13 +103,23 @@ class StoreOwnerDetailsFragment : BaseFragment<FragmentStoreOwnerDetailsBinding>
 
             pendingOrderState.error?.let {
                 loading.dismiss()
-                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
-                Log.d("pending", "pendingOderObserver: $it")
+                binding.rvPendingOrder.visibility = View.INVISIBLE
+                binding.tvCurrentOrder.visibility = View.INVISIBLE
+                binding.tvNoPendingOrder.visibility = View.VISIBLE
+                //Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
             pendingOrderState.data?.let { pendingOrderList ->
                 loading.dismiss()
-                pendingOrderAdapter = PendingOrderAdapter(pendingOrderList, this)
-                binding.rvPendingOrder.adapter = pendingOrderAdapter
+                if (pendingOrderList.isNotEmpty()){
+                    pendingOrderAdapter = PendingOrderAdapter(pendingOrderList, this)
+                    binding.rvPendingOrder.adapter = pendingOrderAdapter
+                }else{
+                    binding.rvPendingOrder.visibility = View.INVISIBLE
+                    binding.tvCurrentOrder.visibility = View.INVISIBLE
+                    binding.tvNoPendingOrder.visibility = View.VISIBLE
+                }
+
+
 
             }
 
