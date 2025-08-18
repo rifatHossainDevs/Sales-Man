@@ -10,9 +10,9 @@
         android:id="@+id/tv_select_customer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_4sdp"
         android:layout_marginTop="@dimen/_4sdp"
         android:fontFamily="@font/poppins_semibold"
-        android:layout_marginStart="@dimen/_4sdp"
         android:text="@string/selected_store"
         android:textColor="@color/black"
         android:textSize="@dimen/_16sdp"
@@ -54,10 +54,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_6sdp"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:text="@string/m_s_khalid_store"
                 android:textColor="@color/black"
-                android:maxLines="1"
-                android:ellipsize="end"
                 android:textSize="@dimen/_14ssp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@id/iv_store_owner"
@@ -67,12 +67,12 @@
                 android:id="@+id/tv_owner_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@string/md_khalid_hasan_jibon"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_10ssp"
                 android:textStyle="bold"
-                android:ellipsize="end"
                 app:layout_constraintStart_toStartOf="@id/tv_store_name"
                 app:layout_constraintTop_toBottomOf="@id/tv_store_name" />
 
@@ -111,13 +111,31 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_pending_order"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_240sdp"
+        android:layout_height="wrap_content"
+        android:maxHeight="@dimen/_240sdp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/tv_complete_order"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_current_order"
         tools:listitem="@layout/item_layout_pending_order" />
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/tv_no_complete_order"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_4sdp"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="No Pending Order Found"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/_12sdp"
+        app:layout_constraintEnd_toEndOf="@+id/rv_pending_order"
+        app:layout_constraintStart_toStartOf="@id/rv_pending_order"
+        app:layout_constraintTop_toTopOf="@id/rv_pending_order"
+
+        />
 
     <TextView
         android:id="@+id/tv_complete_order"
@@ -127,6 +145,7 @@
         android:fontFamily="@font/poppins_semibold"
         android:text="@string/complete_orders"
         android:textColor="@color/black"
+
         android:textSize="@dimen/_14sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rv_pending_order" />
@@ -142,6 +161,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_complete_order"
         tools:listitem="@layout/item_layout_pending_order" />
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/tv_no_pending_order"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_4sdp"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="No Pending Order Found"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/_12sdp"
+        app:layout_constraintEnd_toEndOf="@+id/rv_complete_order"
+        app:layout_constraintStart_toStartOf="@id/rv_complete_order"
+        app:layout_constraintTop_toTopOf="@id/rv_complete_order"
+
+        />
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
