@@ -1,6 +1,7 @@
 package com.wevx.dealershipmanagement.data.repository_impl.auth
 
 import com.wevx.dealershipmanagement.data.dto.RequestRefreshToken
+import com.wevx.dealershipmanagement.data.dto.ResponseChangeProfileImage
 import com.wevx.dealershipmanagement.data.dto.changePasswordDTO.RequestChangePasswordDto
 import com.wevx.dealershipmanagement.data.dto.changePasswordDTO.ResponseChangePasswordDTO
 import com.wevx.dealershipmanagement.data.dto.loginDto.RequestLogin
@@ -14,8 +15,10 @@ import com.wevx.dealershipmanagement.data.dto.updateProfileDto.RequestUpdateProf
 import com.wevx.dealershipmanagement.data.dto.updateProfileDto.ResponseUpdateProfileDto
 import com.wevx.dealershipmanagement.data.remote.auth.AuthApiService
 import com.wevx.dealershipmanagement.domain.repository.auth.AuthRepository
+import com.wevx.dealershipmanagement.utils.toImagePart
 import jakarta.inject.Inject
 import retrofit2.Response
+import java.io.File
 
 class AuthRepositoryImpl @Inject constructor(
     private val authApiService: AuthApiService
@@ -55,6 +58,13 @@ class AuthRepositoryImpl @Inject constructor(
     ): Response<ResponseUpdateProfileDto> {
         return authApiService.updateProfile(token, requestUpdateProfile)
 
+    }
+
+    override suspend fun updateProfileImage(
+        avatarFile: File,
+        token: String
+    ): Response<ResponseChangeProfileImage> {
+        return authApiService.changeProfileImage(token, avatarFile.toImagePart("avatar"))
     }
 
 

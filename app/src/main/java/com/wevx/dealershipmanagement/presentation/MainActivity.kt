@@ -1,23 +1,35 @@
 package com.wevx.dealershipmanagement.presentation
 
+import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import coil.load
 import com.bumptech.glide.Glide
+import com.github.dhaval2404.imagepicker.ImagePicker
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.databinding.ActivityMainBinding
+import com.wevx.dealershipmanagement.databinding.ChangeProfileImageBottomSheetBinding
+import com.wevx.dealershipmanagement.databinding.PhoneVerificationBottomSheetBinding
 import com.wevx.dealershipmanagement.utils.LocalDatabase
 import com.wevx.dealershipmanagement.presentation.adapter.DrawerItemAdapter
+import com.wevx.dealershipmanagement.presentation.auth.changeProfileImage.ChangeProfileImageViewModel
 import com.wevx.dealershipmanagement.presentation.auth.logout.LogoutViewModel
 import com.wevx.dealershipmanagement.presentation.auth.profile.GetProfileViewModel
 import com.wevx.dealershipmanagement.utils.Constants.CHANGE_PASSWORD
@@ -26,7 +38,9 @@ import com.wevx.dealershipmanagement.utils.Constants.HOME
 import com.wevx.dealershipmanagement.utils.Constants.STOCK_AVAILABILITY
 import com.wevx.dealershipmanagement.utils.Constants.TODAYS_DELIVERY
 import com.wevx.dealershipmanagement.utils.TokenManager
+import com.wevx.dealershipmanagement.utils.areAllPermissionGranted
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
+import com.wevx.dealershipmanagement.utils.requestPermission
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -40,11 +54,16 @@ class MainActivity : AppCompatActivity() {
     private val logoutViewModel: LogoutViewModel by viewModels()
     private lateinit var token: String
     private lateinit var tokenManager: TokenManager
+//private val changeProfileImageViewModel: ChangeProfileImageViewModel
+    private lateinit var bottomSheetBinding: ChangeProfileImageBottomSheetBinding
+    private lateinit var bottomSheetDialog: BottomSheetDialog
+    private lateinit var permissionRequest: ActivityResultLauncher<Array<String>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         tokenManager = TokenManager(this)
         token = "Bearer ${tokenManager.getAccessToken()}"
         profileViewModel.getProfile(token)
@@ -58,10 +77,16 @@ class MainActivity : AppCompatActivity() {
 
         allObserver()
 
+        bottomSheetClickListener()
+        allButtonClickListener()
+        uploadButtonClickListener()
+        permissionRequest = getPermissionRequest()
+
     }
 
-    private fun setAllClickListener() {
-
+    private fun allObserver() {
+        profileObserver()
+        logoutObserver()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -80,10 +105,74 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun allObserver() {
-        profileObserver()
-        logoutObserver()
+
+    private fun allButtonClickListener() {
+
     }
+
+
+    private fun setAllClickListener() {
+        binding.ivSeller.setOnClickListener {
+            bottomSheetDialog.show()
+        }
+    }
+
+    private fun bottomSheetClickListener() {
+        bottomSheetDialog = BottomSheetDialog(this)
+        bottomSheetBinding = ChangeProfileImageBottomSheetBinding.inflate(layoutInflater)
+        bottomSheetDialog.apply {
+            setContentView(bottomSheetBinding.root)
+            setCancelable(true)
+        }
+
+        bottomSheetBinding.btnClose.setOnClickListener {
+            bottomSheetDialog.dismiss()
+        }
+
+    }
+
+    private fun uploadButtonClickListener() {
+        bottomSheetBinding.btnUploadImage.setOnClickListener {
+            requestPermission(permissionRequest, permissionList)
+        }
+    }
+
+    private fun getPermissionRequest(): ActivityResultLauncher<Array<String>> {
+        return registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+            if (areAllPermissionGranted(permissionList)) {
+                ImagePicker.with(this).cropSquare().compress(1024).maxResultSize(
+                    512, 512
+                ).createIntent { intent ->
+                    startForProfileImageResult.launch(intent)
+                }
+                Toast.makeText(this, "Granted", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Not Granted", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+
+    private val startForProfileImageResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            val resultCode = result.resultCode
+            val data = result.data
+
+            if (resultCode == Activity.RESULT_OK) {
+                val fileUri = data?.data!!
+                if (fileUri.toString() != "") {
+                    bottomSheetBinding.ivUser.setImageURI(fileUri)
+                }
+
+            } else if (resultCode == ImagePicker.RESULT_ERROR) {
+                Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
 
     private fun logoutObserver() {
         logoutViewModel.logoutState.collectInLifecycle(this) { logoutState ->
@@ -124,6 +213,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    companion object {
+
+        private val permissionList = arrayOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA
+        )
+    }
+
     private fun setNavigationDrawer() {
         setSupportActionBar(binding.toolbar)
         drawerLayout = binding.main
@@ -162,7 +258,6 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.todaysDeliveryFragment)
                     drawerLayout.closeDrawer(GravityCompat.START)
                 }
-
 
 
                 else -> {

@@ -95,7 +95,7 @@
     </androidx.cardview.widget.CardView>
 
     <TextView
-        android:id="@+id/tv_current_order"
+        android:id="@+id/tv_pending_order"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_4sdp"
@@ -117,12 +117,12 @@
         app:layout_constraintBottom_toTopOf="@id/tv_complete_order"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_current_order"
+        app:layout_constraintTop_toBottomOf="@id/tv_pending_order"
         tools:listitem="@layout/item_layout_pending_order" />
 
     <TextView
         android:visibility="gone"
-        android:id="@+id/tv_no_complete_order"
+        android:id="@+id/tv_no_pending_order"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_4sdp"
@@ -145,7 +145,6 @@
         android:fontFamily="@font/poppins_semibold"
         android:text="@string/complete_orders"
         android:textColor="@color/black"
-
         android:textSize="@dimen/_14sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rv_pending_order" />
@@ -164,13 +163,13 @@
 
     <TextView
         android:visibility="gone"
-        android:id="@+id/tv_no_pending_order"
+        android:id="@+id/tv_no_complete_order"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_4sdp"
         android:layout_marginTop="@dimen/_16sdp"
         android:fontFamily="@font/poppins_semibold"
-        android:text="No Pending Order Found"
+        android:text="No Complete Order Found"
         android:textColor="@color/gray"
         android:textSize="@dimen/_12sdp"
         app:layout_constraintEnd_toEndOf="@+id/rv_complete_order"

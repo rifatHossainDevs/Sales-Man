@@ -1,8 +1,10 @@
 package com.wevx.dealershipmanagement.data.remote.auth
 
 import com.wevx.dealershipmanagement.data.dto.RequestRefreshToken
+import com.wevx.dealershipmanagement.data.dto.ResponseChangeProfileImage
 import com.wevx.dealershipmanagement.data.dto.changePasswordDTO.RequestChangePasswordDto
 import com.wevx.dealershipmanagement.data.dto.changePasswordDTO.ResponseChangePasswordDTO
+import com.wevx.dealershipmanagement.data.dto.createStoreDTO.ResponseCreateStoreDTO
 import com.wevx.dealershipmanagement.data.dto.loginDto.RequestLogin
 import com.wevx.dealershipmanagement.data.dto.loginDto.ResponseLoginDTO
 import com.wevx.dealershipmanagement.data.dto.logoutDTO.ResponseLogoutDto
@@ -12,12 +14,16 @@ import com.wevx.dealershipmanagement.data.dto.registrationDto.RequestRegistratio
 import com.wevx.dealershipmanagement.data.dto.registrationDto.ResponseRegistrationDTO
 import com.wevx.dealershipmanagement.data.dto.updateProfileDto.RequestUpdateProfile
 import com.wevx.dealershipmanagement.data.dto.updateProfileDto.ResponseUpdateProfileDto
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Part
 
 interface AuthApiService {
 
@@ -47,5 +53,12 @@ interface AuthApiService {
 
     @POST("users/refresh-token")
     suspend fun refreshToken(@Body request: RequestRefreshToken): Response<ResponseRefreshTokenDTO>
+
+    @Multipart
+    @POST("users/update-avatar")
+    suspend fun changeProfileImage(
+        @Header("Authorization") token: String,
+        @Part avatar: MultipartBody.Part
+    ): Response<ResponseChangeProfileImage>
 
 }

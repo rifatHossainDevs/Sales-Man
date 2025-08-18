@@ -55,7 +55,6 @@ class CreateStoreOwnerUseCase @Inject constructor(
             } else {
                 val errorBody = response.errorBody()?.string()
                 emit(Resource.Error("Create Store Failed: $errorBody"))
-                Log.d("haveError", "invoke: $errorBody")
             }
         } catch (e: Exception) {
             emit(Resource.Error("An error occurred: ${e.localizedMessage ?: "Unknown error"}"))

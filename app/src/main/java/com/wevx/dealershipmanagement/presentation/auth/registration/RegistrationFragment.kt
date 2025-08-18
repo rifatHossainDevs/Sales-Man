@@ -34,7 +34,6 @@ class RegistrationFragment :
         bottomSheetClickListener()
 
         allButtonClickListener()
-        uploadButtonClickListener()
         permissionRequest = getPermissionRequest()
 
     }
@@ -56,12 +55,6 @@ class RegistrationFragment :
             bottomSheetDialog.dismiss()
         }
 
-    }
-
-    private fun uploadButtonClickListener() {
-        binding.btnUploadImage.setOnClickListener {
-            requestPermission(permissionRequest, permissionList)
-        }
     }
 
     override fun allObserver() {
@@ -155,7 +148,7 @@ class RegistrationFragment :
             if (resultCode == Activity.RESULT_OK) {
                 val fileUri = data?.data!!
                 if (fileUri.toString() != "") {
-                    binding.ivUser.setImageURI(fileUri)
+                    //binding.ivUser.setImageURI(fileUri)
                 }
 
             } else if (resultCode == ImagePicker.RESULT_ERROR) {

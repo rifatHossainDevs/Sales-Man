@@ -1,8 +1,10 @@
 package com.wevx.dealershipmanagement.domain.repository.auth
 
 import com.wevx.dealershipmanagement.data.dto.RequestRefreshToken
+import com.wevx.dealershipmanagement.data.dto.ResponseChangeProfileImage
 import com.wevx.dealershipmanagement.data.dto.changePasswordDTO.RequestChangePasswordDto
 import com.wevx.dealershipmanagement.data.dto.changePasswordDTO.ResponseChangePasswordDTO
+import com.wevx.dealershipmanagement.data.dto.createStoreDTO.ResponseCreateStoreDTO
 import com.wevx.dealershipmanagement.data.dto.loginDto.RequestLogin
 import com.wevx.dealershipmanagement.data.dto.loginDto.ResponseLoginDTO
 import com.wevx.dealershipmanagement.data.dto.logoutDTO.ResponseLogoutDto
@@ -13,6 +15,7 @@ import com.wevx.dealershipmanagement.data.dto.registrationDto.ResponseRegistrati
 import com.wevx.dealershipmanagement.data.dto.updateProfileDto.RequestUpdateProfile
 import com.wevx.dealershipmanagement.data.dto.updateProfileDto.ResponseUpdateProfileDto
 import retrofit2.Response
+import java.io.File
 
 interface AuthRepository {
 
@@ -35,5 +38,10 @@ interface AuthRepository {
         requestUpdateProfile: RequestUpdateProfile,
         token: String
     ): Response<ResponseUpdateProfileDto>
+
+    suspend fun updateProfileImage(
+        avatarFile: File,
+        token: String
+    ): Response<ResponseChangeProfileImage>
 
 }

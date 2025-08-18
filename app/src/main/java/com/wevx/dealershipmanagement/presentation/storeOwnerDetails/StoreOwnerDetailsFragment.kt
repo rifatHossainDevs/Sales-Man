@@ -70,7 +70,6 @@ class StoreOwnerDetailsFragment : BaseFragment<FragmentStoreOwnerDetailsBinding>
 
             completeOrderState.error?.let {
                 loading.dismiss()
-                binding.tvCompleteOrder.visibility = View.INVISIBLE
                 binding.rvCompleteOrder.visibility = View.INVISIBLE
                 binding.tvNoCompleteOrder.visibility = View.VISIBLE
                 //Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
@@ -84,7 +83,6 @@ class StoreOwnerDetailsFragment : BaseFragment<FragmentStoreOwnerDetailsBinding>
                     completeOrderAdapter = CompleteOrderAdapter(completeOrderList, this)
                     binding.rvCompleteOrder.adapter = completeOrderAdapter
                 }else{
-                    binding.tvCompleteOrder.visibility = View.INVISIBLE
                     binding.rvCompleteOrder.visibility = View.INVISIBLE
                     binding.tvNoCompleteOrder.visibility = View.VISIBLE
                 }
@@ -104,7 +102,6 @@ class StoreOwnerDetailsFragment : BaseFragment<FragmentStoreOwnerDetailsBinding>
             pendingOrderState.error?.let {
                 loading.dismiss()
                 binding.rvPendingOrder.visibility = View.INVISIBLE
-                binding.tvCurrentOrder.visibility = View.INVISIBLE
                 binding.tvNoPendingOrder.visibility = View.VISIBLE
                 //Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
@@ -115,7 +112,6 @@ class StoreOwnerDetailsFragment : BaseFragment<FragmentStoreOwnerDetailsBinding>
                     binding.rvPendingOrder.adapter = pendingOrderAdapter
                 }else{
                     binding.rvPendingOrder.visibility = View.INVISIBLE
-                    binding.tvCurrentOrder.visibility = View.INVISIBLE
                     binding.tvNoPendingOrder.visibility = View.VISIBLE
                 }
 

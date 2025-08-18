@@ -226,29 +226,6 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <ImageView
-                android:id="@+id/iv_user"
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_100sdp"
-                android:src="@drawable/ic_profile_image_24"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_confirm_password_layout" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_upload_image"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_28sdp"
-                android:layout_marginTop="@dimen/_4sdp"
-                android:layout_marginBottom="@dimen/_16sdp"
-                android:background="@drawable/btn_upload_image"
-                android:fontFamily="@font/poppins_medium"
-                android:paddingHorizontal="@dimen/_8sdp"
-                android:text="@string/upload_image"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_user" />
-
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_create_account"
@@ -261,7 +238,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14sdp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btn_upload_image" />
+                app:layout_constraintTop_toBottomOf="@id/et_confirm_password_layout" />
 
             <TextView
                 android:id="@+id/tv_already_have_account"

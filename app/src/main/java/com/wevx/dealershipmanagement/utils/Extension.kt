@@ -1,5 +1,6 @@
 package com.wevx.dealershipmanagement.utils
 
+import android.app.Activity
 import android.content.pm.PackageManager
 import android.widget.EditText
 import androidx.activity.result.ActivityResultLauncher
@@ -20,5 +21,11 @@ fun requestPermission(
 fun Fragment.areAllPermissionGranted(permissions: Array<String>): Boolean {
     return permissions.all {
         ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
+    }
+}
+
+fun Activity.areAllPermissionGranted(permissions: Array<String>): Boolean {
+    return permissions.all {
+        ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
     }
 }
