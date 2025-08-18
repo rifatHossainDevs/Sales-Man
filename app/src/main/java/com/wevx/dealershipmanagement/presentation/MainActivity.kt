@@ -2,31 +2,32 @@ package com.wevx.dealershipmanagement.presentation
 
 import android.Manifest
 import android.app.Activity
+import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
-import coil.load
 import com.bumptech.glide.Glide
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.wevx.dealershipmanagement.R
+import com.wevx.dealershipmanagement.core.common.Resource
 import com.wevx.dealershipmanagement.databinding.ActivityMainBinding
 import com.wevx.dealershipmanagement.databinding.ChangeProfileImageBottomSheetBinding
-import com.wevx.dealershipmanagement.databinding.PhoneVerificationBottomSheetBinding
 import com.wevx.dealershipmanagement.utils.LocalDatabase
 import com.wevx.dealershipmanagement.presentation.adapter.DrawerItemAdapter
 import com.wevx.dealershipmanagement.presentation.auth.changeProfileImage.ChangeProfileImageViewModel
@@ -42,6 +43,7 @@ import com.wevx.dealershipmanagement.utils.areAllPermissionGranted
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
 import com.wevx.dealershipmanagement.utils.requestPermission
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -53,16 +55,23 @@ class MainActivity : AppCompatActivity() {
 
     private val logoutViewModel: LogoutViewModel by viewModels()
     private lateinit var token: String
+
+    lateinit var uri: Uri
     private lateinit var tokenManager: TokenManager
-//private val changeProfileImageViewModel: ChangeProfileImageViewModel
+
+    private val changeProfileImageViewModel: ChangeProfileImageViewModel by viewModels()
     private lateinit var bottomSheetBinding: ChangeProfileImageBottomSheetBinding
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var permissionRequest: ActivityResultLauncher<Array<String>>
+
+    private lateinit var loading: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        loading = ProgressDialog(this)
 
         tokenManager = TokenManager(this)
         token = "Bearer ${tokenManager.getAccessToken()}"
@@ -87,6 +96,52 @@ class MainActivity : AppCompatActivity() {
     private fun allObserver() {
         profileObserver()
         logoutObserver()
+        changeProfileImageObserver()
+    }
+
+    fun uriToFile(uri: Uri, context: Context): File {
+        val inputStream = context.contentResolver.openInputStream(uri)
+            ?: throw IllegalArgumentException("Cannot open input stream")
+        val tempFile = File.createTempFile("temp_image", ".jpg", context.cacheDir)
+        tempFile.outputStream().use { outputStream ->
+            inputStream.copyTo(outputStream)
+        }
+        return tempFile
+    }
+
+    private fun changeProfileImageObserver() {
+        changeProfileImageViewModel.changeProfileImageState.collectInLifecycle(this) { changeProfileImageState ->
+            if (changeProfileImageState.loading) {
+                loading.show()
+                return@collectInLifecycle
+            }
+
+            changeProfileImageState.error?.let {
+                loading.dismiss()
+
+            }
+
+            changeProfileImageState.data?.let {
+                loading.dismiss()
+                if (it.success == true) {
+                    bottomSheetDialog.dismiss()
+
+                    Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show()
+                    Glide.with(this@MainActivity)
+                        .load(it.data?.avatar?.replace("http://", "https://"))
+                        .placeholder(R.drawable.ic_profile_image_24)
+                        .error(R.drawable.ic_edit_profile)
+                        .into(binding.ivSeller)
+
+
+                    Glide.with(this@MainActivity)
+                        .load(it.data?.avatar?.replace("http://", "https://"))
+                        .placeholder(R.drawable.ic_profile_image_24)
+                        .error(R.drawable.ic_edit_profile)
+                        .into(bottomSheetBinding.ivUser)
+                }
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -115,6 +170,7 @@ class MainActivity : AppCompatActivity() {
         binding.ivSeller.setOnClickListener {
             bottomSheetDialog.show()
         }
+
     }
 
     private fun bottomSheetClickListener() {
@@ -127,6 +183,13 @@ class MainActivity : AppCompatActivity() {
 
         bottomSheetBinding.btnClose.setOnClickListener {
             bottomSheetDialog.dismiss()
+        }
+
+        bottomSheetBinding.btnContinue.setOnClickListener {
+            val imageFile = uri.let { uriToFile(it, this) }
+            val bearerToken = token
+
+            changeProfileImageViewModel.changeProfileImage(imageFile, token = bearerToken)
         }
 
     }
@@ -161,6 +224,7 @@ class MainActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 val fileUri = data?.data!!
                 if (fileUri.toString() != "") {
+                    uri = fileUri
                     bottomSheetBinding.ivUser.setImageURI(fileUri)
                 }
 
@@ -171,7 +235,6 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show()
             }
         }
-
 
 
     private fun logoutObserver() {
@@ -198,7 +261,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Error: $it", Toast.LENGTH_SHORT).show()
             }
             profileState.data?.let { profileModel ->
-
+                
                 binding.tvSellerName.text = profileModel.name
                 binding.tvSellerEmail.text = profileModel.email
                 binding.tvSellerPhone.text = profileModel.phone
@@ -208,7 +271,13 @@ class MainActivity : AppCompatActivity() {
                     .placeholder(R.drawable.ic_profile_image_24)
                     .error(R.drawable.ic_edit_profile)
                     .into(binding.ivSeller)
+                
 
+                Glide.with(this@MainActivity)
+                    .load(profileModel.avatar.replace("http://", "https://"))
+                    .placeholder(R.drawable.ic_profile_image_24)
+                    .error(R.drawable.ic_edit_profile)
+                    .into(bottomSheetBinding.ivUser)
             }
         }
     }

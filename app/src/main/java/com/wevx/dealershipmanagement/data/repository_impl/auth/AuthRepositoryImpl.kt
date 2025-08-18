@@ -64,7 +64,7 @@ class AuthRepositoryImpl @Inject constructor(
         avatarFile: File,
         token: String
     ): Response<ResponseChangeProfileImage> {
-        return authApiService.changeProfileImage(token, avatarFile.toImagePart("avatar"))
+        return authApiService.changeProfileImage(token = token, avatarFile.toImagePart("avatar"))
     }
 
 

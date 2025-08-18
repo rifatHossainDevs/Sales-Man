@@ -55,7 +55,7 @@ interface AuthApiService {
     suspend fun refreshToken(@Body request: RequestRefreshToken): Response<ResponseRefreshTokenDTO>
 
     @Multipart
-    @POST("users/update-avatar")
+    @PATCH("users/update-avatar")
     suspend fun changeProfileImage(
         @Header("Authorization") token: String,
         @Part avatar: MultipartBody.Part
