@@ -1,5 +1,6 @@
 package com.wevx.dealershipmanagement.presentation.orderDetails
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wevx.dealershipmanagement.core.common.Resource
@@ -22,15 +23,13 @@ class UpdateOrderViewModel @Inject constructor(
 
     fun updateOrder(
         id: String,
-        requestUpdateOrder: RequestUpdateOrder,
-        token: String
+        requestUpdateOrder: RequestUpdateOrder
     ) {
         viewModelScope.launch {
             _updateOrderState.value = UpdateOrderDataState(loading = true)
             updateOrderUseCase.invoke(
                 id = id,
-                requestUpdateOrder = requestUpdateOrder,
-                token = token
+                requestUpdateOrder = requestUpdateOrder
             ).collect { response ->
                 when (response) {
                     is Resource.Success -> {
@@ -43,6 +42,7 @@ class UpdateOrderViewModel @Inject constructor(
 
                     is Resource.Error -> {
                         _updateOrderState.value = UpdateOrderDataState(error = response.message)
+                        Log.d("TAG", "updateOrder: ${response.message}")
                     }
                 }
 

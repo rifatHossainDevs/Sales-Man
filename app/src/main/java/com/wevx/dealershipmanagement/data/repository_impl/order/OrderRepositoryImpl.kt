@@ -12,7 +12,10 @@ import com.wevx.dealershipmanagement.data.dto.paymentDto.RequestPaymentDTO
 import com.wevx.dealershipmanagement.data.dto.paymentDto.ResponsePaymentDTO
 import com.wevx.dealershipmanagement.data.dto.pendingAndCompleteOrderDto.ResponsePendingAndCompleteOrderDTO
 import com.wevx.dealershipmanagement.data.dto.shipmentDto.RequestShipmentDTO
+import com.wevx.dealershipmanagement.data.dto.shipmentDto.RequestUpdateShipment
+import com.wevx.dealershipmanagement.data.dto.shipmentDto.ResponseGetShipmentByOrderDTO
 import com.wevx.dealershipmanagement.data.dto.shipmentDto.ResponseShipmentDTO
+import com.wevx.dealershipmanagement.data.dto.shipmentDto.ResponseUpdateShipmentDTO
 import com.wevx.dealershipmanagement.data.dto.todaysDelivery.ResponseTodaysDelivery
 import com.wevx.dealershipmanagement.data.remote.order.OrderApiService
 import com.wevx.dealershipmanagement.domain.repository.order.OrderRepository
@@ -46,15 +49,12 @@ class OrderRepositoryImpl @Inject constructor(
 
     override suspend fun updateOrder(
         id: String,
-        requestUpdateOrder: RequestUpdateOrder,
-        token: String
+        requestUpdateOrder: RequestUpdateOrder
     ): Response<ResponseUpdateOrderDTO> {
-        val bearerToken = "Bearer $token"
 
         return orderApiService.updateOrder(
             id = id,
-            requestUpdateOrder = requestUpdateOrder,
-            token = bearerToken
+            requestUpdateOrder = requestUpdateOrder
         )
     }
 
@@ -74,6 +74,10 @@ class OrderRepositoryImpl @Inject constructor(
 
     }
 
+    override suspend fun getShipmentByOrderId(id: String): Response<ResponseGetShipmentByOrderDTO> {
+        return orderApiService.getShipmentByOrderId(id)
+    }
+
     override suspend fun getOrderById(orderId: String): Response<ResponseOderDetailsDTO> {
         return orderApiService.getOrderById(orderId)
     }
@@ -91,6 +95,13 @@ class OrderRepositoryImpl @Inject constructor(
 
     override suspend fun updatePayment(id: String, requestUpdatePayment: RequestUpdatePayment): Response<ResponseUpdatePaymentDTO> {
         return orderApiService.updatePayment(id = id, requestUpdatePayment = requestUpdatePayment)
+    }
+
+    override suspend fun updateShipment(
+        id: String,
+        requestUpdateShipment: RequestUpdateShipment
+    ): Response<ResponseUpdateShipmentDTO> {
+        return orderApiService.updateShipment(id = id, requestUpdateShipment = requestUpdateShipment)
     }
 
 

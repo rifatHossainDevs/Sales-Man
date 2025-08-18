@@ -12,7 +12,10 @@ import com.wevx.dealershipmanagement.data.dto.paymentDto.RequestPaymentDTO
 import com.wevx.dealershipmanagement.data.dto.paymentDto.ResponsePaymentDTO
 import com.wevx.dealershipmanagement.data.dto.pendingAndCompleteOrderDto.ResponsePendingAndCompleteOrderDTO
 import com.wevx.dealershipmanagement.data.dto.shipmentDto.RequestShipmentDTO
+import com.wevx.dealershipmanagement.data.dto.shipmentDto.RequestUpdateShipment
+import com.wevx.dealershipmanagement.data.dto.shipmentDto.ResponseGetShipmentByOrderDTO
 import com.wevx.dealershipmanagement.data.dto.shipmentDto.ResponseShipmentDTO
+import com.wevx.dealershipmanagement.data.dto.shipmentDto.ResponseUpdateShipmentDTO
 import com.wevx.dealershipmanagement.data.dto.todaysDelivery.ResponseTodaysDelivery
 import retrofit2.Response
 
@@ -35,8 +38,7 @@ interface OrderRepository {
 
     suspend fun updateOrder(
         id: String,
-        requestUpdateOrder: RequestUpdateOrder,
-        token: String
+        requestUpdateOrder: RequestUpdateOrder
     ): Response<ResponseUpdateOrderDTO>
 
     suspend fun createPayment(
@@ -49,6 +51,8 @@ interface OrderRepository {
         token: String
     ): Response<ResponseShipmentDTO>
 
+    suspend fun getShipmentByOrderId(id: String): Response<ResponseGetShipmentByOrderDTO>
+
     suspend fun getOrderById(orderId: String): Response<ResponseOderDetailsDTO>
 
     suspend fun getSellerPendingOrder(
@@ -57,11 +61,15 @@ interface OrderRepository {
     ): Response<ResponseTodaysDelivery>
 
     suspend fun getPaymentByOrderID(id: String): Response<ResponseGetPaymentDTO>
-
     suspend fun updatePayment(
         id: String,
         requestUpdatePayment: RequestUpdatePayment
     ): Response<ResponseUpdatePaymentDTO>
+
+    suspend fun updateShipment(
+        id: String,
+        requestUpdateShipment: RequestUpdateShipment
+    ): Response<ResponseUpdateShipmentDTO>
 
 
 }

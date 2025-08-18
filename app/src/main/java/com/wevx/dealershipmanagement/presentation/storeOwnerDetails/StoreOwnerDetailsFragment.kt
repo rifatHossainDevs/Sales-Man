@@ -35,9 +35,11 @@ class StoreOwnerDetailsFragment : BaseFragment<FragmentStoreOwnerDetailsBinding>
     override fun setAllClickListener() {
         val userId = args.id
         customerId = args.id
+        Log.d("TAG", "customerId: $customerId")
         pendingOrderViewModel.getPendingAndCompleteOder(userId, "Pending")
         completeOrderViewModel.getPendingAndCompleteOder(userId, "Paid")
         Log.d("complete", "setAllClickListener: $userId")
+
         allButtonClickListener()
     }
 
