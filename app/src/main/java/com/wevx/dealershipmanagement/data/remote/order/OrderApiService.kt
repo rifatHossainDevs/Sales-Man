@@ -1,6 +1,10 @@
 package com.wevx.dealershipmanagement.data.remote.order
 
+import com.wevx.dealershipmanagement.data.dto.RequestUpdateOrder
+import com.wevx.dealershipmanagement.data.dto.RequestUpdatePayment
 import com.wevx.dealershipmanagement.data.dto.ResponseGetPaymentDTO
+import com.wevx.dealershipmanagement.data.dto.ResponseUpdateOrderDTO
+import com.wevx.dealershipmanagement.data.dto.ResponseUpdatePaymentDTO
 import com.wevx.dealershipmanagement.data.dto.createOrderDto.RequestCreateOrderDTO
 import com.wevx.dealershipmanagement.data.dto.createOrderDto.ResponseCreateOrderDTO
 import com.wevx.dealershipmanagement.data.dto.orderDetailsDTO.ResponseOderDetailsDTO
@@ -14,6 +18,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -43,6 +48,13 @@ interface OrderApiService {
         @Header("Authorization") token: String
     ): Response<ResponseCreateOrderDTO>
 
+    @POST("orders/update-order/{id}")
+    suspend fun updateOrder(
+        @Path("id") id: String,
+        @Body requestUpdateOrder: RequestUpdateOrder,
+        @Header("Authorization") token: String
+    ): Response<ResponseUpdateOrderDTO>
+
     @POST("payments/create-payment")
     suspend fun createPayment(
         @Body requestPayment: RequestPaymentDTO,
@@ -62,9 +74,16 @@ interface OrderApiService {
     ): Response<ResponseOderDetailsDTO>
 
 
-    @POST("payments/create-payment")
-    suspend fun getPaymentById(
-        @Path("id") id: String
+    @GET("payments/get-payments-by-order/{orderId}")
+    suspend fun getPaymentByOrderId(
+        @Path("orderId") orderId: String
     ): Response<ResponseGetPaymentDTO>
+
+
+    @PATCH("payments/update-payment/{id}")
+    suspend fun updatePayment(
+        @Path("id") id: String,
+        @Body requestUpdatePayment: RequestUpdatePayment
+    ): Response<ResponseUpdatePaymentDTO>
 
 }

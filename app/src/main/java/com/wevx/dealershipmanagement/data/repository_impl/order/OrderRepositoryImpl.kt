@@ -1,5 +1,10 @@
 package com.wevx.dealershipmanagement.data.repository_impl.order
 
+import com.wevx.dealershipmanagement.data.dto.RequestUpdateOrder
+import com.wevx.dealershipmanagement.data.dto.RequestUpdatePayment
+import com.wevx.dealershipmanagement.data.dto.ResponseGetPaymentDTO
+import com.wevx.dealershipmanagement.data.dto.ResponseUpdateOrderDTO
+import com.wevx.dealershipmanagement.data.dto.ResponseUpdatePaymentDTO
 import com.wevx.dealershipmanagement.data.dto.createOrderDto.RequestCreateOrderDTO
 import com.wevx.dealershipmanagement.data.dto.createOrderDto.ResponseCreateOrderDTO
 import com.wevx.dealershipmanagement.data.dto.orderDetailsDTO.ResponseOderDetailsDTO
@@ -39,6 +44,20 @@ class OrderRepositoryImpl @Inject constructor(
         return orderApiService.createOrder(requestCreateOrderDTO, token)
     }
 
+    override suspend fun updateOrder(
+        id: String,
+        requestUpdateOrder: RequestUpdateOrder,
+        token: String
+    ): Response<ResponseUpdateOrderDTO> {
+        val bearerToken = "Bearer $token"
+
+        return orderApiService.updateOrder(
+            id = id,
+            requestUpdateOrder = requestUpdateOrder,
+            token = bearerToken
+        )
+    }
+
     override suspend fun createPayment(
         requestPayment: RequestPaymentDTO,
         token: String
@@ -57,7 +76,6 @@ class OrderRepositoryImpl @Inject constructor(
 
     override suspend fun getOrderById(orderId: String): Response<ResponseOderDetailsDTO> {
         return orderApiService.getOrderById(orderId)
-
     }
 
     override suspend fun getSellerPendingOrder(
@@ -65,6 +83,14 @@ class OrderRepositoryImpl @Inject constructor(
         paymentStatus: String
     ): Response<ResponseTodaysDelivery> {
         return orderApiService.getSellerPendingOrder(sellerId, paymentStatus)
+    }
+
+    override suspend fun getPaymentByOrderID(id: String): Response<ResponseGetPaymentDTO> {
+        return orderApiService.getPaymentByOrderId(id)
+    }
+
+    override suspend fun updatePayment(id: String, requestUpdatePayment: RequestUpdatePayment): Response<ResponseUpdatePaymentDTO> {
+        return orderApiService.updatePayment(id = id, requestUpdatePayment = requestUpdatePayment)
     }
 
 
