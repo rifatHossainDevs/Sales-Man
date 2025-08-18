@@ -72,7 +72,6 @@ class RegistrationFragment :
             }
             registrationState.error?.let {
                 loading.dismiss()
-                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
 
             registrationState.data?.let {

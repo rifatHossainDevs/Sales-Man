@@ -47,7 +47,6 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(
 
             changePasswordState.error?.let { error ->
                 loading.dismiss()
-                Toast.makeText(requireContext(), "Error: $error", Toast.LENGTH_SHORT).show()
             }
 
             changePasswordState.data?.let { data ->

@@ -67,7 +67,6 @@ class UpdateProfileFragment :
             }
             profileState.error?.let {
                 loading.dismiss()
-                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
             profileState.data?.let { profileModel ->
                 loading.dismiss()
@@ -87,7 +86,6 @@ class UpdateProfileFragment :
             }
             updateProfileState.error?.let {
                 loading.dismiss()
-                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
 
             updateProfileState.data?.let { updateProfileModel ->
@@ -148,11 +146,6 @@ class UpdateProfileFragment :
             binding.etNidNumberLayout.error = "This field must be filled"
             return false
         }
-
-        /*if (nid.length != 10 && nid.length != 17) {
-            binding.etNidNumberLayout.error = "NID Should have 10 or 17 Digit"
-            return false
-        }*/
 
         return true
     }

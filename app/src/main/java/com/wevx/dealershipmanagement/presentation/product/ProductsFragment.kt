@@ -71,7 +71,7 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
 
             productState.error?.let {
                 loading.dismiss()
-                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+
             }
 
             productState.data?.let { allProductList ->
@@ -92,7 +92,6 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
 
             productState.error?.let {
                 loading.dismiss()
-                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
 
             productState.data?.let { filteredProductList ->
@@ -108,7 +107,7 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
             if (categoryState.loading) return@collectInLifecycle
 
             categoryState.error?.let {
-                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+
             }
 
             categoryState.data?.let { categoryList ->

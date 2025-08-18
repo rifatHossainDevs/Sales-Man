@@ -1,11 +1,9 @@
 package com.wevx.dealershipmanagement.presentation.stockAvailability
 
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import com.wevx.dealershipmanagement.core.common.BaseFragment
 import com.wevx.dealershipmanagement.databinding.FragmentStockAvailabilityBinding
-import com.wevx.dealershipmanagement.presentation.adapter.ProductAdapter
 import com.wevx.dealershipmanagement.presentation.adapter.StockAvailabilityAdapter
 import com.wevx.dealershipmanagement.presentation.product.getAllProduct.AllProductViewModel
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
@@ -29,7 +27,6 @@ class StockAvailabilityFragment : BaseFragment<FragmentStockAvailabilityBinding>
             }
             allProductDataState.error?.let {
                 loading.dismiss()
-                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
             allProductDataState.data?.let { allProductList->
                 loading.dismiss()

@@ -76,8 +76,7 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
             if (createShipmentState.loading) return@collectInLifecycle
 
             createShipmentState.error?.let {
-                Toast.makeText(requireContext(), "Shipment Error: $it", Toast.LENGTH_SHORT).show()
-                return@collectInLifecycle
+
             }
             createShipmentState.data?.let {
                 isShipmentCreated = true
@@ -91,8 +90,7 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
         createPaymentViewModel.createPaymentState.collectInLifecycle(viewLifecycleOwner) { createPaymentState ->
             if (createPaymentState.loading) return@collectInLifecycle
             createPaymentState.error?.let {
-                Toast.makeText(requireContext(), "Payment Error: $it", Toast.LENGTH_SHORT).show()
-                return@collectInLifecycle
+
             }
             createPaymentState.data?.let {
                 isPaymentCreated = true
@@ -106,7 +104,7 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
         currentUserViewModel.profileState.collectInLifecycle(viewLifecycleOwner) { currentUserState ->
             if (currentUserState.loading) return@collectInLifecycle
             currentUserState.error?.let {
-                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+
             }
 
             currentUserState.data?.let {
@@ -123,8 +121,6 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
             }
             createOrderState.error?.let {
                 loading.dismiss()
-                Toast.makeText(requireContext(), "Order Error: $it", Toast.LENGTH_SHORT).show()
-                return@collectInLifecycle
             }
             createOrderState.data?.let {
                 //loading.dismiss()

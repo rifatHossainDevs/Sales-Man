@@ -46,7 +46,7 @@ class TodaysDeliveryFragment : BaseFragment<FragmentTodaysDeliveryBinding>(
 
             sellerPendingState.error?.let {
                 loading.dismiss()
-                binding.tvTodaysDelivery.visibility = View.VISIBLE
+                binding.tvNoPendingOrder.visibility = View.VISIBLE
             }
 
             sellerPendingState.data?.let { order ->
@@ -58,7 +58,7 @@ class TodaysDeliveryFragment : BaseFragment<FragmentTodaysDeliveryBinding>(
                 } else {
                     binding.apply {
                         rvTodaysDelivery.visibility = View.INVISIBLE
-                        tvTodaysDelivery.visibility = View.VISIBLE
+                        tvNoPendingOrder.visibility = View.VISIBLE
                     }
                 }
 
@@ -71,7 +71,7 @@ class TodaysDeliveryFragment : BaseFragment<FragmentTodaysDeliveryBinding>(
             if (profileState.loading) return@collectInLifecycle
 
             profileState.error?.let {
-                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+
             }
 
             profileState.data?.let {

@@ -30,6 +30,7 @@
         tools:listitem="@layout/item_layout_todays_delivery" />
 
     <TextView
+        android:id="@+id/tv_no_pending_order"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="No Pending Order For Today"

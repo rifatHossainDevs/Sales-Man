@@ -1,6 +1,7 @@
 package com.wevx.dealershipmanagement.presentation.addCustomer
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
@@ -68,6 +69,9 @@ class AddCustomerFragment :
     lateinit var token: String
     lateinit var tokenManager: TokenManager
 
+    var hasStoreUri: Boolean = false
+    var hasStoreOwnerUri: Boolean = false
+
     private enum class ImageType {
         STORE_OWNER, STORE
     }
@@ -86,7 +90,10 @@ class AddCustomerFragment :
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun setAllClickListener() {
+        toggleSpinners()
+
         setupDivisionSpinner()
         allButtonClickListener()
         tokenManager = TokenManager(requireContext())
@@ -95,6 +102,37 @@ class AddCustomerFragment :
         currentUserViewModel.getProfile(token)
 
     }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun toggleSpinners() {
+        val spinners = listOf(
+            binding.spinnerDivision,
+            binding.spinnerDistrict,
+            binding.spinnerSubdistrict,
+            binding.spinnerArea
+        )
+
+        if (hasStoreUri && hasStoreOwnerUri) {
+            spinners.forEach {
+                it.isEnabled = true
+                it.setOnTouchListener(null)
+                it.alpha = 1f
+            }
+        } else {
+            val toastMessage = "First set images"
+            val blockTouchListener = View.OnTouchListener { _, _ ->
+                Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT).show()
+                true
+            }
+
+            spinners.forEach {
+                it.isEnabled = false
+                it.alpha = 0.5f
+                it.setOnTouchListener(blockTouchListener)
+            }
+        }
+    }
+
 
     override fun allObserver() {
         observeDistricts()
@@ -109,7 +147,7 @@ class AddCustomerFragment :
         currentUserViewModel.profileState.collectInLifecycle(viewLifecycleOwner) { profileState ->
             if (profileState.loading) return@collectInLifecycle
             profileState.error?.let {
-                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+
             }
             profileState.data?.let { user ->
                 currentUser = user.id
@@ -125,17 +163,18 @@ class AddCustomerFragment :
                 val storeName = etStoreName.extract()
                 val storeAddress = etStoreAddress.extract()
 
-                val subDistrictIdToSend = currentSubdistricts[spinnerSubdistrict.selectedItemPosition-1].subDisNo
+                val subDistrictIdToSend =
+                    currentSubdistricts[spinnerSubdistrict.selectedItemPosition - 1].subDisNo
 
-                val areaIdToSend = currentAreaList[spinnerArea.selectedItemPosition-1].areaNo
+                val areaIdToSend = currentAreaList[spinnerArea.selectedItemPosition - 1].areaNo
 
                 val storeImageFile = storeImageUri?.let { uriToFile(it, requireContext()) }
                 val storeOwnerImageFile =
                     storeOwnerImageUri?.let { uriToFile(it, requireContext()) }
-                Log.d(
+                /*Log.d(
                     "FileCheck",
                     "storeImageFile: ${storeImageFile?.absolutePath} exists=${storeImageFile?.exists()} size=${storeImageFile?.length()}"
-                )
+                )*/
                 if (storeImageFile == null || storeOwnerImageFile == null) {
                     Toast.makeText(requireContext(), "Please select images", Toast.LENGTH_SHORT)
                         .show()
@@ -189,14 +228,13 @@ class AddCustomerFragment :
 
     private fun createStoreObserver() {
         createStoreViewModel.createStoreState.collectInLifecycle(viewLifecycleOwner) { createStoreState ->
-            if (createStoreState.loading){
+            if (createStoreState.loading) {
                 loading.show()
                 return@collectInLifecycle
             }
             createStoreState.error?.let {
                 loading.dismiss()
-                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
-                Log.d("failled", "createStoreObserver: $it")
+
             }
 
             createStoreState.data?.let {
@@ -315,7 +353,7 @@ class AddCustomerFragment :
                     selectedSubDistrictId = list[0].subDisNo
                     areaViewModel.getArea(selectedSubDistrictId!!)
 
-                    Log.d("subDistrict", "observeSubDistricts: $selectedSubDistrictId")
+
                 }
 
                 binding.spinnerSubdistrict.onItemSelectedListener =
@@ -398,7 +436,7 @@ class AddCustomerFragment :
             if (permissions.all { it.value }) {
                 // All permissions granted
                 getCurrentLocation()
-                Toast.makeText(requireContext(), "Permissions granted", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(requireContext(), "Permissions granted", Toast.LENGTH_SHORT).show()
             } else {
                 // Permission(s) denied, check for "Don't ask again" case
                 var permanentlyDenied = false
@@ -452,14 +490,10 @@ class AddCustomerFragment :
                 currentLatitude = location.latitude
                 currentLongitude = location.longitude
 
-                Log.d(
-                    "AddCustomerFragment", "Location: lat=$currentLatitude, lon=$currentLongitude"
-                )
-                //Toast.makeText(requireContext(), "Lat: $currentLatitude, Lon: $currentLongitude", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(
+                /*Toast.makeText(
                     requireContext(), "Could not get current location", Toast.LENGTH_SHORT
-                ).show()
+                ).show()*/
             }
         }
     }
@@ -475,12 +509,18 @@ class AddCustomerFragment :
                 when (currentImageType) {
                     ImageType.STORE_OWNER -> {
                         storeOwnerImageUri = fileUri
+                        hasStoreOwnerUri = true
+                        toggleSpinners()
                         binding.ivStoreOwner.setImageURI(fileUri)
                     }
+
                     ImageType.STORE -> {
                         storeImageUri = fileUri
+                        hasStoreUri = true
+                        toggleSpinners()
                         binding.ivUserStore.setImageURI(fileUri)
                     }
+
                     null -> {
 
                     }

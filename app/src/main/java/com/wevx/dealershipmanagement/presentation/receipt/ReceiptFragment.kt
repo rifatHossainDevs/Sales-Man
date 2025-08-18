@@ -70,7 +70,7 @@ class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBind
         getProfileViewModel.profileState.collectInLifecycle(viewLifecycleOwner) { profileState ->
             if (profileState.loading) return@collectInLifecycle
             profileState.error?.let {
-                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+
             }
             profileState.data?.let {
                 salesmanName = it.name
@@ -87,7 +87,7 @@ class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBind
             }
             storeByIdState.error?.let {
                 loading.dismiss()
-                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+
             }
             storeByIdState.data?.let {
                 loading.dismiss()
