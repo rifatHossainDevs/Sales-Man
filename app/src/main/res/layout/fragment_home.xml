@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:paddingHorizontal="@dimen/_8sdp"
     tools:context=".presentation.home.HomeFragment">
 
 
     <TextView
+        android:layout_marginStart="@dimen/_8sdp"
         android:id="@+id/tv_select_a_customer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,6 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
+        android:layout_marginStart="@dimen/_8sdp"
         android:id="@+id/iv_filter"
         android:layout_width="@dimen/_24sdp"
         android:layout_height="@dimen/_24sdp"
@@ -43,6 +44,7 @@
 
 
     <LinearLayout
+        android:layout_marginHorizontal="@dimen/_8sdp"
 
         android:id="@+id/spinner_division_district"
         android:layout_width="match_parent"
@@ -107,6 +109,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_marginHorizontal="@dimen/_8sdp"
         android:id="@+id/spinner_subDistrict_area"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -173,6 +176,7 @@
     </LinearLayout>
 
     <TextView
+        android:layout_marginStart="@dimen/_8sdp"
         android:id="@+id/tv_all_customer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

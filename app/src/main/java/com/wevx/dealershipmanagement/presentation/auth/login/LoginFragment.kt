@@ -1,5 +1,6 @@
 package com.wevx.dealershipmanagement.presentation.auth.login
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
@@ -45,15 +46,12 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
     private fun refreshTokenObserver() {
         refreshTokenViewModel.refreshTokenState.collectInLifecycle(viewLifecycleOwner) { refreshTokenState ->
-            if (refreshTokenState.loading){
+            if (refreshTokenState.loading) {
                 loading.show()
-                //return@collectInLifecycle
             }
 
             refreshTokenState.error?.let {
                 loading.dismiss()
-                //Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
-                //return@collectInLifecycle
             }
 
             refreshTokenState.data?.let {
@@ -73,7 +71,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
     private fun loginObserver() {
         loginViewModel.loginState.collectInLifecycle(viewLifecycleOwner) { loginState ->
-            if (loginState.loading){
+            if (loginState.loading) {
                 loading.show()
                 return@collectInLifecycle
             }
@@ -94,13 +92,13 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                 Log.d("refresh", "loginObserver: ${responseDTO.accessToken}")
 
 
-                Toast.makeText(requireContext(), "Login Successful", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(requireContext(), MainActivity::class.java))
-                requireActivity().finish()
+                //Toast.makeText(requireContext(), "Login Successful", Toast.LENGTH_SHORT).show()
 
-                /*if (responseDTO.isActive){
 
-                }else{
+                if (responseDTO.isActive) {
+                    startActivity(Intent(requireContext(), MainActivity::class.java))
+                    requireActivity().finish()
+                } else {
                     AlertDialog.Builder(requireContext())
                         .setTitle("Account Inactive")
                         .setMessage("Your account is not active. Please contact with your company.")
@@ -109,7 +107,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                         }
                         .setCancelable(false)
                         .show()
-                }*/
+                }
 
             }
         }
@@ -125,13 +123,27 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                 val emailPattern = Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
 
                 if (userEmailOrPass.isNotEmpty() && password.isNotEmpty()) {
-                    if (emailPattern.matches(userEmailOrPass)){
-                        loginViewModel.loginUser(RequestLogin(email = userEmailOrPass, password = password))
-                    }else{
-                        loginViewModel.loginUser(RequestLogin(phone = userEmailOrPass, password = password))
+                    if (emailPattern.matches(userEmailOrPass)) {
+                        loginViewModel.loginUser(
+                            RequestLogin(
+                                email = userEmailOrPass,
+                                password = password
+                            )
+                        )
+                    } else {
+                        loginViewModel.loginUser(
+                            RequestLogin(
+                                phone = userEmailOrPass,
+                                password = password
+                            )
+                        )
                     }
                 } else {
-                    Toast.makeText(requireContext(), "Please enter email and password", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Please enter email and password",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
 
             }

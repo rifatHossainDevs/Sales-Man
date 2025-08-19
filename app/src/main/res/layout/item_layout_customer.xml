@@ -1,119 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp">
+    android:layout_marginHorizontal="@dimen/_8sdp"
+    android:layout_marginBottom="8dp"
+    android:backgroundTint="@color/recyclerView"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="12dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
 
-    <androidx.cardview.widget.CardView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/recyclerView"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        android:layout_margin="4dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="4dp">
+        <ImageView
+            android:id="@+id/iv_store"
+            android:layout_width="@dimen/_68sdp"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_customer_item"
+            android:clipToOutline="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/shop_keeper"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_shop_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:ellipsize="end"
+            android:maxWidth="@dimen/_168sdp"
+            android:maxLines="1"
+            android:text="M/S Khalid Store"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_16ssp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/iv_store"
+            app:layout_constraintTop_toTopOf="@id/iv_store" />
+
+        <TextView
+            android:id="@+id/tv_owner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxWidth="@dimen/_168sdp"
+            android:maxLines="1"
+            android:text="MD Khalid Hasan Jibon"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/tv_shop_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_shop_name" />
+
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:ellipsize="end"
+            android:maxWidth="@dimen/_168sdp"
+            android:maxLines="2"
+            android:text="shop no-27/28,block-d,level-06 shop no-27/28,block-d,level-06 shop no-27/28,block-d,level-06"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintStart_toStartOf="@id/tv_owner"
+            app:layout_constraintTop_toBottomOf="@id/tv_owner" />
+
+        <!--<LinearLayout
+            android:id="@+id/layout_edit_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
 
             <ImageView
-                android:id="@+id/iv_store"
-                android:layout_width="@dimen/_68sdp"
-                android:layout_height="0dp"
-                android:background="@drawable/bg_customer_item"
-                android:clipToOutline="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/shop_keeper"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_shop_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_4sdp"
-                android:maxWidth="@dimen/_168sdp"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:text="M/S Khalid Store"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_16ssp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@id/iv_store"
-                app:layout_constraintTop_toTopOf="@id/iv_store" />
-
-            <TextView
-                android:id="@+id/tv_owner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="@dimen/_168sdp"
-                android:text="MD Khalid Hasan Jibon"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_12ssp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@id/tv_shop_name"
-                app:layout_constraintTop_toBottomOf="@id/tv_shop_name" />
-
-            <TextView
-                android:id="@+id/tv_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_2sdp"
-                android:ellipsize="end"
-                android:maxWidth="@dimen/_168sdp"
-                android:maxLines="2"
-                android:text="shop no-27/28,block-d,level-06 shop no-27/28,block-d,level-06 shop no-27/28,block-d,level-06"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_12ssp"
-                app:layout_constraintStart_toStartOf="@id/tv_owner"
-                app:layout_constraintTop_toBottomOf="@id/tv_owner" />
-
-            <!--<LinearLayout
-                android:id="@+id/layout_edit_delete"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:orientation="vertical"
+                android:id="@+id/iv_edit"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_edit_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_delete"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_delete_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
-                <ImageView
-                    android:id="@+id/iv_edit"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_weight="1"
-                    android:src="@drawable/ic_edit_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/iv_delete"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_weight="1"
-                    android:src="@drawable/ic_delete_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+        </LinearLayout>-->
 
 
-            </LinearLayout>-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    </androidx.cardview.widget.CardView>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
