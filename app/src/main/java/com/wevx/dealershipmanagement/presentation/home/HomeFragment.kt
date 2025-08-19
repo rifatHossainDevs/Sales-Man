@@ -175,7 +175,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                         }.sortedBy { it.distance }
 
                     storeOwnerList = storesWithDistance.toMutableList()
-                    setStoreOwnerAdapterData()
+
+                    if (storeOwnerList.isNotEmpty()) {
+                        setStoreOwnerAdapterData()
+                        binding.tvNoStoreFound.visibility = View.GONE
+                        binding.rvAllCustomer.visibility = View.VISIBLE
+                        binding.tvAllCustomer.visibility = View.VISIBLE
+                    } else {
+                        storeOwnerList.clear()
+                        storeOwnerAdapter = StoreOwnerAdapter(storeOwnerList, this)
+                        binding.rvAllCustomer.adapter = storeOwnerAdapter
+                        binding.tvNoStoreFound.visibility = View.VISIBLE
+                        binding.rvAllCustomer.visibility = View.GONE
+                        binding.tvAllCustomer.visibility = View.GONE
+                    }
                 } else {
                     warningPermissionDialog(
                         requireContext(),
