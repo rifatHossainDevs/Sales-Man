@@ -148,11 +148,11 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
     private fun checkAllOperationsSuccess() {
         if (isPaymentCreated && isShipmentCreated && isOrderCreated) {
             loading.dismiss()
-            Toast.makeText(
+            /*Toast.makeText(
                 requireContext(),
                 "Order, Payment, and Shipment successfully created!",
                 Toast.LENGTH_SHORT
-            ).show()
+            ).show()*/
             val action =
                 PaymentFragmentDirections.actionPaymentFragmentToReceiptFragment(
                     id = customerId,
