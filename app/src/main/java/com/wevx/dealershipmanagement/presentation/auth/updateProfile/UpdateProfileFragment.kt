@@ -1,14 +1,12 @@
 package com.wevx.dealershipmanagement.presentation.auth.updateProfile
 
-import android.content.Intent
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.core.common.BaseFragment
-import com.wevx.dealershipmanagement.data.dto.updateProfileDto.RequestUpdateProfile
+import com.wevx.dealershipmanagement.data.dto.authDto.updateProfileDto.RequestUpdateProfile
 import com.wevx.dealershipmanagement.databinding.FragmentEditProfileBinding
-import com.wevx.dealershipmanagement.presentation.MainActivity
 import com.wevx.dealershipmanagement.presentation.auth.profile.GetProfileViewModel
 import com.wevx.dealershipmanagement.utils.TokenManager
 import com.wevx.dealershipmanagement.utils.collectInLifecycle

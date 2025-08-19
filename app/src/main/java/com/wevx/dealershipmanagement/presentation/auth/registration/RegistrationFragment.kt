@@ -13,12 +13,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.utils.areAllPermissionGranted
 import com.wevx.dealershipmanagement.core.common.BaseFragment
-import com.wevx.dealershipmanagement.data.dto.registrationDto.RequestRegistrationDto
+import com.wevx.dealershipmanagement.data.dto.authDto.registrationDto.RequestRegistrationDto
 import com.wevx.dealershipmanagement.databinding.FragmentRegistrationBinding
 import com.wevx.dealershipmanagement.databinding.PhoneVerificationBottomSheetBinding
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
 import com.wevx.dealershipmanagement.utils.extract
-import com.wevx.dealershipmanagement.utils.requestPermission
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.wevx.dealershipmanagement.data.dto.orderDetailsDTO.ResponseOderDetailsDTO
 import com.wevx.dealershipmanagement.databinding.ItemLayoutProductCartBinding
-import com.wevx.dealershipmanagement.domain.models.CartItem
 import com.wevx.dealershipmanagement.domain.models.OrderDetailsModel
 
 class OrderDetailsAdapter(val productsList: List<OrderDetailsModel>) :

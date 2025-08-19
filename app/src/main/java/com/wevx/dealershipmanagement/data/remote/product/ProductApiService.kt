@@ -1,9 +1,8 @@
 package com.wevx.dealershipmanagement.data.remote.product
 
-import com.wevx.dealershipmanagement.data.dto.categoryDTO.ResponseCategoryDTO
-import com.wevx.dealershipmanagement.data.dto.districtDto.ResponseDisDTO
-import com.wevx.dealershipmanagement.data.dto.productById.ResponseProductByIdDTO
-import com.wevx.dealershipmanagement.data.dto.productDto.ResponseProductDTO
+import com.wevx.dealershipmanagement.data.dto.product.categoryDTO.ResponseCategoryDTO
+import com.wevx.dealershipmanagement.data.dto.product.productById.ResponseProductByIdDTO
+import com.wevx.dealershipmanagement.data.dto.product.productDto.ResponseProductDTO
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

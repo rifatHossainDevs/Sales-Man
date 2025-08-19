@@ -1,7 +1,7 @@
 package com.wevx.dealershipmanagement.domain.use_case.storeOwner
 
 import com.wevx.dealershipmanagement.core.common.Resource
-import com.wevx.dealershipmanagement.data.dto.getStoreOwnerByAreaDTO.toStoreOwnerModelList
+import com.wevx.dealershipmanagement.data.dto.homeDto.getStoreOwnerByAreaDTO.toStoreOwnerModelList
 import com.wevx.dealershipmanagement.domain.models.StoreOwnerModel
 import com.wevx.dealershipmanagement.domain.repository.storeOwner.StoreOwnerRepository
 import kotlinx.coroutines.flow.Flow

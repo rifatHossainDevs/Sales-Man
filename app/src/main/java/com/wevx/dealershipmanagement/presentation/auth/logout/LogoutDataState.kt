@@ -1,6 +1,6 @@
 package com.wevx.dealershipmanagement.presentation.auth.logout
 
-import com.wevx.dealershipmanagement.data.dto.logoutDTO.ResponseLogoutDto
+import com.wevx.dealershipmanagement.data.dto.authDto.logoutDTO.ResponseLogoutDto
 
 data class LogoutDataState(
     val loading: Boolean = false,

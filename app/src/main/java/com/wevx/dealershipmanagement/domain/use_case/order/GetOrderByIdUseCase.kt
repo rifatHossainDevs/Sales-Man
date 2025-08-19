@@ -1,10 +1,8 @@
 package com.wevx.dealershipmanagement.domain.use_case.order
 
 import com.wevx.dealershipmanagement.core.common.Resource
-import com.wevx.dealershipmanagement.data.dto.orderDetailsDTO.toPendingOrderSellerModel
-import com.wevx.dealershipmanagement.data.dto.todaysDelivery.toPendingOrderSellerModel
+import com.wevx.dealershipmanagement.data.dto.order.orderDetailsDTO.toPendingOrderSellerModel
 import com.wevx.dealershipmanagement.domain.models.OrderDetailsModel
-import com.wevx.dealershipmanagement.domain.models.PendingOrderSellerModel
 import com.wevx.dealershipmanagement.domain.repository.order.OrderRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

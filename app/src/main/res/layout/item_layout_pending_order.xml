@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/_4sdp"
+    android:layout_marginHorizontal="@dimen/_8sdp"
     android:layout_marginBottom="8dp"
     android:backgroundTint="#FFEBEE"
     app:cardCornerRadius="@dimen/_8sdp"
@@ -20,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Invoice: INV/001"
-            android:maxWidth="@dimen/_200sdp"
+            android:maxWidth="@dimen/_180sdp"
             android:maxLines="1"
             android:ellipsize="end"
             android:textColor="@color/black"
@@ -59,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:maxWidth="@dimen/_220sdp"
+            android:maxWidth="@dimen/_180sdp"
             android:text="Mirpur-12"
             android:maxLines="1"
             android:ellipsize="end"
@@ -70,7 +71,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnViewInvoice"
-            android:layout_width="@dimen/_60sdp"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/_28sdp"
             android:backgroundTint="@color/white"
             android:paddingHorizontal="8dp"

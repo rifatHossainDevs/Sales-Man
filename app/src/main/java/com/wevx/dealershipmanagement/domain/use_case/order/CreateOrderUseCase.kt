@@ -2,8 +2,8 @@ package com.wevx.dealershipmanagement.domain.use_case.order
 
 import android.util.Log
 import com.wevx.dealershipmanagement.core.common.Resource
-import com.wevx.dealershipmanagement.data.dto.createOrderDto.RequestCreateOrderDTO
-import com.wevx.dealershipmanagement.data.dto.createOrderDto.ResponseCreateOrderDTO
+import com.wevx.dealershipmanagement.data.dto.order.createOrderDto.RequestCreateOrderDTO
+import com.wevx.dealershipmanagement.data.dto.order.createOrderDto.ResponseCreateOrderDTO
 import com.wevx.dealershipmanagement.domain.repository.order.OrderRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

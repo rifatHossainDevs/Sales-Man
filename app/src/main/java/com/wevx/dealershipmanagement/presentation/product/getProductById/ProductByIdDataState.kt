@@ -1,6 +1,6 @@
 package com.wevx.dealershipmanagement.presentation.product.getProductById
 
-import com.wevx.dealershipmanagement.data.dto.productById.ResponseProductByIdDTO
+import com.wevx.dealershipmanagement.data.dto.product.productById.ResponseProductByIdDTO
 
 data class ProductByIdDataState(
     val loading: Boolean = false,

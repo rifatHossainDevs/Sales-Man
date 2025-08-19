@@ -1,8 +1,8 @@
 package com.wevx.dealershipmanagement.data.remote.home
 
-import com.wevx.dealershipmanagement.data.dto.areaDTO.ResponseAreaDTO
-import com.wevx.dealershipmanagement.data.dto.districtDto.ResponseDisDTO
-import com.wevx.dealershipmanagement.data.dto.subDistrictDto.ResponseSubDisDTO
+import com.wevx.dealershipmanagement.data.dto.homeDto.areaDTO.ResponseAreaDTO
+import com.wevx.dealershipmanagement.data.dto.homeDto.districtDto.ResponseDisDTO
+import com.wevx.dealershipmanagement.data.dto.homeDto.subDistrictDto.ResponseSubDisDTO
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

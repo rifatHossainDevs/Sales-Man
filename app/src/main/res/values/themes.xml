@@ -9,6 +9,6 @@
 
     <style name="Theme.DealershipManagement.MainActivity" parent="Base.Theme.DealershipManagement">
         <item name="android:statusBarColor">@color/primary</item> <!-- Status bar background -->
-        <item name="android:windowLightStatusBar">false</item> <!-- Dark text -->
+        <item name="android:windowLightStatusBar">true</item> <!-- Dark text -->
     </style>
 </resources>

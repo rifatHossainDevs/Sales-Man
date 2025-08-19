@@ -1,9 +1,9 @@
 package com.wevx.dealershipmanagement.data.remote.storeOwner
 
-import com.wevx.dealershipmanagement.data.dto.createStoreDTO.ResponseCreateStoreDTO
-import com.wevx.dealershipmanagement.data.dto.getStoreById.ResponseGetStoreById
-import com.wevx.dealershipmanagement.data.dto.getStoreOwnerByAreaDTO.ResponseStoreOwnerDto
-import com.wevx.dealershipmanagement.data.dto.getStoreOwnerBySubDisDto.ResponseGetStoreOwnerBySubDistrictDTO
+import com.wevx.dealershipmanagement.data.dto.store.createStoreDTO.ResponseCreateStoreDTO
+import com.wevx.dealershipmanagement.data.dto.store.getStoreById.ResponseGetStoreById
+import com.wevx.dealershipmanagement.data.dto.homeDto.getStoreOwnerByAreaDTO.ResponseStoreOwnerDto
+import com.wevx.dealershipmanagement.data.dto.homeDto.getStoreOwnerBySubDisDto.ResponseGetStoreOwnerBySubDistrictDTO
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response

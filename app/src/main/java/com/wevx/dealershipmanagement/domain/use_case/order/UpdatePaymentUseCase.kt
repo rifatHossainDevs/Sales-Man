@@ -1,8 +1,8 @@
 package com.wevx.dealershipmanagement.domain.use_case.order
 
 import com.wevx.dealershipmanagement.core.common.Resource
-import com.wevx.dealershipmanagement.data.dto.RequestUpdatePayment
-import com.wevx.dealershipmanagement.data.dto.ResponseUpdatePaymentDTO
+import com.wevx.dealershipmanagement.data.dto.paymentDto.updatePayment.RequestUpdatePayment
+import com.wevx.dealershipmanagement.data.dto.paymentDto.updatePayment.ResponseUpdatePaymentDTO
 import com.wevx.dealershipmanagement.domain.repository.order.OrderRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

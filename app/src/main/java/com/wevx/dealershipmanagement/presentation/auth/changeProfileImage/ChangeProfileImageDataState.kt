@@ -1,6 +1,6 @@
 package com.wevx.dealershipmanagement.presentation.auth.changeProfileImage
 
-import com.wevx.dealershipmanagement.data.dto.ResponseChangeProfileImage
+import com.wevx.dealershipmanagement.data.dto.authDto.ResponseChangeProfileImage
 
 data class ChangeProfileImageDataState(
     val loading: Boolean = false,

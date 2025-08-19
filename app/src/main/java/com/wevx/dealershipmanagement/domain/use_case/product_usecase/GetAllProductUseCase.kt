@@ -1,7 +1,7 @@
 package com.wevx.dealershipmanagement.domain.use_case.product_usecase
 
 import com.wevx.dealershipmanagement.core.common.Resource
-import com.wevx.dealershipmanagement.data.dto.productDto.toProductModelList
+import com.wevx.dealershipmanagement.data.dto.product.productDto.toProductModelList
 import com.wevx.dealershipmanagement.domain.models.ProductModel
 import com.wevx.dealershipmanagement.domain.repository.product.ProductRepository
 import kotlinx.coroutines.flow.Flow

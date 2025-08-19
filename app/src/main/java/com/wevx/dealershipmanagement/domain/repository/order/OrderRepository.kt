@@ -1,22 +1,22 @@
 package com.wevx.dealershipmanagement.domain.repository.order
 
-import com.wevx.dealershipmanagement.data.dto.RequestUpdateOrder
-import com.wevx.dealershipmanagement.data.dto.RequestUpdatePayment
-import com.wevx.dealershipmanagement.data.dto.ResponseGetPaymentDTO
-import com.wevx.dealershipmanagement.data.dto.ResponseUpdateOrderDTO
-import com.wevx.dealershipmanagement.data.dto.ResponseUpdatePaymentDTO
-import com.wevx.dealershipmanagement.data.dto.createOrderDto.RequestCreateOrderDTO
-import com.wevx.dealershipmanagement.data.dto.createOrderDto.ResponseCreateOrderDTO
-import com.wevx.dealershipmanagement.data.dto.orderDetailsDTO.ResponseOderDetailsDTO
-import com.wevx.dealershipmanagement.data.dto.paymentDto.RequestPaymentDTO
-import com.wevx.dealershipmanagement.data.dto.paymentDto.ResponsePaymentDTO
-import com.wevx.dealershipmanagement.data.dto.pendingAndCompleteOrderDto.ResponsePendingAndCompleteOrderDTO
+import com.wevx.dealershipmanagement.data.dto.order.updateOrder.RequestUpdateOrder
+import com.wevx.dealershipmanagement.data.dto.paymentDto.updatePayment.RequestUpdatePayment
+import com.wevx.dealershipmanagement.data.dto.paymentDto.ResponseGetPaymentDTO
+import com.wevx.dealershipmanagement.data.dto.order.updateOrder.ResponseUpdateOrderDTO
+import com.wevx.dealershipmanagement.data.dto.paymentDto.updatePayment.ResponseUpdatePaymentDTO
+import com.wevx.dealershipmanagement.data.dto.order.createOrderDto.RequestCreateOrderDTO
+import com.wevx.dealershipmanagement.data.dto.order.createOrderDto.ResponseCreateOrderDTO
+import com.wevx.dealershipmanagement.data.dto.order.orderDetailsDTO.ResponseOderDetailsDTO
+import com.wevx.dealershipmanagement.data.dto.paymentDto.createPayment.RequestPaymentDTO
+import com.wevx.dealershipmanagement.data.dto.paymentDto.createPayment.ResponsePaymentDTO
+import com.wevx.dealershipmanagement.data.dto.order.pendingAndCompleteOrderDto.ResponsePendingAndCompleteOrderDTO
 import com.wevx.dealershipmanagement.data.dto.shipmentDto.RequestShipmentDTO
 import com.wevx.dealershipmanagement.data.dto.shipmentDto.RequestUpdateShipment
 import com.wevx.dealershipmanagement.data.dto.shipmentDto.ResponseGetShipmentByOrderDTO
 import com.wevx.dealershipmanagement.data.dto.shipmentDto.ResponseShipmentDTO
 import com.wevx.dealershipmanagement.data.dto.shipmentDto.ResponseUpdateShipmentDTO
-import com.wevx.dealershipmanagement.data.dto.todaysDelivery.ResponseTodaysDelivery
+import com.wevx.dealershipmanagement.data.dto.order.todaysDelivery.ResponseTodaysDelivery
 import retrofit2.Response
 
 interface OrderRepository {

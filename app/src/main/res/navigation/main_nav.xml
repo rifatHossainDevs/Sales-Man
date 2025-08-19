@@ -104,15 +104,19 @@
         android:id="@+id/todaysDeliveryFragment"
         android:name="com.wevx.dealershipmanagement.presentation.order.sellerPendingOrder.TodaysDeliveryFragment"
         android:label="fragment_todays_delivery"
-        tools:layout="@layout/fragment_todays_delivery" />
+        tools:layout="@layout/fragment_todays_delivery" >
+        <action
+            android:id="@+id/action_todaysDeliveryFragment_to_orderDetailsFragment"
+            app:destination="@id/orderDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/paymentCollectionFragment"
-        android:name="com.wevx.dealershipmanagement.PaymentCollectionFragment"
+        android:name="com.wevx.dealershipmanagement.presentation.paymentCollection.PaymentCollectionFragment"
         android:label="fragment_payment_collection"
         tools:layout="@layout/fragment_payment_collection" />
     <fragment
         android:id="@+id/paymentHistoryFragment"
-        android:name="com.wevx.dealershipmanagement.PaymentHistoryFragment"
+        android:name="com.wevx.dealershipmanagement.presentation.paymentHistory.PaymentHistoryFragment"
         android:label="fragment_payment_history"
         tools:layout="@layout/fragment_payment_history" />
     <fragment

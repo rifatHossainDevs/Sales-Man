@@ -1,10 +1,7 @@
 package com.wevx.dealershipmanagement.domain.use_case.auth_usecase
 
 import com.wevx.dealershipmanagement.core.common.Resource
-import com.wevx.dealershipmanagement.data.dto.loginDto.RequestLogin
-import com.wevx.dealershipmanagement.data.dto.loginDto.toUserModel
-import com.wevx.dealershipmanagement.data.dto.logoutDTO.ResponseLogoutDto
-import com.wevx.dealershipmanagement.domain.models.LoginModel
+import com.wevx.dealershipmanagement.data.dto.authDto.logoutDTO.ResponseLogoutDto
 import com.wevx.dealershipmanagement.domain.repository.auth.AuthRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

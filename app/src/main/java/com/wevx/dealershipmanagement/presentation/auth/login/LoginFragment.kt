@@ -9,8 +9,8 @@ import androidx.navigation.fragment.findNavController
 import com.wevx.dealershipmanagement.presentation.MainActivity
 import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.core.common.BaseFragment
-import com.wevx.dealershipmanagement.data.dto.RequestRefreshToken
-import com.wevx.dealershipmanagement.data.dto.loginDto.RequestLogin
+import com.wevx.dealershipmanagement.data.dto.authDto.RequestRefreshToken
+import com.wevx.dealershipmanagement.data.dto.authDto.loginDto.RequestLogin
 import com.wevx.dealershipmanagement.databinding.FragmentLoginBinding
 import com.wevx.dealershipmanagement.presentation.auth.refreshToken.RefreshTokenViewModel
 import com.wevx.dealershipmanagement.utils.collectInLifecycle

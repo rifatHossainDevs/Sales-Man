@@ -1,12 +1,8 @@
 package com.wevx.dealershipmanagement.domain.use_case.auth_usecase
 
-import android.util.Log
 import com.wevx.dealershipmanagement.core.common.Resource
-import com.wevx.dealershipmanagement.data.dto.ResponseChangeProfileImage
-import com.wevx.dealershipmanagement.data.dto.createStoreDTO.toCreateStoreModel
-import com.wevx.dealershipmanagement.domain.models.CreateStoreModel
+import com.wevx.dealershipmanagement.data.dto.authDto.ResponseChangeProfileImage
 import com.wevx.dealershipmanagement.domain.repository.auth.AuthRepository
-import com.wevx.dealershipmanagement.domain.repository.storeOwner.StoreOwnerRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.File

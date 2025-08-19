@@ -1,7 +1,7 @@
 package com.wevx.dealershipmanagement.domain.use_case.order
 
 import com.wevx.dealershipmanagement.core.common.Resource
-import com.wevx.dealershipmanagement.data.dto.pendingAndCompleteOrderDto.toPendingAndCompleteOrderModelList
+import com.wevx.dealershipmanagement.data.dto.order.pendingAndCompleteOrderDto.toPendingAndCompleteOrderModelList
 import com.wevx.dealershipmanagement.domain.models.PendingAndCompleteOrderModel
 import com.wevx.dealershipmanagement.domain.repository.order.OrderRepository
 import kotlinx.coroutines.flow.Flow

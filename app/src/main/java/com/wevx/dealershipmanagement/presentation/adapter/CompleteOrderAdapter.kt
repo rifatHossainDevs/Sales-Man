@@ -50,7 +50,7 @@ class CompleteOrderAdapter(val completeOrders: List<PendingAndCompleteOrderModel
                     tvPaymentStatus.setTextColor(Color.GREEN)
                 }*/
                 tvShipmentAddress.text = item.shipmentAddress
-                tvTotal.text = "Total: ৳${item.totalPrice}"
+                tvTotal.text = "৳${item.totalPrice}"
 
                 root.setOnClickListener {
                     listener.selectCompleteOrder(item.id)

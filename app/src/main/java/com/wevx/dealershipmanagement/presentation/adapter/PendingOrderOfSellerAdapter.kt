@@ -43,7 +43,7 @@ class PendingOrderOfSellerAdapter(
                 tvInvoiceNumber.text = "Invoice: ${order.invoiceNumber}"
                 tvPaymentStatus.text = "Status: ${order.paymentStatus}"
                 tvShipmentAddress.text = order.address
-                tvTotal.text = order.total
+                tvTotal.text = "৳${order.total}"
 
 
                 root.setOnClickListener {

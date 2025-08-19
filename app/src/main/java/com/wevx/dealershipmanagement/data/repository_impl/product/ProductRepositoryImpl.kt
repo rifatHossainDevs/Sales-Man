@@ -1,8 +1,8 @@
 package com.wevx.dealershipmanagement.data.repository_impl.product
 
-import com.wevx.dealershipmanagement.data.dto.categoryDTO.ResponseCategoryDTO
-import com.wevx.dealershipmanagement.data.dto.productById.ResponseProductByIdDTO
-import com.wevx.dealershipmanagement.data.dto.productDto.ResponseProductDTO
+import com.wevx.dealershipmanagement.data.dto.product.categoryDTO.ResponseCategoryDTO
+import com.wevx.dealershipmanagement.data.dto.product.productById.ResponseProductByIdDTO
+import com.wevx.dealershipmanagement.data.dto.product.productDto.ResponseProductDTO
 import com.wevx.dealershipmanagement.data.remote.product.ProductApiService
 import com.wevx.dealershipmanagement.domain.repository.product.ProductRepository
 import jakarta.inject.Inject

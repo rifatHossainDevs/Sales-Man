@@ -52,7 +52,6 @@ class TodaysDeliveryFragment : BaseFragment<FragmentTodaysDeliveryBinding>(
             sellerPendingState.data?.let { order ->
                 loading.dismiss()
                 if (order.isNotEmpty()) {
-
                     pendingOrderAdapter = PendingOrderOfSellerAdapter(order, this)
                     binding.rvTodaysDelivery.adapter = pendingOrderAdapter
                 } else {
@@ -83,7 +82,7 @@ class TodaysDeliveryFragment : BaseFragment<FragmentTodaysDeliveryBinding>(
     }
 
     override fun selectPendingOrder(pendingOderId: String, customerId: String) {
-        val action =
+        val action = TodaysDeliveryFragmentDirections.actionTodaysDeliveryFragmentToOrderDetailsFragment(pendingOderId, customerId)
             StoreOwnerDetailsFragmentDirections.actionStoreOwnerDetailsFragmentToOrderDetailsFragment(
                 pendingOderId, customerId
             )

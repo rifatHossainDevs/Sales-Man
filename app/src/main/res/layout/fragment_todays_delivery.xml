@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/_4sdp"
     tools:context=".presentation.order.sellerPendingOrder.TodaysDeliveryFragment">
 
     <TextView
+        android:layout_marginHorizontal="@dimen/_8sdp"
         android:id="@+id/tv_todays_delivery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

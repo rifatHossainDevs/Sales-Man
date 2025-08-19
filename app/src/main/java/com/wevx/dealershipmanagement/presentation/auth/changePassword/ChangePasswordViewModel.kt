@@ -3,7 +3,7 @@ package com.wevx.dealershipmanagement.presentation.auth.changePassword
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wevx.dealershipmanagement.core.common.Resource
-import com.wevx.dealershipmanagement.data.dto.changePasswordDTO.RequestChangePasswordDto
+import com.wevx.dealershipmanagement.data.dto.authDto.changePasswordDTO.RequestChangePasswordDto
 import com.wevx.dealershipmanagement.domain.use_case.auth_usecase.ChangePasswordUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

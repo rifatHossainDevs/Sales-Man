@@ -1,7 +1,7 @@
 package com.wevx.dealershipmanagement.domain.use_case.home_usecase
 
 import com.wevx.dealershipmanagement.core.common.Resource
-import com.wevx.dealershipmanagement.data.dto.areaDTO.toAreaModelList
+import com.wevx.dealershipmanagement.data.dto.homeDto.areaDTO.toAreaModelList
 import com.wevx.dealershipmanagement.domain.models.AreaModel
 import com.wevx.dealershipmanagement.domain.repository.home.AreaRepository
 import kotlinx.coroutines.flow.Flow
