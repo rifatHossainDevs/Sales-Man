@@ -59,4 +59,5 @@ interface AuthApiService {
         @Part avatar: MultipartBody.Part
     ): Response<ResponseChangeProfileImage>
 
+
 }
