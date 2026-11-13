@@ -54,14 +54,22 @@ data class ResponseOderDetailsDTO(
         data class OrderItem(
             @SerializedName("createdAt")
             val createdAt: String? = null,
+
             @SerializedName("_id")
             val id: String? = null,
+
             @SerializedName("priceAtPurchase")
             val priceAtPurchase: Int? = null,
+
             @SerializedName("productId")
             val productId: String? = null,
+
+            @SerializedName("productName")
+            val productName: String? = null,
+
             @SerializedName("purchaseQuantity")
             val purchaseQuantity: Int? = null,
+
             @SerializedName("updatedAt")
             val updatedAt: String? = null
         )
@@ -70,28 +78,33 @@ data class ResponseOderDetailsDTO(
 
 // Per-item totals (subtotal used via computed property, total from parent if needed)
 fun ResponseOderDetailsDTO.Data.toOrderDetailsModelList(): List<OrderDetailsModel> {
-    val orderTotal = this.totalPrice?.toDouble() ?: 0.0
-    return this.orderItems?.filterNotNull()?.map { item ->
-        OrderDetailsModel(
-            name = "",
-            quantity = item.purchaseQuantity?.toDouble() ?: 0.0,
-            unit = "pcs",
-            price = item.priceAtPurchase?.toDouble() ?: 0.0,
-            total = orderTotal   // grand total for the order
-        )
-    } ?: emptyList()
+    return this.orderItems
+        ?.filterNotNull()
+        ?.map { item ->
+            val quantity = item.purchaseQuantity?.toDouble() ?: 0.0
+            val price = item.priceAtPurchase?.toDouble() ?: 0.0
+
+            OrderDetailsModel(
+                name = item.productName.orEmpty(),
+                quantity = quantity,
+                unit = "pcs",
+                price = price,
+                total = quantity * price
+            )
+        } ?: emptyList()
 }
 
 // Per-item mapping for RecyclerView (total = subtotal = qty * price)
 fun ResponseOderDetailsDTO.Data.OrderItem.toOrderDetailsModel(): OrderDetailsModel {
     val quantity = this.purchaseQuantity?.toDouble() ?: 0.0
     val price = this.priceAtPurchase?.toDouble() ?: 0.0
+
     return OrderDetailsModel(
-        name = "",
+        name = this.productName.orEmpty(),
         quantity = quantity,
         unit = "pcs",
         price = price,
-        total = quantity * price  // per-item total
+        total = quantity * price
     )
 }
 

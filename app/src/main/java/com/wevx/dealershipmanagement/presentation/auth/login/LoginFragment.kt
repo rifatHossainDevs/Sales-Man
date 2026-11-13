@@ -61,7 +61,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                     tokenManager.saveToken(
                         it.data.accessToken, "${it.data.refreshToken}"
                     )
-                    Toast.makeText(requireContext(), "Login Successful", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(requireContext(), "Login Successful", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(requireContext(), MainActivity::class.java))
                     requireActivity().finish()
                 }
@@ -79,6 +79,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             loginState.error?.let {
                 loading.dismiss()
                 Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+                Log.d("Login", "loginObserver: $it")
             }
 
             loginState.data?.let { responseDTO ->
@@ -88,8 +89,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                 tokenManager.saveToken(
                     "${responseDTO.accessToken}", "${responseDTO.refreshToken}"
                 )
-
-                Log.d("refresh", "loginObserver: ${responseDTO.accessToken}")
 
 
                 //Toast.makeText(requireContext(), "Login Successful", Toast.LENGTH_SHORT).show()

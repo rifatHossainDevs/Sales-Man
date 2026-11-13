@@ -18,10 +18,15 @@ class UpdatePaymentUseCase @Inject constructor(
             val response = orderRepository.updatePayment(id = id, requestUpdatePayment = requestUpdatePayment)
 
             if (response.isSuccessful) {
-                val data = response.body()
-                emit(Resource.Success(data = data))
+                emit(Resource.Success(data = response.body()))
             } else {
-                emit(Resource.Error("Update Payment failed: ${response.message()}"))
+                val errorBody = response.errorBody()?.string()
+
+                emit(
+                    Resource.Error(
+                        "HTTP ${response.code()}: ${errorBody ?: response.message()}"
+                    )
+                )
             }
 
         } catch (e: Exception) {

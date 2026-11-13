@@ -1,5 +1,6 @@
 package com.wevx.dealershipmanagement.presentation.shipment.getShipment
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wevx.dealershipmanagement.core.common.Resource
@@ -24,7 +25,9 @@ class GetShipmentViewModel @Inject constructor(
             _getShipmentState.value = GetShipmentDataState(loading = true)
             getShipmentByOrderIdUseCase.invoke(orderId).collect { response ->
                 when (response) {
+
                     is Resource.Success -> {
+                        Log.d("ORDER_DEBUG", "Shipment GET success: ${response.data}")
                         _getShipmentState.value = GetShipmentDataState(data = response.data)
                     }
 
@@ -33,7 +36,10 @@ class GetShipmentViewModel @Inject constructor(
                     }
 
                     is Resource.Error -> {
-                        _getShipmentState.value = GetShipmentDataState(error = response.message)
+                        Log.e("ORDER_DEBUG", "Shipment GET failed: ${response.message}")
+                        _getShipmentState.value = GetShipmentDataState(
+                            error = response.message
+                        )
                     }
                 }
 

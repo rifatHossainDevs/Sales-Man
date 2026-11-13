@@ -3,6 +3,7 @@ package com.wevx.dealershipmanagement.presentation.payment
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.icu.util.Calendar
+import android.util.Log
 import android.widget.RadioButton
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -183,6 +184,7 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
                 val orderItems = SharedData.selectedProductList.map { cartItem ->
                     RequestCreateOrderDTO.OrderItem(
                         productId = cartItem.product.productId,
+                        productName = cartItem.product.productName, // Verify actual property name
                         purchaseQuantity = cartItem.purchaseQuantity.toInt(),
                         priceAtPurchase = cartItem.product.price
                     )
@@ -209,10 +211,13 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
                     paymentDue = total,
                     shippingAddress = shippingAddress,
                     orderItems = orderItems,
-                    expectedShipDate = expectedShipDateIso
+                    expectedShipDate = expectedShipDateIso,
+                    areaName = "Dhaka",
+                    areaNo = "1"
                 )
 
                 val bearerToken = "Bearer $token"
+
                 createOrderViewModel.createOrder(requestCreateOrderDTO, bearerToken)
             }
         }

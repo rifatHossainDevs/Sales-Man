@@ -94,7 +94,7 @@ class OrderRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updatePayment(id: String, requestUpdatePayment: RequestUpdatePayment): Response<ResponseUpdatePaymentDTO> {
-        return orderApiService.updatePayment(id = id, requestUpdatePayment = requestUpdatePayment)
+        return orderApiService.updatePayment(paymentId = id, requestUpdatePayment = requestUpdatePayment)
     }
 
     override suspend fun updateShipment(
@@ -103,6 +103,4 @@ class OrderRepositoryImpl @Inject constructor(
     ): Response<ResponseUpdateShipmentDTO> {
         return orderApiService.updateShipment(id = id, requestUpdateShipment = requestUpdateShipment)
     }
-
-
 }

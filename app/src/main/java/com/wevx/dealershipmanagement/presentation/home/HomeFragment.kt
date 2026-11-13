@@ -13,6 +13,9 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import com.wevx.dealershipmanagement.domain.models.DistrictModel
+import com.wevx.dealershipmanagement.domain.models.SubDistrictModel
+import com.wevx.dealershipmanagement.domain.models.AreaModel
 import androidx.annotation.RequiresPermission
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
@@ -33,7 +36,9 @@ import com.wevx.dealershipmanagement.presentation.home.getStoreOwnerByArea.Store
 import com.wevx.dealershipmanagement.presentation.home.getStoreOwnerByDistrict.StoreOwnerByDistrictViewModel
 import com.wevx.dealershipmanagement.presentation.home.getSubDistrict.SubDistrictViewModel
 import com.wevx.dealershipmanagement.utils.Constants
+import com.wevx.dealershipmanagement.utils.LocalDatabase
 import com.wevx.dealershipmanagement.utils.LocalDatabase.divisionList
+import com.wevx.dealershipmanagement.utils.LocalDatabase.divisions
 import com.wevx.dealershipmanagement.utils.handleMultiplePermissionsResult
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -54,9 +59,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     private lateinit var storeOwnerAdapter: StoreOwnerAdapter
 
-    private var districtList: MutableList<String> = mutableListOf()
-    private var subDistrictList: MutableList<String> = mutableListOf()
-    private var areaList: MutableList<String> = mutableListOf()
+    private var currentDistricts: List<DistrictModel> = emptyList()
+    private var currentSubdistricts: List<SubDistrictModel> = emptyList()
+    private var currentAreaList: List<AreaModel> = emptyList()
     private var storeOwnerList: MutableList<StoreOwnerModel> = mutableListOf()
 
     private val multiplePermissionList = arrayListOf(
@@ -148,8 +153,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
     }
 
-    //near by store
-    @SuppressLint("MissingPermission")
+    @SuppressLint("MissingPermission", "DefaultLocale")
     private fun nearByStoreOwner() {
         if (storeOwnerList.isNotEmpty()) {
             fusedLocationClient.lastLocation.addOnSuccessListener { currentLocation: Location? ->
@@ -217,134 +221,370 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     private fun setDivisionSpinner() {
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, divisionList)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            divisions.map { it.divisionName }
+        )
+
+        adapter.setDropDownViewResource(
+            android.R.layout.simple_spinner_dropdown_item
+        )
+
         binding.spinnerDivision.adapter = adapter
-        binding.spinnerDivision.setSelection(0)
 
-        binding.spinnerDivision.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                districtViewModel.getDistrict(position + 1)
+        binding.spinnerDivision.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val divisionId = divisions[position].divisionId
+
+                    currentDistricts = emptyList()
+                    currentSubdistricts = emptyList()
+                    currentAreaList = emptyList()
+
+                    resetSpinner(
+                        binding.spinnerDistrict,
+                        "Select District"
+                    )
+                    resetSpinner(
+                        binding.spinnerSubdistrict,
+                        "Select Subdistrict"
+                    )
+                    resetSpinner(
+                        binding.spinnerArea,
+                        "Select Area"
+                    )
+
+                    disableSpinner(binding.spinnerDistrict)
+                    disableSpinner(binding.spinnerSubdistrict)
+                    disableSpinner(binding.spinnerArea)
+
+                    districtViewModel.getDistrict(divisionId)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                // Do nothing
-            }
+        if (divisions.isNotEmpty()) {
+            binding.spinnerDivision.setSelection(0)
         }
     }
 
     private fun observeDistricts() {
-        lifecycleScope.launch {
-            districtViewModel.districtState.collect { response->
-                if (response.loading) {
-                    //loading.show()
+        viewLifecycleOwner.lifecycleScope.launch {
+            districtViewModel.districtState.collect { response ->
+
+                if (response.loading) return@collect
+
+                response.data?.let { list ->
+
+                    currentDistricts = list
+
+                    val names = listOf("Select District") +
+                            list.map { it.disName }
+
+                    binding.spinnerDistrict.adapter =
+                        CustomSpinnerAdapter(
+                            requireContext(),
+                            names,
+                            setOf("Select District")
+                        )
+
+                    enableSpinner(binding.spinnerDistrict)
+
+                    if (currentDistricts.isNotEmpty()) {
+                        binding.spinnerDistrict.setSelection(1)
+                    }
+
+                    binding.spinnerDistrict.onItemSelectedListener =
+                        object : AdapterView.OnItemSelectedListener {
+
+                            override fun onItemSelected(
+                                parent: AdapterView<*>?,
+                                view: View?,
+                                position: Int,
+                                id: Long
+                            ) {
+                                if (position == 0) return
+
+                                val selectedDistrictId =
+                                    currentDistricts[position - 1].disNo
+
+                                currentSubdistricts = emptyList()
+                                currentAreaList = emptyList()
+
+                                resetSpinner(
+                                    binding.spinnerSubdistrict,
+                                    "Select Subdistrict"
+                                )
+
+                                resetSpinner(
+                                    binding.spinnerArea,
+                                    "Select Area"
+                                )
+
+                                disableSpinner(binding.spinnerSubdistrict)
+                                disableSpinner(binding.spinnerArea)
+
+                                subDistrictViewModel.getSubDistrict(
+                                    selectedDistrictId
+                                )
+                            }
+
+                            override fun onNothingSelected(
+                                parent: AdapterView<*>?
+                            ) {}
+                        }
                 }
-                if (response.data != null) {
-                    loading.dismiss()
-                    districtList.clear()
-                    districtList = response.data.map { it?.disName ?: "District" } as MutableList<String>
-                    setDistrictSpinner()
-                }
-                if (response.error != null) {
-                    loading.dismiss()
-                    Toast.makeText(requireContext(), response.error, Toast.LENGTH_SHORT).show()
+
+                response.error?.let {
+                    Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
     private fun setDistrictSpinner() {
-        val adapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, districtList)
+        val adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            currentDistricts.map { it.disName }
+        )
+
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerDistrict.adapter = adapter
-        binding.spinnerDistrict.setSelection(0)
 
-        binding.spinnerDistrict.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    subDistrictViewModel.getSubDistrict(position + 1)
+        binding.spinnerDistrict.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val districtId = currentDistricts[position].disNo
+
+                    currentSubdistricts = emptyList()
+                    currentAreaList = emptyList()
+
+                    subDistrictViewModel.getSubDistrict(districtId)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                // Do nothing
-            }
+        if (currentDistricts.isNotEmpty()) {
+            binding.spinnerDistrict.setSelection(0)
         }
     }
 
     private fun observeSubDistricts() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             subDistrictViewModel.subDistrictState.collect { response ->
-                if (response.loading) {
-                    //loading.show()
+
+                if (response.loading) return@collect
+
+                response.data?.let { list ->
+
+                    currentSubdistricts = list
+
+                    val names = listOf("Select Subdistrict") +
+                            list.map { it.subDisName }
+
+                    binding.spinnerSubdistrict.adapter =
+                        CustomSpinnerAdapter(
+                            requireContext(),
+                            names,
+                            setOf("Select Subdistrict")
+                        )
+
+                    enableSpinner(binding.spinnerSubdistrict)
+
+                    if (currentSubdistricts.isNotEmpty()) {
+                        binding.spinnerSubdistrict.setSelection(1)
+                    }
+
+                    binding.spinnerSubdistrict.onItemSelectedListener =
+                        object : AdapterView.OnItemSelectedListener {
+
+                            override fun onItemSelected(
+                                parent: AdapterView<*>?,
+                                view: View?,
+                                position: Int,
+                                id: Long
+                            ) {
+                                if (position == 0) return
+
+                                val selectedSubDistrictId =
+                                    currentSubdistricts[position - 1].subDisNo
+
+                                currentAreaList = emptyList()
+
+                                resetSpinner(
+                                    binding.spinnerArea,
+                                    "Select Area"
+                                )
+
+                                disableSpinner(binding.spinnerArea)
+
+                                areaViewModel.getArea(selectedSubDistrictId)
+                            }
+
+                            override fun onNothingSelected(
+                                parent: AdapterView<*>?
+                            ) {}
+                        }
                 }
-                if (response.data != null) {
-                    loading.dismiss()
-                    subDistrictList.clear()
-                    subDistrictList = response.data.map { it?.subDisName ?: "Sub-District" } as MutableList<String>
-                    setSubDistrictSpinner()
-                }
-                if (response.error != null) {
-                    loading.dismiss()
-                    Toast.makeText(requireContext(), response.error, Toast.LENGTH_SHORT).show()
+
+                response.error?.let {
+                    Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
     private fun setSubDistrictSpinner() {
-        val adapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, subDistrictList)
+        val adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            currentSubdistricts.map { it.subDisName }
+        )
+
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerSubdistrict.adapter = adapter
-        binding.spinnerSubdistrict.setSelection(0)
 
-        binding.spinnerSubdistrict.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    areaViewModel.getArea(position + 1)
+        binding.spinnerSubdistrict.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val subDistrictId = currentSubdistricts[position].subDisNo
+
+                    currentAreaList = emptyList()
+                    areaViewModel.getArea(subDistrictId)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                // Do nothing
-            }
+        if (currentSubdistricts.isNotEmpty()) {
+            binding.spinnerSubdistrict.setSelection(0)
         }
     }
 
     private fun observeAreas() {
-        lifecycleScope.launch {
-            areaViewModel.areaState.collect { response->
-                if (response.loading) {
-                    //loading.show()
+        viewLifecycleOwner.lifecycleScope.launch {
+            areaViewModel.areaState.collect { response ->
+
+                if (response.loading) return@collect
+
+                response.data?.let { list ->
+
+                    currentAreaList = list
+
+                    val names = listOf("Select Area") +
+                            list.map { it.areaName }
+
+                    binding.spinnerArea.adapter =
+                        CustomSpinnerAdapter(
+                            requireContext(),
+                            names,
+                            setOf("Select Area")
+                        )
+
+                    enableSpinner(binding.spinnerArea)
+                    if (currentAreaList.isNotEmpty()) {
+                        binding.spinnerArea.setSelection(1)
+                    }
+
+                    binding.spinnerArea.onItemSelectedListener =
+                        object : AdapterView.OnItemSelectedListener {
+
+                            override fun onItemSelected(
+                                parent: AdapterView<*>?,
+                                view: View?,
+                                position: Int,
+                                id: Long
+                            ) {
+                                if (position == 0) return
+
+                                val selectedAreaId =
+                                    currentAreaList[position - 1].areaNo
+
+                                // Fetch store owners using the actual area ID
+                                storeOwnerViewModel.getStoreOwnerByArea(
+                                    selectedAreaId
+                                )
+                            }
+
+                            override fun onNothingSelected(
+                                parent: AdapterView<*>?
+                            ) {}
+                        }
                 }
-                if (response.data != null) {
-                    loading.dismiss()
-                    areaList.clear()
-                    areaList = response.data.map { it?.areaName ?: "Area" } as MutableList<String>
-                    setAreaSpinner()
-                }
-                if (response.error != null) {
-                    loading.dismiss()
-                    Toast.makeText(requireContext(), response.error, Toast.LENGTH_SHORT).show()
+
+                response.error?.let {
+                    Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
     private fun setAreaSpinner() {
-        val adapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, areaList)
+        val adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            currentAreaList.map { it.areaName }
+        )
+
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerArea.adapter = adapter
-        binding.spinnerArea.setSelection(0)
 
-        binding.spinnerArea.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    storeOwnerViewModel.getStoreOwnerByArea(position + 1)
+        binding.spinnerArea.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val areaId = currentAreaList[position].areaNo
+                    storeOwnerViewModel.getStoreOwnerByArea(areaId)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                // Do nothing
-            }
+        if (currentAreaList.isNotEmpty()) {
+            binding.spinnerArea.setSelection(0)
         }
+    }
+
+    private fun resetSpinner(
+        spinner: android.widget.Spinner,
+        defaultText: String
+    ) {
+        val adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            listOf(defaultText)
+        )
+
+        adapter.setDropDownViewResource(
+            android.R.layout.simple_spinner_dropdown_item
+        )
+
+        spinner.adapter = adapter
+        spinner.setSelection(0)
     }
 
     /*private fun setupInitialSpinners() {

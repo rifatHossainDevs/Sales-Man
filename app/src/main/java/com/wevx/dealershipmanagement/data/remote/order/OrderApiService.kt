@@ -82,9 +82,9 @@ interface OrderApiService {
     ): Response<ResponseGetPaymentDTO>
 
 
-    @PATCH("payments/update-payment/{id}")
+    @PATCH("payments/update-payment/{paymentId}")
     suspend fun updatePayment(
-        @Path("id") id: String,
+        @Path("paymentId") paymentId: String,
         @Body requestUpdatePayment: RequestUpdatePayment
     ): Response<ResponseUpdatePaymentDTO>
 

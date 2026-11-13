@@ -1,7 +1,7 @@
 package com.wevx.dealershipmanagement.utils
 
 object Constants {
-    const val BASE_URL="https://dealership-sales-management-system.onrender.com/api/v1/"
+    const val BASE_URL="https://dealership-sales-backend.onrender.com/api/v1/"
 
     const val ACCESS_TOKEN = "accessToken"
     const val REFRESH_TOKEN = "refreshToken"

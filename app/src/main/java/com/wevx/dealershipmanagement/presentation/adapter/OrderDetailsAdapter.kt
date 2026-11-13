@@ -30,7 +30,7 @@ class OrderDetailsAdapter(val productsList: List<OrderDetailsModel>) :
     ) {
         productsList[position].let { product ->
             holder.binding.apply {
-                tvName.text = "Banana"
+                tvName.text = product.name
                 tvQuantity.text = "${product.quantity} pcs"
                 tvSubtotal.text = "%.2f".format(product.subtotal)
             }

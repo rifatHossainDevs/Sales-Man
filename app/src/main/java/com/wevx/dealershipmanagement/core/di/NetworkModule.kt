@@ -1,5 +1,8 @@
+
 package com.wevx.dealershipmanagement.core.di
 
+import android.content.Context
+import com.wevx.dealershipmanagement.core.network.AuthInterceptor
 import com.wevx.dealershipmanagement.data.remote.auth.AuthApiService
 import com.wevx.dealershipmanagement.data.remote.home.AreaApiService
 import com.wevx.dealershipmanagement.data.remote.order.OrderApiService
@@ -16,24 +19,59 @@ import com.wevx.dealershipmanagement.domain.repository.order.OrderRepository
 import com.wevx.dealershipmanagement.domain.repository.product.ProductRepository
 import com.wevx.dealershipmanagement.domain.repository.storeOwner.StoreOwnerRepository
 import com.wevx.dealershipmanagement.utils.Constants
+import com.wevx.dealershipmanagement.utils.TokenManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
-
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
+    // Token Manager
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit {
+    fun provideTokenManager(
+        @ApplicationContext context: Context
+    ): TokenManager {
+        return TokenManager(context)
+    }
+
+    // Authentication Interceptor
+    @Provides
+    @Singleton
+    fun provideAuthInterceptor(
+        tokenManager: TokenManager
+    ): AuthInterceptor {
+        return AuthInterceptor(tokenManager)
+    }
+
+    // OkHttp Client
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(
+        authInterceptor: AuthInterceptor
+    ): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)
+            .build()
+    }
+
+    // Retrofit
+    @Provides
+    @Singleton
+    fun provideRetrofit(
+        okHttpClient: OkHttpClient
+    ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
+            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
@@ -51,7 +89,7 @@ object NetworkModule {
         return AuthRepositoryImpl(authApiService)
     }
 
-    //Home
+    // Home
     @Provides
     @Singleton
     fun provideAreaApiService(retrofit: Retrofit): AreaApiService {
@@ -64,7 +102,7 @@ object NetworkModule {
         return AreaRepositoryImpl(homeApiService)
     }
 
-    //Product
+    // Product
     @Provides
     @Singleton
     fun provideProductApiService(retrofit: Retrofit): ProductApiService {
@@ -77,20 +115,22 @@ object NetworkModule {
         return ProductRepositoryImpl(productApiService)
     }
 
-    //StoreOwner
+    // Store Owner
     @Provides
     @Singleton
-    fun provideStoreOwnerApiService(retrofit: Retrofit): StoreOwnerApiService{
+    fun provideStoreOwnerApiService(retrofit: Retrofit): StoreOwnerApiService {
         return retrofit.create(StoreOwnerApiService::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideStoreOwnerRepository(storeOwnerApiService: StoreOwnerApiService): StoreOwnerRepository {
+    fun provideStoreOwnerRepository(
+        storeOwnerApiService: StoreOwnerApiService
+    ): StoreOwnerRepository {
         return StoreOwnerRepositoryImpl(storeOwnerApiService)
     }
 
-    //Order
+    // Order
     @Provides
     @Singleton
     fun provideOrderApiService(retrofit: Retrofit): OrderApiService {
@@ -102,20 +142,4 @@ object NetworkModule {
     fun provideOrderRepository(orderApiService: OrderApiService): OrderRepository {
         return OrderRepositoryImpl(orderApiService)
     }
-
-
-
-    // Profile
-    /*@Provides
-    @Singleton
-    fun provideProfileApiService(retrofit: Retrofit): ProfileApiService{
-        return retrofit.create(ProfileApiService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideProfileRepository(profileApiService: ProfileApiService): ProfileRepository{
-        return ProfileRepositoryImpl(profileApiService)
-    }*/
-
 }

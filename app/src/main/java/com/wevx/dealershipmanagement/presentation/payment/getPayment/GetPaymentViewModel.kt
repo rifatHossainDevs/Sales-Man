@@ -1,5 +1,6 @@
 package com.wevx.dealershipmanagement.presentation.payment.getPayment
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wevx.dealershipmanagement.core.common.Resource
@@ -25,6 +26,7 @@ class GetPaymentViewModel @Inject constructor(
             getPaymentByOrderIdUseCase.invoke(orderId).collect { response ->
                 when (response) {
                     is Resource.Success -> {
+                        Log.d("ORDER_DEBUG", "Payment GET success: ${response.data}")
                         _getPaymentState.value = GetPaymentDataState(data = response.data)
                     }
 
@@ -33,7 +35,10 @@ class GetPaymentViewModel @Inject constructor(
                     }
 
                     is Resource.Error -> {
-                        _getPaymentState.value = GetPaymentDataState(error = response.message)
+                        Log.e("ORDER_DEBUG", "Payment GET failed: ${response.message}")
+                        _getPaymentState.value = GetPaymentDataState(
+                            error = response.message
+                        )
                     }
                 }
 
