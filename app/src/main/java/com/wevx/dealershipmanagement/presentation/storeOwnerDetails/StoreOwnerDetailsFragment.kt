@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.VIEW_MODEL_STORE_OWNER_KEY
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -43,6 +42,14 @@ class StoreOwnerDetailsFragment : BaseFragment<FragmentStoreOwnerDetailsBinding>
         allButtonClickListener()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (::customerId.isInitialized && customerId.isNotBlank()) {
+            pendingOrderViewModel.getPendingAndCompleteOder(customerId, "Pending")
+            completeOrderViewModel.getPendingAndCompleteOder(customerId, "Paid")
+        }
+    }
+
     private fun allButtonClickListener() {
         val userId = args.id
         binding.btnCreateOrder.setOnClickListener {
@@ -74,21 +81,19 @@ class StoreOwnerDetailsFragment : BaseFragment<FragmentStoreOwnerDetailsBinding>
                 loading.dismiss()
                 binding.rvCompleteOrder.visibility = View.INVISIBLE
                 binding.tvNoCompleteOrder.visibility = View.VISIBLE
-                //Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
-
-
             }
 
             completeOrderState.data?.let { completeOrderList ->
                 loading.dismiss()
-                if (completeOrderList.isNotEmpty()){
+                if (completeOrderList.isNotEmpty()) {
+                    binding.rvCompleteOrder.visibility = View.VISIBLE
+                    binding.tvNoCompleteOrder.visibility = View.GONE
                     completeOrderAdapter = CompleteOrderAdapter(completeOrderList, this)
                     binding.rvCompleteOrder.adapter = completeOrderAdapter
-                }else{
+                } else {
                     binding.rvCompleteOrder.visibility = View.INVISIBLE
                     binding.tvNoCompleteOrder.visibility = View.VISIBLE
                 }
-
             }
         }
     }
@@ -105,23 +110,19 @@ class StoreOwnerDetailsFragment : BaseFragment<FragmentStoreOwnerDetailsBinding>
                 loading.dismiss()
                 binding.rvPendingOrder.visibility = View.INVISIBLE
                 binding.tvNoPendingOrder.visibility = View.VISIBLE
-                //Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
             pendingOrderState.data?.let { pendingOrderList ->
                 loading.dismiss()
-                if (pendingOrderList.isNotEmpty()){
+                if (pendingOrderList.isNotEmpty()) {
+                    binding.rvPendingOrder.visibility = View.VISIBLE
+                    binding.tvNoPendingOrder.visibility = View.GONE
                     pendingOrderAdapter = PendingOrderAdapter(pendingOrderList, this)
                     binding.rvPendingOrder.adapter = pendingOrderAdapter
-                }else{
+                } else {
                     binding.rvPendingOrder.visibility = View.INVISIBLE
                     binding.tvNoPendingOrder.visibility = View.VISIBLE
                 }
-
-
-
             }
-
-
         }
     }
 
@@ -136,6 +137,7 @@ class StoreOwnerDetailsFragment : BaseFragment<FragmentStoreOwnerDetailsBinding>
                 binding.apply {
                     tvStoreName.text = it.storeName
                     tvOwnerName.text = it.storeOwnerName
+                    tvStorePhone.text = if (it.phone.isNotBlank()) "📞 ${it.phone}" else "📞 N/A"
                     tvAddress.text = it.address
                     Glide.with(requireContext())
                         .load(it.storeOwnerAvatar.replace("http://", "https://"))
@@ -143,15 +145,11 @@ class StoreOwnerDetailsFragment : BaseFragment<FragmentStoreOwnerDetailsBinding>
                         .error(R.drawable.ic_edit_profile)
                         .into(ivStoreOwner)
                 }
-
-
             }
         }
-
     }
 
     override fun selectPendingOrder(pendingOderId: String) {
-
         val action =
             StoreOwnerDetailsFragmentDirections.actionStoreOwnerDetailsFragmentToOrderDetailsFragment(
                 pendingOderId, customerId
@@ -165,8 +163,5 @@ class StoreOwnerDetailsFragment : BaseFragment<FragmentStoreOwnerDetailsBinding>
                 completeOrderid, customerId
             )
         findNavController().navigate(action)
-
     }
-
-
 }

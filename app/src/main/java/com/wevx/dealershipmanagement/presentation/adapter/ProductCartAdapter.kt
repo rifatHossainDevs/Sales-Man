@@ -28,15 +28,18 @@ class ProductCartAdapter(val cartItem: List<CartItem>) :
         holder: ViewHolder,
         position: Int
     ) {
-        cartItem[position].let { cartItem ->
+        cartItem[position].let { item ->
+            val qtyStr = if (item.purchaseQuantity % 1.0 == 0.0) {
+                item.purchaseQuantity.toInt().toString()
+            } else {
+                item.purchaseQuantity.toString()
+            }
             holder.binding.apply {
-                tvName.text = cartItem.product.productName
-                tvQuantity.text = "${cartItem.purchaseQuantity} ${cartItem.product.unit}"
-                tvSubtotal.text = "%.2f".format(cartItem.subtotal)
-
+                tvName.text = item.product.productName
+                tvQuantity.text = "$qtyStr ${item.product.unit}"
+                tvSubtotal.text = "%.2f".format(item.subtotal)
             }
         }
-
     }
 
     override fun getItemCount(): Int = cartItem.size

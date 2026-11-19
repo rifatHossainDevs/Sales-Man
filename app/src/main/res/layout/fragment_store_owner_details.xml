@@ -4,18 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/surface_bg"
     tools:context=".presentation.storeOwnerDetails.StoreOwnerDetailsFragment">
 
     <TextView
         android:id="@+id/tv_select_customer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_8sdp"
-        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_10sdp"
         android:fontFamily="@font/poppins_semibold"
         android:text="@string/selected_store"
-        android:textColor="@color/black"
-        android:textSize="@dimen/_16sdp"
+        android:textColor="@color/text_primary"
+        android:textSize="@dimen/_15ssp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,72 +24,92 @@
         android:id="@+id/cv_selected_store"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_8sdp"
-        android:layout_marginBottom="8dp"
-        android:background="@color/recyclerView"
-        android:backgroundTint="@color/recyclerView"
-        android:padding="@dimen/_4sdp"
-        app:cardElevation="@dimen/_8sdp"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_6sdp"
+        app:cardCornerRadius="@dimen/_14sdp"
+        app:cardElevation="@dimen/_4sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_select_customer">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/_4sdp">
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_header_gradient"
+            android:padding="@dimen/_10sdp">
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <ImageView
                 android:id="@+id/iv_store_owner"
-                android:layout_width="76dp"
-                android:layout_height="76dp"
-                android:src="@drawable/ic_profile_image_24"
-                app:civ_border_color="#FF000000"
-                app:civ_border_width="2dp"
+                android:layout_width="@dimen/_56sdp"
+                android:layout_height="@dimen/_56sdp"
+                android:background="@drawable/bg_customer_item"
+                android:clipToOutline="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/shop_keeper"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_store_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_6sdp"
+                android:layout_marginStart="@dimen/_10sdp"
                 android:ellipsize="end"
+                android:fontFamily="@font/poppins_semibold"
                 android:maxLines="1"
                 android:text="@string/m_s_khalid_store"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_14ssp"
-                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_13ssp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/iv_store_owner"
                 app:layout_constraintTop_toTopOf="@id/iv_store_owner" />
 
             <TextView
                 android:id="@+id/tv_owner_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_6sdp"
                 android:ellipsize="end"
+                android:fontFamily="@font/poppins_medium"
                 android:maxLines="1"
                 android:text="@string/md_khalid_hasan_jibon"
-                android:textColor="@color/black"
+                android:textColor="@color/primary"
                 android:textSize="@dimen/_10ssp"
-                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@id/tv_store_phone"
                 app:layout_constraintStart_toStartOf="@id/tv_store_name"
                 app:layout_constraintTop_toBottomOf="@id/tv_store_name" />
 
             <TextView
-                android:id="@+id/tv_address"
+                android:id="@+id/tv_store_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bg_pill_soft"
+                android:backgroundTint="#1E293B"
+                android:fontFamily="@font/poppins_medium"
+                android:paddingHorizontal="@dimen/_6sdp"
+                android:paddingVertical="@dimen/_1sdp"
+                android:text="📞 --"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_9ssp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_owner_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_owner_name" />
+
+            <TextView
+                android:id="@+id/tv_address"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_2sdp"
                 android:ellipsize="end"
-                android:maxWidth="@dimen/_220sdp"
-                android:maxLines="2"
+                android:fontFamily="@font/poppins"
+                android:maxLines="1"
                 android:text="@string/address_shop_store_details_fragment"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_10ssp"
+                android:textColor="#CBD5E1"
+                android:textSize="@dimen/_9ssp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/tv_owner_name"
                 app:layout_constraintTop_toBottomOf="@id/tv_owner_name" />
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -98,25 +119,26 @@
         android:id="@+id/tv_pending_order"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_8sdp"
-        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_12sdp"
         android:fontFamily="@font/poppins_semibold"
-        android:text="Pending Order"
-        android:textColor="@color/black"
-        android:textSize="@dimen/_14sdp"
+        android:text="Pending Orders"
+        android:textColor="@color/text_primary"
+        android:textSize="@dimen/_13ssp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cv_selected_store" />
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_pending_order"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4sdp"
         android:minHeight="@dimen/_32sdp"
-        android:maxHeight="@dimen/_240sdp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toTopOf="@id/tv_complete_order"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_max="@dimen/_180sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_pending_order"
         tools:listitem="@layout/item_layout_pending_order" />
@@ -125,10 +147,11 @@
         android:id="@+id/tv_no_pending_order"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_semibold"
+        android:layout_marginTop="@dimen/_6sdp"
+        android:fontFamily="@font/poppins"
         android:text="No Pending Order Found"
-        android:textColor="@color/gray"
-        android:textSize="@dimen/_12sdp"
+        android:textColor="@color/text_muted"
+        android:textSize="@dimen/_11ssp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -138,19 +161,22 @@
         android:id="@+id/tv_complete_order"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_10sdp"
         android:fontFamily="@font/poppins_semibold"
         android:text="@string/complete_orders"
-        android:textColor="@color/black"
-        android:textSize="@dimen/_14sdp"
+        android:textColor="@color/text_primary"
+        android:textSize="@dimen/_13ssp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rv_pending_order" />
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_complete_order"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/_70sdp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -162,32 +188,27 @@
         android:id="@+id/tv_no_complete_order"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_8sdp"
-        android:fontFamily="@font/poppins_semibold"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:fontFamily="@font/poppins"
         android:text="No Complete Order Found"
-        android:textColor="@color/gray"
-        android:textSize="@dimen/_12sdp"
+        android:textColor="@color/text_muted"
+        android:textSize="@dimen/_11ssp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_complete_order"
-
-        />
-
+        app:layout_constraintTop_toBottomOf="@id/tv_complete_order" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_create_order"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:layout_marginEnd="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_14sdp"
         android:layout_marginBottom="@dimen/_16sdp"
-        android:backgroundTint="@color/secondary"
+        android:backgroundTint="@color/primary"
         android:importantForAccessibility="no"
         android:src="@drawable/ic_add_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@color/white" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

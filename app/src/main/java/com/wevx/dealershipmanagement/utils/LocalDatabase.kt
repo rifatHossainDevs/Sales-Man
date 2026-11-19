@@ -22,8 +22,8 @@ object LocalDatabase {
     val drawerItems = listOf(
         DrawerItems(drawerImage[0], "Home"),
         DrawerItems(drawerImage[1], "Stock Availability"),
-        DrawerItems(drawerImage[2], "Today's Delivery"),
-        DrawerItems(drawerImage[3], "Payment Collection"),
+        DrawerItems(drawerImage[2], "Pending Delivery"),
+        DrawerItems(drawerImage[3], "Sales Summary"),
         DrawerItems(drawerImage[4], "Payment History"),
         DrawerItems(drawerImage[5], "Edit Profile"),
         DrawerItems(drawerImage[6], "Change Password")

@@ -4,231 +4,258 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:padding="6dp"
+    android:background="@color/surface_bg"
+    android:padding="@dimen/_12sdp"
     tools:context=".presentation.payment.PaymentFragment">
 
     <TextView
         android:id="@+id/tv_full_product"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Full Product Cart"
-        android:textColor="@color/secondary"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="Order Checkout"
+        android:textColor="@color/text_primary"
         android:textSize="@dimen/_16ssp"
-        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/layout_title"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_cart_items"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_8sdp"
-        android:layout_marginBottom="@dimen/_4sdp"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
+        android:backgroundTint="@color/card_bg"
+        app:cardCornerRadius="@dimen/_12sdp"
+        app:cardElevation="@dimen/_2sdp"
         app:layout_constraintTop_toBottomOf="@id/tv_full_product">
 
-        <TextView
-            android:id="@+id/tvName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:text="Product Name"
-            android:textSize="@dimen/_14sdp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvQuantity"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:gravity="start"
-            android:text="Qty"
-            android:textSize="@dimen/_14sdp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvSubtotal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2.5"
-            android:gravity="end"
-            android:text="Subtotal"
-            android:textSize="@dimen/_14sdp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerProducts"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_4sdp"
-        android:clipToPadding="false"
-        android:paddingBottom="8dp"
-        android:scrollbars="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_title" />
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginVertical="8dp"
-        android:background="@android:color/darker_gray"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recyclerProducts" />
-
-    <TextView
-        android:id="@+id/tvTotal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_8sdp"
-        android:paddingVertical="@dimen/_8sdp"
-        android:text="Total: ৳0.00"
-        android:textColor="#FF0000"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view" />
-
-
-    <TextView
-        android:id="@+id/tv_payment_method"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_16ssp"
-        android:text="Payment Method:"
-        android:textColor="@color/secondary"
-        android:textSize="@dimen/_16ssp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTotal" />
-
-    <View
-        android:id="@+id/view1"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_marginTop="1dp"
-        android:background="@android:color/darker_gray"
-        app:layout_constraintEnd_toEndOf="@id/tv_payment_method"
-        app:layout_constraintStart_toStartOf="@id/tv_payment_method"
-        app:layout_constraintTop_toBottomOf="@id/tv_payment_method" />
-
-    <TextView
-        android:id="@+id/payment_by"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_8sdp"
-        android:text="Payment By: "
-        android:textSize="@dimen/_14sdp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_payment_method" />
-
-    <RadioGroup
-        android:id="@+id/radio_group_payment_method"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_8sdp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="@id/payment_by"
-        app:layout_constraintStart_toEndOf="@id/payment_by"
-        app:layout_constraintTop_toTopOf="@id/payment_by">
-
-        <RadioButton
-            android:id="@+id/rb_cash"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="Cash"
-            android:textSize="@dimen/_14ssp"
-            android:textStyle="bold" />
-
-    </RadioGroup>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/et_shipment_date_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColorHint="#99AEBF"
-        app:boxStrokeColor="#6FB6E5"
-        app:boxStrokeWidth="2dp"
-        app:endIconDrawable="@drawable/calendar_24"
-        app:endIconMode="custom"
-        app:endIconTint="@color/black"
-        app:hintAnimationEnabled="true"
-        app:layout_constraintStart_toStartOf="@id/payment_by"
-        app:layout_constraintTop_toBottomOf="@id/payment_by">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_expected_shipment_date"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="false"
-            android:cursorVisible="false"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:hint="Expected Shipment Date"
-            android:inputType="date"
-            android:textColor="@color/black"
-            android:textColorHint="#A9A9A9" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/_10sdp">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <LinearLayout
+                android:id="@+id/layout_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/surface_bg"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/_6sdp"
+                android:paddingVertical="@dimen/_5sdp">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/et_shipping_address_layout"
+                <TextView
+                    android:id="@+id/tvName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:text="Product"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="@dimen/_11ssp" />
+
+                <TextView
+                    android:id="@+id/tvQuantity"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.5"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:gravity="center"
+                    android:text="Qty"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="@dimen/_11ssp" />
+
+                <TextView
+                    android:id="@+id/tvSubtotal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:gravity="end"
+                    android:text="Subtotal"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="@dimen/_11ssp" />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerProducts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:clipToPadding="false"
+                android:maxHeight="@dimen/_140sdp"
+                android:scrollbars="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="@dimen/_6sdp"
+                android:background="@color/border_subtle" />
+
+            <TextView
+                android:id="@+id/tvTotal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_semibold"
+                android:gravity="end"
+                android:text="Total: ৳0.00"
+                android:textColor="@color/secondary"
+                android:textSize="@dimen/_15ssp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_checkout_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_16sdp"
-        android:hint="Shipping Address"
-        android:textColorHint="#A9A9A9"
-        app:boxStrokeWidth="2dp"
-        app:counterTextAppearance="@style/TextAppearance.Material3.TitleSmall"
-        app:endIconMode="clear_text"
-        app:helperTextTextColor="#FF0000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_shipment_date_layout">
+        android:layout_marginTop="@dimen/_10sdp"
+        android:backgroundTint="@color/card_bg"
+        app:cardCornerRadius="@dimen/_12sdp"
+        app:cardElevation="@dimen/_2sdp"
+        app:layout_constraintTop_toBottomOf="@id/card_cart_items">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_shipping_address"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:drawableStart="@drawable/ic_pressent_address_24"
-            android:drawablePadding="4dp"
-            android:inputType="text" />
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_12sdp">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:id="@+id/tv_payment_method"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="Payment &amp; Delivery"
+                android:textColor="@color/secondary"
+                android:textSize="@dimen/_13ssp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <!--<CheckBox
-        android:id="@+id/checkbox_confirmation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="I Have Received Cash succesfully"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_shipping_address_layout" />-->
+            <View
+                android:id="@+id/view1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:background="@color/border_subtle"
+                app:layout_constraintTop_toBottomOf="@id/tv_payment_method" />
+
+            <TextView
+                android:id="@+id/payment_by"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:fontFamily="@font/poppins_medium"
+                android:text="Payment By:"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/_11ssp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view1" />
+
+            <RadioGroup
+                android:id="@+id/radio_group_payment_method"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="@id/payment_by"
+                app:layout_constraintStart_toEndOf="@id/payment_by"
+                app:layout_constraintTop_toTopOf="@id/payment_by">
+
+                <RadioButton
+                    android:id="@+id/rb_cash"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:fontFamily="@font/poppins_medium"
+                    android:text="Cash"
+                    android:textColor="@color/text_primary"
+                    android:textSize="@dimen/_11ssp" />
+
+            </RadioGroup>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/et_shipment_date_layout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:boxStrokeColor="@color/secondary"
+                app:endIconDrawable="@drawable/calendar_24"
+                app:endIconMode="custom"
+                app:endIconTint="@color/secondary"
+                app:hintAnimationEnabled="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/payment_by">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_expected_shipment_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:fontFamily="@font/poppins"
+                    android:hint="Expected Shipment Date"
+                    android:inputType="date"
+                    android:textColor="@color/text_primary"
+                    android:textSize="@dimen/_11ssp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/et_shipping_address_layout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:hint="Shipping Address"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:boxStrokeColor="@color/secondary"
+                app:endIconMode="clear_text"
+                app:helperTextTextColor="@color/danger_red"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_shipment_date_layout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_shipping_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_pressent_address_24"
+                    android:drawablePadding="8dp"
+                    android:fontFamily="@font/poppins"
+                    android:inputType="text"
+                    android:textSize="@dimen/_11ssp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_order_confirm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_42sdp"
         android:layout_marginBottom="@dimen/_4sdp"
         android:background="@drawable/btn_create_account"
-        android:paddingHorizontal="@dimen/_16sdp"
-        android:text="Corfirm Order"
+        android:backgroundTint="@color/primary"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="Confirm Order"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:textSize="@dimen/_16ssp"
+        android:textSize="@dimen/_13ssp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

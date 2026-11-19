@@ -29,13 +29,17 @@ class OrderDetailsAdapter(val productsList: List<OrderDetailsModel>) :
         position: Int
     ) {
         productsList[position].let { product ->
+            val qtyStr = if (product.quantity % 1.0 == 0.0) {
+                product.quantity.toInt().toString()
+            } else {
+                product.quantity.toString()
+            }
             holder.binding.apply {
                 tvName.text = product.name
-                tvQuantity.text = "${product.quantity} pcs"
-                tvSubtotal.text = "%.2f".format(product.subtotal)
+                tvQuantity.text = "$qtyStr pcs"
+                tvSubtotal.text = "৳%.2f".format(product.subtotal)
             }
         }
-
     }
 
     override fun getItemCount(): Int = productsList.size

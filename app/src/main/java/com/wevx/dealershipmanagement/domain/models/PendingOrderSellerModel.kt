@@ -6,5 +6,6 @@ data class PendingOrderSellerModel(
     val address: String,
     val paymentStatus: String,
     val total: String,
-    val customerId: String
+    val customerId: String,
+    val orderDate: String = ""
 )

@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#000000</color>
+    <!-- Core Brand & Legacy Token Compatibility -->
+    <color name="black">#0F172A</color>
     <color name="white">#FFFFFF</color>
-    <color name="primary">#F6872B</color>
+    <color name="primary">#F97316</color>
     <color name="secondary">#1E3A8A</color>
-    <color name="recyclerView">#FFE0C2</color>
-    <color name="gray">#808080</color>
-    <color name="green">#06F00E</color>
-    <color name="navigationDrawer">#F4A73E</color>
+    <color name="recyclerView">#F1F5F9</color>
+    <color name="gray">#64748B</color>
+    <color name="green">#16A34A</color>
+    <color name="navigationDrawer">#0F172A</color>
+
+    <!-- Extended Modern Design System Tokens -->
+    <color name="navy_dark">#0F172A</color>
+    <color name="navy_medium">#1E293B</color>
+    <color name="primary_dark">#EA580C</color>
+    <color name="primary_soft">#FFF7ED</color>
+    <color name="secondary_soft">#EFF6FF</color>
+    <color name="surface_bg">#F8FAFC</color>
+    <color name="card_bg">#FFFFFF</color>
+    <color name="border_subtle">#E2E8F0</color>
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#475569</color>
+    <color name="text_muted">#94A3B8</color>
+    <color name="success_green">#16A34A</color>
+    <color name="success_soft">#ECFDF5</color>
+    <color name="warning_amber">#D97706</color>
+    <color name="warning_soft">#FFFBEB</color>
+    <color name="danger_red">#DC2626</color>
+    <color name="danger_soft">#FEF2F2</color>
 </resources>

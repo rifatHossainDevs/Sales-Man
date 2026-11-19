@@ -4,17 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/surface_bg"
     tools:context=".presentation.order.sellerPendingOrder.TodaysDeliveryFragment">
 
     <TextView
-        android:layout_marginHorizontal="@dimen/_8sdp"
         android:id="@+id/tv_todays_delivery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_10sdp"
         android:fontFamily="@font/poppins_semibold"
         android:text="Pending Delivery"
-        android:textColor="@color/black"
-        android:textSize="@dimen/_20sdp"
+        android:textColor="@color/text_primary"
+        android:textSize="@dimen/_16ssp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,6 +24,9 @@
         android:id="@+id/rv_todays_delivery"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/_12sdp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,14 +38,14 @@
         android:id="@+id/tv_no_pending_order"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No Pending Order For Today"
-        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-        android:textColor="@color/black"
+        android:fontFamily="@font/poppins"
+        android:text="No Pending Delivery Found"
+        android:textColor="@color/text_muted"
+        android:textSize="@dimen/_13ssp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_todays_delivery" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

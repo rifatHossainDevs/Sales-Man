@@ -3,6 +3,7 @@ package com.wevx.dealershipmanagement.data.remote.order
 import com.wevx.dealershipmanagement.data.dto.order.updateOrder.RequestUpdateOrder
 import com.wevx.dealershipmanagement.data.dto.paymentDto.updatePayment.RequestUpdatePayment
 import com.wevx.dealershipmanagement.data.dto.paymentDto.ResponseGetPaymentDTO
+import com.wevx.dealershipmanagement.data.dto.paymentDto.ResponseMonthlyPaymentsDTO
 import com.wevx.dealershipmanagement.data.dto.order.updateOrder.ResponseUpdateOrderDTO
 import com.wevx.dealershipmanagement.data.dto.paymentDto.updatePayment.ResponseUpdatePaymentDTO
 import com.wevx.dealershipmanagement.data.dto.order.createOrderDto.RequestCreateOrderDTO
@@ -17,6 +18,7 @@ import com.wevx.dealershipmanagement.data.dto.shipmentDto.ResponseGetShipmentByO
 import com.wevx.dealershipmanagement.data.dto.shipmentDto.ResponseShipmentDTO
 import com.wevx.dealershipmanagement.data.dto.shipmentDto.ResponseUpdateShipmentDTO
 import com.wevx.dealershipmanagement.data.dto.order.todaysDelivery.ResponseTodaysDelivery
+import com.wevx.dealershipmanagement.data.dto.order.ResponseSalesmanOrdersDTO
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -24,6 +26,7 @@ import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface OrderApiService {
 
@@ -45,14 +48,33 @@ interface OrderApiService {
         @Path("paymentStatus") paymentStatus: String
     ): Response<ResponseTodaysDelivery>
 
+    @GET("orders/get-pending-payment-orders-by-salesman/{salesmanId}")
+    suspend fun getPendingPaymentOrdersBySalesman(
+        @Path("salesmanId") salesmanId: String
+    ): Response<ResponseTodaysDelivery>
+
+    @GET("orders/get-orders-by-customer/{customerId}")
+    suspend fun getOrdersByCustomer(
+        @Path("customerId") customerId: String
+    ): Response<ResponseTodaysDelivery>
+
+    @GET("stores/admin/all-stores")
+    suspend fun getAllStoresForDelivery(): Response<com.google.gson.JsonObject>
+
     @POST("orders/create-order")
     suspend fun createOrder(
         @Body requestCreateOrderDTO: RequestCreateOrderDTO,
         @Header("Authorization") token: String
     ): Response<ResponseCreateOrderDTO>
 
-    @PATCH("orders/update-paymentStatus/{id}")
+    @PATCH("orders/update-order-payment-status/{id}/Paid")
     suspend fun updateOrder(
+        @Path("id") id: String,
+        @Body requestUpdateOrder: RequestUpdateOrder
+    ): Response<ResponseUpdateOrderDTO>
+
+    @PATCH("orders/{id}/update-shipment-status")
+    suspend fun updateOrderShipmentStatus(
         @Path("id") id: String,
         @Body requestUpdateOrder: RequestUpdateOrder
     ): Response<ResponseUpdateOrderDTO>
@@ -98,6 +120,19 @@ interface OrderApiService {
     suspend fun getShipmentByOrderId(
         @Path("id") id: String,
     ): Response<ResponseGetShipmentByOrderDTO>
+
+    @GET("payments/get-monthly-total-payments/{salesmanId}/{month}/{paymentStatus}")
+    suspend fun getMonthlyTotalPayments(
+        @Path("salesmanId") salesmanId: String,
+        @Path("month") month: String,
+        @Path("paymentStatus") paymentStatus: String
+    ): Response<ResponseMonthlyPaymentsDTO>
+
+    @GET("orders/admin/all-orders")
+    suspend fun getOrdersBySalesman(
+        @Query("salesmanId") salesmanId: String,
+        @Query("limit") limit: Int = 200
+    ): Response<ResponseSalesmanOrdersDTO>
 
 
 }

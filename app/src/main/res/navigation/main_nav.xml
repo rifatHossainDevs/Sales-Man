@@ -113,12 +113,31 @@
         android:id="@+id/paymentCollectionFragment"
         android:name="com.wevx.dealershipmanagement.presentation.paymentCollection.PaymentCollectionFragment"
         android:label="fragment_payment_collection"
-        tools:layout="@layout/fragment_payment_collection" />
+        tools:layout="@layout/fragment_payment_collection">
+        <action
+            android:id="@+id/action_paymentCollectionFragment_to_orderDetailsFragment"
+            app:destination="@id/orderDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/paymentHistoryFragment"
         android:name="com.wevx.dealershipmanagement.presentation.paymentHistory.PaymentHistoryFragment"
         android:label="fragment_payment_history"
         tools:layout="@layout/fragment_payment_history" />
+    <fragment
+        android:id="@+id/salesSummaryFragment"
+        android:name="com.wevx.dealershipmanagement.presentation.salesSummary.SalesSummaryFragment"
+        android:label="fragment_sales_summary"
+        tools:layout="@layout/fragment_sales_summary">
+        <action
+            android:id="@+id/action_salesSummaryFragment_to_orderDetailsFragment"
+            app:destination="@id/orderDetailsFragment" />
+        <action
+            android:id="@+id/action_salesSummaryFragment_to_todaysDeliveryFragment"
+            app:destination="@id/todaysDeliveryFragment" />
+        <action
+            android:id="@+id/action_salesSummaryFragment_to_paymentHistoryFragment"
+            app:destination="@id/paymentHistoryFragment" />
+    </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.wevx.dealershipmanagement.presentation.auth.updateProfile.UpdateProfileFragment"

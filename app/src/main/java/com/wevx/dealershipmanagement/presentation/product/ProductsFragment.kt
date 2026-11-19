@@ -13,7 +13,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.utils.SharedData
 import com.wevx.dealershipmanagement.core.common.BaseFragment
 import com.wevx.dealershipmanagement.databinding.FragmentProductsBinding
@@ -25,7 +24,6 @@ import com.wevx.dealershipmanagement.presentation.adapter.ProductCartAdapter
 import com.wevx.dealershipmanagement.presentation.product.getAllProduct.AllProductViewModel
 import com.wevx.dealershipmanagement.presentation.product.getCategory.CategoryViewModel
 import com.wevx.dealershipmanagement.presentation.product.productByCategory.ProductByCategoryViewModel
-import com.wevx.dealershipmanagement.presentation.storeOwnerDetails.StoreOwnerDetailsFragmentArgs
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
@@ -53,7 +51,6 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
         bottomSheetClickListener()
         categoryViewModel.getCategory()
         allProductViewModel.getAllProduct()
-
     }
 
     override fun allObserver() {
@@ -64,20 +61,23 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
 
     private fun allProductObserver() {
         allProductViewModel.allProductState.collectInLifecycle(viewLifecycleOwner) { productState ->
-            if (productState.loading){
+            if (productState.loading) {
                 loading.show()
                 return@collectInLifecycle
             }
 
             productState.error?.let {
                 loading.dismiss()
-
+                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
             }
 
             productState.data?.let { allProductList ->
                 loading.dismiss()
-                productViewModel.allProducts = allProductList
-                selectedCategoryId = ""
+                productViewModel.allProducts = allProductList.filter { it.isActive }
+                if (selectedCategoryId.isNotEmpty()) {
+                    productViewModel.filteredProducts =
+                        productViewModel.allProducts.filter { it.categoryId == selectedCategoryId }
+                }
                 setProductRecyclerView()
             }
         }
@@ -85,18 +85,21 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
 
     private fun productByCategoryObserver() {
         productByCategoryViewModel.productByCategoryState.collectInLifecycle(viewLifecycleOwner) { productState ->
-            if (productState.loading){
+            if (productState.loading) {
                 loading.show()
                 return@collectInLifecycle
             }
 
             productState.error?.let {
                 loading.dismiss()
+                productViewModel.filteredProducts =
+                    productViewModel.allProducts.filter { p -> p.categoryId == selectedCategoryId }
+                setProductRecyclerView()
             }
 
             productState.data?.let { filteredProductList ->
                 loading.dismiss()
-                productViewModel.filteredProducts = filteredProductList
+                productViewModel.filteredProducts = filteredProductList.filter { it.isActive }
                 setProductRecyclerView()
             }
         }
@@ -147,7 +150,10 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
     @SuppressLint("SetTextI18n")
     private fun bottomSheetClickListener() {
         bottomSheetBinding = ProductCartBottomSheetBinding.inflate(layoutInflater)
-        bottomSheetDialog = BottomSheetDialog(requireContext())
+        bottomSheetDialog = BottomSheetDialog(requireContext()).apply {
+            setContentView(bottomSheetBinding.root)
+            setCancelable(true)
+        }
 
         binding.btnContinue.setOnClickListener {
             selectedItems = cartItemMap.values.filter { it.purchaseQuantity > 0 }
@@ -165,11 +171,7 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
             val total = selectedItems.sumOf { it.subtotal }
             bottomSheetBinding.tvTotal.text = "Total: ৳%.2f".format(total)
 
-            bottomSheetDialog.apply {
-                setContentView(bottomSheetBinding.root)
-                setCancelable(true)
-                show()
-            }
+            bottomSheetDialog.show()
         }
 
         bottomSheetBinding.btnClose.setOnClickListener {
@@ -188,11 +190,9 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
         categoryNames: List<String>,
         categoryList: List<CategoryModel>
     ) {
-        val adapter = ArrayAdapter(
-            requireContext(), android.R.layout.simple_spinner_item, categoryNames
-        ).also {
-            it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        }
+        val adapter = com.wevx.dealershipmanagement.presentation.adapter.CustomSpinnerAdapter(
+            requireContext(), categoryNames
+        )
 
         binding.spinnerCategory.adapter = adapter
 
@@ -213,6 +213,9 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>(FragmentProductsB
                     if (position > 0) {
                         val selectedModel = categoryList[position - 1]
                         selectedCategoryId = selectedModel.id
+                        productViewModel.filteredProducts =
+                            productViewModel.allProducts.filter { it.categoryId == selectedCategoryId }
+                        setProductRecyclerView()
                         productByCategoryViewModel.getProductByCategory(selectedCategoryId)
                     } else {
                         selectedCategoryId = ""

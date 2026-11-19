@@ -13,42 +13,43 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import com.wevx.dealershipmanagement.domain.models.DistrictModel
-import com.wevx.dealershipmanagement.domain.models.SubDistrictModel
-import com.wevx.dealershipmanagement.domain.models.AreaModel
-import androidx.annotation.RequiresPermission
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.core.common.BaseFragment
+import com.wevx.dealershipmanagement.data.service.LocationForegroundService
 import com.wevx.dealershipmanagement.databinding.FragmentHomeBinding
+import com.wevx.dealershipmanagement.domain.models.AreaModel
+import com.wevx.dealershipmanagement.domain.models.DistrictModel
+import com.wevx.dealershipmanagement.domain.models.Divisions
 import com.wevx.dealershipmanagement.domain.models.StoreOwnerModel
+import com.wevx.dealershipmanagement.domain.models.SubDistrictModel
 import com.wevx.dealershipmanagement.presentation.adapter.CustomSpinnerAdapter
 import com.wevx.dealershipmanagement.presentation.adapter.StoreOwnerAdapter
 import com.wevx.dealershipmanagement.presentation.home.getArea.AreaViewModel
 import com.wevx.dealershipmanagement.presentation.home.getDistrict.DistrictViewModel
+import com.wevx.dealershipmanagement.presentation.home.getDivision.DivisionViewModel
 import com.wevx.dealershipmanagement.presentation.home.getStoreOwnerByArea.StoreOwnerViewModel
 import com.wevx.dealershipmanagement.presentation.home.getStoreOwnerByDistrict.StoreOwnerByDistrictViewModel
 import com.wevx.dealershipmanagement.presentation.home.getSubDistrict.SubDistrictViewModel
 import com.wevx.dealershipmanagement.utils.Constants
-import com.wevx.dealershipmanagement.utils.LocalDatabase
-import com.wevx.dealershipmanagement.utils.LocalDatabase.divisionList
 import com.wevx.dealershipmanagement.utils.LocalDatabase.divisions
 import com.wevx.dealershipmanagement.utils.handleMultiplePermissionsResult
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import kotlin.getValue
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate),
     StoreOwnerAdapter.HandleCustomerClickListener {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
+    private val divisionViewModel: DivisionViewModel by viewModels()
     private val districtViewModel: DistrictViewModel by viewModels()
     private val subDistrictViewModel: SubDistrictViewModel by viewModels()
     private val areaViewModel: AreaViewModel by viewModels()
@@ -56,9 +57,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private val homeViewModel: HomeViewModel by viewModels()
     private val storeByDisViewModel: StoreOwnerByDistrictViewModel by viewModels()
 
-
     private lateinit var storeOwnerAdapter: StoreOwnerAdapter
 
+    private var currentDivisions: List<Divisions> = emptyList()
     private var currentDistricts: List<DistrictModel> = emptyList()
     private var currentSubdistricts: List<SubDistrictModel> = emptyList()
     private var currentAreaList: List<AreaModel> = emptyList()
@@ -68,7 +69,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION
     )
 
-
     override fun setAllClickListener() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         checkMultiplePermission()
@@ -76,45 +76,27 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         binding.btnAddUser.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_addCustomerFragment)
         }
-
-        //storeByDisViewModel.getStoreOwnerByDis(1)
-
-        /*districtViewModel.getDistrict(1)
-        subDistrictViewModel.getSubDistrict(1)
-        areaViewModel.getArea(1)*/
-        //storeOwnerViewModel.getStoreOwnerByArea(2)
     }
 
     override fun allObserver() {
+        observeDivisions()
         observeDistricts()
         observeSubDistricts()
         observeAreas()
         observeStoreOwners()
-        //observeStoreOwnersBySubDis()
     }
-
-    /*private fun observeStoreOwnersBySubDis() {
-        storeByDisViewModel.storeOwnerByDisState.collectInLifecycle(viewLifecycleOwner){storeOwnerByDisState->
-            if (storeOwnerByDisState.loading) return@collectInLifecycle
-            storeOwnerByDisState.data?.let { storeOwnerBySubDisList ->
-
-            }
-            storeOwnerByDisState.error?.let {
-                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
-            }
-
-        }
-    }*/
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //setupTouchListeners()
-        //setupInitialSpinners()
         setupRecyclerView()
-        //observeLoading()
-        allObserver()
-        setAllClickListener()
-        setDivisionSpinner()
+        resetSpinner(binding.spinnerDivision, "Select Division")
+        resetSpinner(binding.spinnerDistrict, "Select District")
+        resetSpinner(binding.spinnerSubdistrict, "Select Subdistrict")
+        resetSpinner(binding.spinnerArea, "Select Area")
+        disableSpinner(binding.spinnerDistrict)
+        disableSpinner(binding.spinnerSubdistrict)
+        disableSpinner(binding.spinnerArea)
+        divisionViewModel.getDivisions()
     }
 
     private fun setupRecyclerView() {
@@ -122,91 +104,97 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         binding.rvAllCustomer.adapter = storeOwnerAdapter
     }
 
-    /*private fun observeLoading() {
-        homeViewModel.isLoading.observe(viewLifecycleOwner) {
-            binding.progressBar.isVisible = it
-        }
-    }*/
+    private fun clearStoreList(showEmptyMessage: Boolean = true) {
+        storeOwnerList.clear()
+        storeOwnerAdapter = StoreOwnerAdapter(emptyList(), this)
+        binding.rvAllCustomer.adapter = storeOwnerAdapter
+        binding.rvAllCustomer.visibility = View.GONE
+        binding.tvAllCustomer.visibility = View.GONE
+        binding.tvNoStoreFound.visibility = if (showEmptyMessage) View.VISIBLE else View.GONE
+    }
 
     private fun observeStoreOwners() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             storeOwnerViewModel.storeOwnerState.collect { response ->
                 if (response.loading) {
                     loading.show()
                 }
                 if (response.data != null) {
                     loading.dismiss()
-                    //storeOwnerAdapter.updateData(response.data)
-                    storeOwnerList = response.data as MutableList<StoreOwnerModel>
-                    //setStoreOwnerAdapterData()
+                    storeOwnerList = response.data.toMutableList()
                     nearByStoreOwner()
                     Log.d("TAG", "observeStoreOwners: ${response.data} ")
                 }
                 if (response.error != null) {
                     loading.dismiss()
-                    storeOwnerList.clear()
-                    binding.tvNoStoreFound.visibility = View.VISIBLE
-                    binding.rvAllCustomer.visibility = View.GONE
-                    binding.tvAllCustomer.visibility = View.GONE
+                    clearStoreList(showEmptyMessage = true)
                 }
             }
         }
     }
 
+    private fun filterStoresByLocation(currentLocation: Location) {
+        val storesWithDistance =
+            storeOwnerList.filter { it.coordinates?.size == 2 }.mapNotNull { store ->
+                val lat = store.coordinates?.getOrNull(0)?.toDoubleOrNull()
+                val lon = store.coordinates?.getOrNull(1)?.toDoubleOrNull()
+
+                if (lat != null && lon != null) {
+                    val storeLocation = Location("").apply {
+                        latitude = lat
+                        longitude = lon
+                    }
+                    val distanceInMeters = currentLocation.distanceTo(storeLocation)
+                    if (distanceInMeters <= 50) {
+                        val roundedDistance = String.format("%.2f", distanceInMeters).toDouble()
+                        store.copy(distance = roundedDistance)
+                    } else {
+                        null // If the store is further than 50 meters, exclude it
+                    }
+                } else null
+            }.sortedBy { it.distance }
+
+        storeOwnerList = storesWithDistance.toMutableList()
+
+        if (storeOwnerList.isNotEmpty()) {
+            setStoreOwnerAdapterData()
+        } else {
+            clearStoreList(showEmptyMessage = true)
+        }
+    }
+
     @SuppressLint("MissingPermission", "DefaultLocale")
     private fun nearByStoreOwner() {
-        if (storeOwnerList.isNotEmpty()) {
-            fusedLocationClient.lastLocation.addOnSuccessListener { currentLocation: Location? ->
-                if (currentLocation != null) {
-                    val storesWithDistance =
-                        storeOwnerList.filter { it.coordinates?.size == 2 }.mapNotNull { store ->
-                            val lat = store.coordinates?.getOrNull(0)?.toDoubleOrNull()
-                            val lon = store.coordinates?.getOrNull(1)?.toDoubleOrNull()
+        if (storeOwnerList.isEmpty()) {
+            clearStoreList(showEmptyMessage = true)
+            return
+        }
 
-                            if (lat != null && lon != null) {
-                                val storeLocation = Location("").apply {
-                                    latitude = lat
-                                    longitude = lon
-                                }
-                                val distanceInMeters = currentLocation.distanceTo(storeLocation)
-                                if (distanceInMeters <= 50) {
-                                    val roundedDistance = String.format("%.2f", distanceInMeters).toDouble()
-                                    store.copy(distance = roundedDistance)
-                                } else {
-                                    null // If the store is further than 50 meters, exclude it
-                                }
-                            } else null
-                        }.sortedBy { it.distance }
-
-                    storeOwnerList = storesWithDistance.toMutableList()
-
-                    if (storeOwnerList.isNotEmpty()) {
-                        setStoreOwnerAdapterData()
-                        binding.tvNoStoreFound.visibility = View.GONE
-                        binding.rvAllCustomer.visibility = View.VISIBLE
-                        binding.tvAllCustomer.visibility = View.VISIBLE
-                    } else {
-                        storeOwnerList.clear()
-                        storeOwnerAdapter = StoreOwnerAdapter(storeOwnerList, this)
-                        binding.rvAllCustomer.adapter = storeOwnerAdapter
-                        binding.tvNoStoreFound.visibility = View.VISIBLE
-                        binding.rvAllCustomer.visibility = View.GONE
-                        binding.tvAllCustomer.visibility = View.GONE
+        fusedLocationClient.lastLocation.addOnSuccessListener { currentLocation: Location? ->
+            if (!isAdded) return@addOnSuccessListener
+            if (currentLocation != null) {
+                filterStoresByLocation(currentLocation)
+            } else {
+                fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+                    .addOnSuccessListener { freshLocation: Location? ->
+                        if (!isAdded) return@addOnSuccessListener
+                        if (freshLocation != null) {
+                            filterStoresByLocation(freshLocation)
+                        } else {
+                            warningPermissionDialog(
+                                requireContext(),
+                                "Unable to get current location. Please ensure location services are enabled For get Near By Home List"
+                            ) { _, _ -> }
+                        }
                     }
-                } else {
-                    warningPermissionDialog(
-                        requireContext(),
-                        "Unable to get current location. Please ensure location services are enabled For get Near By Home List"
-                    ) { _, _ -> }
-
-                }
-            }.addOnFailureListener {
-                Toast.makeText(
-                    requireContext(),
-                    "Failed to get location, Please turn on location. ${it.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
             }
+        }.addOnFailureListener {
+            if (!isAdded) return@addOnFailureListener
+            Toast.makeText(
+                requireContext(),
+                "Failed to get location, Please turn on location. ${it.message}",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -220,18 +208,33 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
     }
 
-    private fun setDivisionSpinner() {
-        val adapter = ArrayAdapter(
+    private fun observeDivisions() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            divisionViewModel.divisionState.collect { response ->
+                if (response.loading) return@collect
+
+                val list = if (!response.data.isNullOrEmpty()) {
+                    response.data
+                } else if (response.error != null) {
+                    divisions
+                } else {
+                    return@collect
+                }
+
+                currentDivisions = list
+                populateDivisionSpinner(currentDivisions)
+            }
+        }
+    }
+
+    private fun populateDivisionSpinner(list: List<Divisions>) {
+        val names = listOf("Select Division") + list.map { it.divisionName }
+        binding.spinnerDivision.adapter = CustomSpinnerAdapter(
             requireContext(),
-            android.R.layout.simple_spinner_item,
-            divisions.map { it.divisionName }
+            names,
+            setOf("Select Division")
         )
-
-        adapter.setDropDownViewResource(
-            android.R.layout.simple_spinner_dropdown_item
-        )
-
-        binding.spinnerDivision.adapter = adapter
+        enableSpinner(binding.spinnerDivision)
 
         binding.spinnerDivision.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
@@ -242,37 +245,30 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                     position: Int,
                     id: Long
                 ) {
-                    val divisionId = divisions[position].divisionId
-
                     currentDistricts = emptyList()
                     currentSubdistricts = emptyList()
                     currentAreaList = emptyList()
 
-                    resetSpinner(
-                        binding.spinnerDistrict,
-                        "Select District"
-                    )
-                    resetSpinner(
-                        binding.spinnerSubdistrict,
-                        "Select Subdistrict"
-                    )
-                    resetSpinner(
-                        binding.spinnerArea,
-                        "Select Area"
-                    )
+                    resetSpinner(binding.spinnerDistrict, "Select District")
+                    resetSpinner(binding.spinnerSubdistrict, "Select Subdistrict")
+                    resetSpinner(binding.spinnerArea, "Select Area")
 
                     disableSpinner(binding.spinnerDistrict)
                     disableSpinner(binding.spinnerSubdistrict)
                     disableSpinner(binding.spinnerArea)
+                    clearStoreList(showEmptyMessage = false)
 
+                    if (position == 0) return
+
+                    val divisionId = currentDivisions[position - 1].divisionId
                     districtViewModel.getDistrict(divisionId)
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
 
-        if (divisions.isNotEmpty()) {
-            binding.spinnerDivision.setSelection(0)
+        if (currentDivisions.isNotEmpty()) {
+            binding.spinnerDivision.setSelection(1)
         }
     }
 
@@ -296,10 +292,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                             setOf("Select District")
                         )
 
-                    enableSpinner(binding.spinnerDistrict)
-
                     if (currentDistricts.isNotEmpty()) {
+                        enableSpinner(binding.spinnerDistrict)
                         binding.spinnerDistrict.setSelection(1)
+                    } else {
+                        disableSpinner(binding.spinnerDistrict)
+                        clearStoreList(showEmptyMessage = true)
                     }
 
                     binding.spinnerDistrict.onItemSelectedListener =
@@ -311,11 +309,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                                 position: Int,
                                 id: Long
                             ) {
-                                if (position == 0) return
-
-                                val selectedDistrictId =
-                                    currentDistricts[position - 1].disNo
-
                                 currentSubdistricts = emptyList()
                                 currentAreaList = emptyList()
 
@@ -331,6 +324,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
                                 disableSpinner(binding.spinnerSubdistrict)
                                 disableSpinner(binding.spinnerArea)
+                                clearStoreList(showEmptyMessage = false)
+
+                                if (position == 0) return
+
+                                val selectedDistrictId =
+                                    currentDistricts[position - 1].disNo
 
                                 subDistrictViewModel.getSubDistrict(
                                     selectedDistrictId
@@ -344,43 +343,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 }
 
                 response.error?.let {
-                    Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                    clearStoreList(showEmptyMessage = true)
                 }
             }
-        }
-    }
-
-    private fun setDistrictSpinner() {
-        val adapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            currentDistricts.map { it.disName }
-        )
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spinnerDistrict.adapter = adapter
-
-        binding.spinnerDistrict.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    val districtId = currentDistricts[position].disNo
-
-                    currentSubdistricts = emptyList()
-                    currentAreaList = emptyList()
-
-                    subDistrictViewModel.getSubDistrict(districtId)
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {}
-            }
-
-        if (currentDistricts.isNotEmpty()) {
-            binding.spinnerDistrict.setSelection(0)
         }
     }
 
@@ -404,10 +369,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                             setOf("Select Subdistrict")
                         )
 
-                    enableSpinner(binding.spinnerSubdistrict)
-
                     if (currentSubdistricts.isNotEmpty()) {
+                        enableSpinner(binding.spinnerSubdistrict)
                         binding.spinnerSubdistrict.setSelection(1)
+                    } else {
+                        disableSpinner(binding.spinnerSubdistrict)
+                        clearStoreList(showEmptyMessage = true)
                     }
 
                     binding.spinnerSubdistrict.onItemSelectedListener =
@@ -419,11 +386,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                                 position: Int,
                                 id: Long
                             ) {
-                                if (position == 0) return
-
-                                val selectedSubDistrictId =
-                                    currentSubdistricts[position - 1].subDisNo
-
                                 currentAreaList = emptyList()
 
                                 resetSpinner(
@@ -432,6 +394,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                                 )
 
                                 disableSpinner(binding.spinnerArea)
+                                clearStoreList(showEmptyMessage = false)
+
+                                if (position == 0) return
+
+                                val selectedSubDistrictId =
+                                    currentSubdistricts[position - 1].subDisNo
 
                                 areaViewModel.getArea(selectedSubDistrictId)
                             }
@@ -443,41 +411,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 }
 
                 response.error?.let {
-                    Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                    clearStoreList(showEmptyMessage = true)
                 }
             }
-        }
-    }
-
-    private fun setSubDistrictSpinner() {
-        val adapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            currentSubdistricts.map { it.subDisName }
-        )
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spinnerSubdistrict.adapter = adapter
-
-        binding.spinnerSubdistrict.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    val subDistrictId = currentSubdistricts[position].subDisNo
-
-                    currentAreaList = emptyList()
-                    areaViewModel.getArea(subDistrictId)
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {}
-            }
-
-        if (currentSubdistricts.isNotEmpty()) {
-            binding.spinnerSubdistrict.setSelection(0)
         }
     }
 
@@ -501,9 +437,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                             setOf("Select Area")
                         )
 
-                    enableSpinner(binding.spinnerArea)
                     if (currentAreaList.isNotEmpty()) {
+                        enableSpinner(binding.spinnerArea)
                         binding.spinnerArea.setSelection(1)
+                    } else {
+                        disableSpinner(binding.spinnerArea)
+                        clearStoreList(showEmptyMessage = true)
                     }
 
                     binding.spinnerArea.onItemSelectedListener =
@@ -515,7 +454,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                                 position: Int,
                                 id: Long
                             ) {
-                                if (position == 0) return
+                                if (position == 0) {
+                                    clearStoreList(showEmptyMessage = false)
+                                    return
+                                }
 
                                 val selectedAreaId =
                                     currentAreaList[position - 1].areaNo
@@ -533,39 +475,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 }
 
                 response.error?.let {
-                    Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                    clearStoreList(showEmptyMessage = true)
                 }
             }
-        }
-    }
-
-    private fun setAreaSpinner() {
-        val adapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            currentAreaList.map { it.areaName }
-        )
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spinnerArea.adapter = adapter
-
-        binding.spinnerArea.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    val areaId = currentAreaList[position].areaNo
-                    storeOwnerViewModel.getStoreOwnerByArea(areaId)
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {}
-            }
-
-        if (currentAreaList.isNotEmpty()) {
-            binding.spinnerArea.setSelection(0)
         }
     }
 
@@ -573,37 +485,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         spinner: android.widget.Spinner,
         defaultText: String
     ) {
-        val adapter = ArrayAdapter(
+        val adapter = CustomSpinnerAdapter(
             requireContext(),
-            android.R.layout.simple_spinner_item,
-            listOf(defaultText)
-        )
-
-        adapter.setDropDownViewResource(
-            android.R.layout.simple_spinner_dropdown_item
+            listOf(defaultText),
+            setOf(defaultText)
         )
 
         spinner.adapter = adapter
         spinner.setSelection(0)
     }
-
-    /*private fun setupInitialSpinners() {
-        setupSpinner(binding.spinnerDistrict, listOf("Select District"))
-        setupSpinner(binding.spinnerSubdistrict, listOf("Select Subdistrict"))
-        setupSpinner(binding.spinnerArea, listOf("Select Area"))
-
-        disableSpinner(binding.spinnerDistrict)
-        disableSpinner(binding.spinnerSubdistrict)
-        disableSpinner(binding.spinnerArea)
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private fun setupTouchListeners() {
-        setupTouch(binding.spinnerDivision, binding.divisionDropdownIcon)
-        setupTouch(binding.spinnerDistrict, binding.districtDropdownIcon)
-        setupTouch(binding.spinnerSubdistrict, binding.subdistrictDropdownIcon)
-        setupTouch(binding.spinnerArea, binding.areaDropdownIcon)
-    }*/
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupTouch(spinner: View, icon: View) {
@@ -635,40 +525,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         spinner.alpha = 0.5f
     }
 
-    /*private fun resetSpinners(from: String) {
-        when (from) {
-            "division" -> {
-                homeViewModel.selectedDistrictIndex = 0
-                homeViewModel.selectedSubDistrictIndex = 0
-                homeViewModel.selectedAreaIndex = 0
-
-                setupSpinner(binding.spinnerDistrict, listOf("Select District"))
-                setupSpinner(binding.spinnerSubdistrict, listOf("Select Subdistrict"))
-                setupSpinner(binding.spinnerArea, listOf("Select Area"))
-                disableSpinner(binding.spinnerDistrict)
-                disableSpinner(binding.spinnerSubdistrict)
-                disableSpinner(binding.spinnerArea)
-            }
-
-            "district" -> {
-                homeViewModel.selectedSubDistrictIndex = 0
-                homeViewModel.selectedAreaIndex = 0
-
-                setupSpinner(binding.spinnerSubdistrict, listOf("Select Subdistrict"))
-                setupSpinner(binding.spinnerArea, listOf("Select Area"))
-                disableSpinner(binding.spinnerSubdistrict)
-                disableSpinner(binding.spinnerArea)
-            }
-
-            "subdistrict" -> {
-                homeViewModel.selectedAreaIndex = 0
-
-                setupSpinner(binding.spinnerArea, listOf("Select Area"))
-                disableSpinner(binding.spinnerArea)
-            }
-        }
-    }*/
-
     override fun selectCustomer(userId: String, id: String) {
         val action = HomeFragmentDirections.actionHomeFragmentToStoreOwnerDetailsFragment(id)
         findNavController().navigate(action)
@@ -681,7 +537,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     override fun deleteClickListener(storeOwnerModel: StoreOwnerModel) {
 
     }
-
 
     private fun checkMultiplePermission() {
         val needListOfPermission = ArrayList<String>()
@@ -698,9 +553,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             requestPermissions(
                 needListOfPermission.toTypedArray(), Constants.MULTIPLE_PERMISSIONS_CODE
             )
+        } else {
+            LocationForegroundService.startService(requireContext())
         }
     }
-
 
     @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
@@ -719,6 +575,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             grantResults = grantResults,
             onGranted = {
                 // Permissions granted, proceed
+                LocationForegroundService.startService(requireContext())
                 nearByStoreOwner()
             },
             onDeniedRetry = {
@@ -726,7 +583,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 checkMultiplePermission()
             })
     }
-
 
     fun warningPermissionDialog(
         context: Context,

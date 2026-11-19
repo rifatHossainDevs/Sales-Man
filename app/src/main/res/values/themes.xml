@@ -1,14 +1,20 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.DealershipManagement" parent="Theme.Material3.Light.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/secondary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/primary</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:windowBackground">@color/surface_bg</item>
+        <item name="android:statusBarColor">@color/secondary</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="fontFamily">@font/poppins</item>
     </style>
 
     <style name="Theme.DealershipManagement" parent="Base.Theme.DealershipManagement" />
 
     <style name="Theme.DealershipManagement.MainActivity" parent="Base.Theme.DealershipManagement">
-        <item name="android:statusBarColor">@color/primary</item> <!-- Status bar background -->
-        <item name="android:windowLightStatusBar">true</item> <!-- Dark text -->
+        <item name="android:statusBarColor">@color/secondary</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>

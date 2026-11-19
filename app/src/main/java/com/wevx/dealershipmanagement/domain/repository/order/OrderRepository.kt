@@ -3,6 +3,7 @@ package com.wevx.dealershipmanagement.domain.repository.order
 import com.wevx.dealershipmanagement.data.dto.order.updateOrder.RequestUpdateOrder
 import com.wevx.dealershipmanagement.data.dto.paymentDto.updatePayment.RequestUpdatePayment
 import com.wevx.dealershipmanagement.data.dto.paymentDto.ResponseGetPaymentDTO
+import com.wevx.dealershipmanagement.data.dto.paymentDto.ResponseMonthlyPaymentsDTO
 import com.wevx.dealershipmanagement.data.dto.order.updateOrder.ResponseUpdateOrderDTO
 import com.wevx.dealershipmanagement.data.dto.paymentDto.updatePayment.ResponseUpdatePaymentDTO
 import com.wevx.dealershipmanagement.data.dto.order.createOrderDto.RequestCreateOrderDTO
@@ -17,6 +18,7 @@ import com.wevx.dealershipmanagement.data.dto.shipmentDto.ResponseGetShipmentByO
 import com.wevx.dealershipmanagement.data.dto.shipmentDto.ResponseShipmentDTO
 import com.wevx.dealershipmanagement.data.dto.shipmentDto.ResponseUpdateShipmentDTO
 import com.wevx.dealershipmanagement.data.dto.order.todaysDelivery.ResponseTodaysDelivery
+import com.wevx.dealershipmanagement.data.dto.order.ResponseSalesmanOrdersDTO
 import retrofit2.Response
 
 interface OrderRepository {
@@ -60,6 +62,16 @@ interface OrderRepository {
         paymentStatus: String
     ): Response<ResponseTodaysDelivery>
 
+    suspend fun getPendingPaymentOrdersBySalesman(
+        sellerId: String
+    ): Response<ResponseTodaysDelivery>
+
+    suspend fun getOrdersByCustomer(
+        customerId: String
+    ): Response<ResponseTodaysDelivery>
+
+    suspend fun getAllStoresForDelivery(): Response<com.google.gson.JsonObject>
+
     suspend fun getPaymentByOrderID(id: String): Response<ResponseGetPaymentDTO>
     suspend fun updatePayment(
         id: String,
@@ -70,6 +82,17 @@ interface OrderRepository {
         id: String,
         requestUpdateShipment: RequestUpdateShipment
     ): Response<ResponseUpdateShipmentDTO>
+
+    suspend fun getMonthlyTotalPayments(
+        salesmanId: String,
+        month: String,
+        paymentStatus: String
+    ): Response<ResponseMonthlyPaymentsDTO>
+
+    suspend fun getOrdersBySalesman(
+        salesmanId: String,
+        limit: Int = 200
+    ): Response<ResponseSalesmanOrdersDTO>
 
 
 }

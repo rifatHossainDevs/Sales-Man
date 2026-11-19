@@ -142,4 +142,11 @@ object NetworkModule {
     fun provideOrderRepository(orderApiService: OrderApiService): OrderRepository {
         return OrderRepositoryImpl(orderApiService)
     }
+
+    // GPS Tracking
+    @Provides
+    @Singleton
+    fun provideGpsApiService(retrofit: Retrofit): com.wevx.dealershipmanagement.data.remote.gps.GpsApiService {
+        return retrofit.create(com.wevx.dealershipmanagement.data.remote.gps.GpsApiService::class.java)
+    }
 }

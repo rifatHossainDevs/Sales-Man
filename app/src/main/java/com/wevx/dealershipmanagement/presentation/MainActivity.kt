@@ -5,7 +5,9 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -17,6 +19,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
@@ -26,6 +29,7 @@ import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.core.common.Resource
+import com.wevx.dealershipmanagement.data.service.LocationForegroundService
 import com.wevx.dealershipmanagement.databinding.ActivityMainBinding
 import com.wevx.dealershipmanagement.databinding.ChangeProfileImageBottomSheetBinding
 import com.wevx.dealershipmanagement.utils.LocalDatabase
@@ -36,6 +40,8 @@ import com.wevx.dealershipmanagement.presentation.auth.profile.GetProfileViewMod
 import com.wevx.dealershipmanagement.utils.Constants.CHANGE_PASSWORD
 import com.wevx.dealershipmanagement.utils.Constants.EDIT_PROFILE
 import com.wevx.dealershipmanagement.utils.Constants.HOME
+import com.wevx.dealershipmanagement.utils.Constants.PAYMENT_HISTORY
+import com.wevx.dealershipmanagement.utils.Constants.SALES_SUMMARY
 import com.wevx.dealershipmanagement.utils.Constants.STOCK_AVAILABILITY
 import com.wevx.dealershipmanagement.utils.Constants.TODAYS_DELIVERY
 import com.wevx.dealershipmanagement.utils.TokenManager
@@ -63,6 +69,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomSheetBinding: ChangeProfileImageBottomSheetBinding
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var permissionRequest: ActivityResultLauncher<Array<String>>
+    private lateinit var locationServicePermissionLauncher: ActivityResultLauncher<Array<String>>
 
     private lateinit var loading: ProgressDialog
 
@@ -90,7 +97,41 @@ class MainActivity : AppCompatActivity() {
         allButtonClickListener()
         uploadButtonClickListener()
         permissionRequest = getPermissionRequest()
+        setupLocationTrackingService()
 
+    }
+
+    private fun setupLocationTrackingService() {
+        locationServicePermissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            val granted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+            if (granted) {
+                LocationForegroundService.startService(this)
+            }
+        }
+
+        val hasLocation = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+        if (hasLocation) {
+            LocationForegroundService.startService(this)
+        } else {
+            val permsToRequest = mutableListOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                permsToRequest.add(Manifest.permission.POST_NOTIFICATIONS)
+            }
+            locationServicePermissionLauncher.launch(permsToRequest.toTypedArray())
+        }
     }
 
     private fun allObserver() {
@@ -246,6 +287,7 @@ class MainActivity : AppCompatActivity() {
             logoutState.data?.let { logoutModel ->
                 if (logoutModel.success == true) {
                     Toast.makeText(this, "Logout Successfully", Toast.LENGTH_SHORT).show()
+                    LocationForegroundService.stopService(this@MainActivity)
                     tokenManager.clearTokens()
                     startActivity(Intent(this@MainActivity, AuthActivity::class.java))
                     finish()
@@ -325,6 +367,16 @@ class MainActivity : AppCompatActivity() {
 
                 TODAYS_DELIVERY -> {
                     navController.navigate(R.id.todaysDeliveryFragment)
+                    drawerLayout.closeDrawer(GravityCompat.START)
+                }
+
+                PAYMENT_HISTORY -> {
+                    navController.navigate(R.id.paymentHistoryFragment)
+                    drawerLayout.closeDrawer(GravityCompat.START)
+                }
+
+                SALES_SUMMARY -> {
+                    navController.navigate(R.id.salesSummaryFragment)
                     drawerLayout.closeDrawer(GravityCompat.START)
                 }
 

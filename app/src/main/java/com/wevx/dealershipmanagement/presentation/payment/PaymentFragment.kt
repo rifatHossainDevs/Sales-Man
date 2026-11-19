@@ -5,10 +5,10 @@ import android.app.DatePickerDialog
 import android.icu.util.Calendar
 import android.util.Log
 import android.widget.RadioButton
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.wevx.dealershipmanagement.utils.SharedData
 import com.wevx.dealershipmanagement.core.common.BaseFragment
 import com.wevx.dealershipmanagement.data.dto.order.createOrderDto.RequestCreateOrderDTO
 import com.wevx.dealershipmanagement.data.dto.paymentDto.createPayment.RequestPaymentDTO
@@ -18,9 +18,11 @@ import com.wevx.dealershipmanagement.domain.models.CartItem
 import com.wevx.dealershipmanagement.presentation.adapter.ProductCartAdapter
 import com.wevx.dealershipmanagement.presentation.auth.profile.GetProfileViewModel
 import com.wevx.dealershipmanagement.presentation.order.createOrder.CreateOrderViewModel
-import com.wevx.dealershipmanagement.presentation.payment.createPayment.CreatePaymentViewModel
 import com.wevx.dealershipmanagement.presentation.order.createShipment.CreateShipmentViewModel
+import com.wevx.dealershipmanagement.presentation.payment.createPayment.CreatePaymentViewModel
 import com.wevx.dealershipmanagement.presentation.product.ProductsFragmentArgs
+import com.wevx.dealershipmanagement.presentation.storeOwnerDetails.GetStoreByIdViewModel
+import com.wevx.dealershipmanagement.utils.SharedData
 import com.wevx.dealershipmanagement.utils.TokenManager
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
 import com.wevx.dealershipmanagement.utils.extract
@@ -36,38 +38,58 @@ import kotlin.properties.Delegates
 class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBinding::inflate) {
     private lateinit var adapter: ProductCartAdapter
     lateinit var selectedItems: List<CartItem>
-    private lateinit var selectedDate: String
+    private var selectedDate: String = ""
     private val createOrderViewModel: CreateOrderViewModel by viewModels()
     private val currentUserViewModel: GetProfileViewModel by viewModels()
     private val createPaymentViewModel: CreatePaymentViewModel by viewModels()
     private val createShipmentViewModel: CreateShipmentViewModel by viewModels()
+    private val getStoreByIdViewModel: GetStoreByIdViewModel by viewModels()
     private val args: ProductsFragmentArgs by navArgs()
-    private lateinit var customerId: String
-    private lateinit var salesManId: String
-    lateinit var token: String
+    private var customerId: String = ""
+    private var salesManId: String = ""
+    private var token: String = ""
     private var total by Delegates.notNull<Double>()
-    private lateinit var expectedShipDateIso: String
-    private lateinit var orderId: String
+    private var expectedShipDateIso: String = ""
+    private var orderId: String = ""
     private var isOrderCreated = false
     private var isPaymentCreated = false
     private var isShipmentCreated = false
-    lateinit var invoiceNumber: String
+    private var invoiceNumber: String = ""
+    private var storeAreaName: String = "Dhaka"
+    private var storeAreaNo: String = "1"
 
     override fun setAllClickListener() {
         customerId = args.id
         val tokenManager = TokenManager(requireContext())
-        token = tokenManager.getAccessToken().toString()
-        currentUserViewModel.getProfile(token)
+        token = tokenManager.getAccessToken().orEmpty()
+        currentUserViewModel.getProfile("Bearer $token")
+        getStoreByIdViewModel.getStoreById(customerId)
         allSelectedProducts()
         buttonClickListener()
-
     }
 
     override fun allObserver() {
         createOrderObserver()
         currentUserObserver()
+        storeByIdObserver()
         createPaymentObserver()
         createShipmentObserver()
+    }
+
+    private fun storeByIdObserver() {
+        getStoreByIdViewModel.getStoreByIdState.collectInLifecycle(viewLifecycleOwner) { state ->
+            state.data?.let { store ->
+                if (store.address.isNotBlank()) {
+                    storeAreaName = store.address
+                    if (binding.etShippingAddress.text.isNullOrBlank()) {
+                        binding.etShippingAddress.setText(store.address)
+                    }
+                }
+                if (store.areaNo > 0) {
+                    storeAreaNo = store.areaNo.toString()
+                }
+            }
+        }
     }
 
     private fun createShipmentObserver() {
@@ -75,12 +97,12 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
             if (createShipmentState.loading) return@collectInLifecycle
 
             createShipmentState.error?.let {
-
+                loading.dismiss()
+                Toast.makeText(requireContext(), "Shipment Error: $it", Toast.LENGTH_SHORT).show()
             }
             createShipmentState.data?.let {
                 isShipmentCreated = true
                 checkAllOperationsSuccess()
-
             }
         }
     }
@@ -89,12 +111,12 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
         createPaymentViewModel.createPaymentState.collectInLifecycle(viewLifecycleOwner) { createPaymentState ->
             if (createPaymentState.loading) return@collectInLifecycle
             createPaymentState.error?.let {
-
+                loading.dismiss()
+                Toast.makeText(requireContext(), "Payment Error: $it", Toast.LENGTH_SHORT).show()
             }
             createPaymentState.data?.let {
                 isPaymentCreated = true
                 checkAllOperationsSuccess()
-
             }
         }
     }
@@ -120,26 +142,25 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
             }
             createOrderState.error?.let {
                 loading.dismiss()
+                Toast.makeText(requireContext(), "Order Error: $it", Toast.LENGTH_SHORT).show()
             }
             createOrderState.data?.let {
-                //loading.dismiss()
-                orderId = it.data?.id.toString()
+                orderId = it.data?.id.orEmpty()
                 isOrderCreated = true
 
                 val requestPaymentDTO =
                     RequestPaymentDTO(total, orderId, "Cash", "Pending", salesManId)
 
-                val requestShipmentDTO = RequestShipmentDTO(expectedShipDateIso, orderId, "Pending")
+                val requestShipmentDTO =
+                    RequestShipmentDTO(expectedShipDateIso, orderId, "Pending")
 
                 val bearerToken = "Bearer $token"
 
                 createPaymentViewModel.createPayment(requestPaymentDTO, bearerToken)
                 createShipmentViewModel.createShipment(requestShipmentDTO, bearerToken)
-                //Toast.makeText(requireContext(), "Order Created", Toast.LENGTH_SHORT).show()
-                invoiceNumber = it.data?.invoiceNumber.toString()
+                invoiceNumber = it.data?.invoiceNumber.orEmpty()
 
                 checkAllOperationsSuccess()
-
             }
         }
     }
@@ -147,11 +168,6 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
     private fun checkAllOperationsSuccess() {
         if (isPaymentCreated && isShipmentCreated && isOrderCreated) {
             loading.dismiss()
-            /*Toast.makeText(
-                requireContext(),
-                "Order, Payment, and Shipment successfully created!",
-                Toast.LENGTH_SHORT
-            ).show()*/
             val action =
                 PaymentFragmentDirections.actionPaymentFragmentToReceiptFragment(
                     id = customerId,
@@ -175,16 +191,25 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
 
     private fun buttonClickListener() {
         binding.btnOrderConfirm.setOnClickListener {
-
             val expectedShipmentDate = binding.etExpectedShipmentDate.extract()
             val shippingAddress = binding.etShippingAddress.extract()
             val cash = binding.rbCash
-            //val check = binding.checkboxConfirmation
+
             if (checkAllFieldValidity(expectedShipmentDate, shippingAddress, cash)) {
+                if (salesManId.isBlank()) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Loading salesman profile, please try again in a moment.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    currentUserViewModel.getProfile("Bearer $token")
+                    return@setOnClickListener
+                }
+
                 val orderItems = SharedData.selectedProductList.map { cartItem ->
                     RequestCreateOrderDTO.OrderItem(
                         productId = cartItem.product.productId,
-                        productName = cartItem.product.productName, // Verify actual property name
+                        productName = cartItem.product.productName,
                         purchaseQuantity = cartItem.purchaseQuantity.toInt(),
                         priceAtPurchase = cartItem.product.price
                     )
@@ -200,20 +225,19 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
                     return "INV-$datePart-$timePartBase36$randomPart"
                 }
 
-                val invoiceNumber = generateInvoiceNumber()
+                val generatedInvoice = generateInvoiceNumber()
                 val requestCreateOrderDTO = RequestCreateOrderDTO(
                     customerId = customerId,
                     salesmanId = salesManId,
-                    invoiceNumber = invoiceNumber,
-                    //Invoice Format : INV-20250814-KF4Z9AX7, INV-20250814-KF4Z9B2P
+                    invoiceNumber = generatedInvoice,
                     totalPrice = total,
                     amountPaid = 0.0,
                     paymentDue = total,
                     shippingAddress = shippingAddress,
                     orderItems = orderItems,
                     expectedShipDate = expectedShipDateIso,
-                    areaName = "Dhaka",
-                    areaNo = "1"
+                    areaName = storeAreaName,
+                    areaNo = storeAreaNo
                 )
 
                 val bearerToken = "Bearer $token"
@@ -222,6 +246,9 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
             }
         }
         binding.etExpectedShipmentDate.setOnClickListener {
+            showDatePicker()
+        }
+        binding.etShipmentDateLayout.setEndIconOnClickListener {
             showDatePicker()
         }
     }
@@ -238,6 +265,7 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
             val displayFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             selectedDate = displayFormat.format(calendar.time)
             binding.etExpectedShipmentDate.setText(selectedDate)
+            binding.etShipmentDateLayout.error = null
 
             val isoFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
             isoFormat.timeZone = TimeZone.getTimeZone("UTC")
@@ -248,8 +276,10 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
     private fun checkAllFieldValidity(
         expectedShipmentDate: String, shippingAddress: String, cash: RadioButton
     ): Boolean {
+        binding.etShipmentDateLayout.error = null
+        binding.etShippingAddressLayout.error = null
 
-        if (expectedShipmentDate.isEmpty()) {
+        if (expectedShipmentDate.isEmpty() || expectedShipDateIso.isEmpty()) {
             binding.etShipmentDateLayout.error = "This field must be filled"
             return false
         }
@@ -261,10 +291,6 @@ class PaymentFragment : BaseFragment<FragmentPaymentBinding>(FragmentPaymentBind
             binding.rbCash.error = "This field must be filled"
             return false
         }
-        /*if (!check.isChecked) {
-            Toast.makeText(requireContext(), "Check Box must be checked", Toast.LENGTH_SHORT).show()
-            return false
-        }*/
 
         return true
     }

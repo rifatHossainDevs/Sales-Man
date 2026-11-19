@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
@@ -13,9 +14,9 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.core.common.BaseFragment
+import com.wevx.dealershipmanagement.data.dto.order.orderDetailsDTO.ResponseOderDetailsDTO
 import com.wevx.dealershipmanagement.data.dto.order.updateOrder.RequestUpdateOrder
 import com.wevx.dealershipmanagement.data.dto.paymentDto.updatePayment.RequestUpdatePayment
-import com.wevx.dealershipmanagement.data.dto.order.orderDetailsDTO.ResponseOderDetailsDTO
 import com.wevx.dealershipmanagement.data.dto.shipmentDto.RequestUpdateShipment
 import com.wevx.dealershipmanagement.databinding.FragmentOrderDetailsBinding
 import com.wevx.dealershipmanagement.presentation.adapter.OrderDetailsAdapter
@@ -28,9 +29,7 @@ import com.wevx.dealershipmanagement.presentation.storeOwnerDetails.GetStoreById
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 import java.time.Instant
-import java.time.format.DateTimeFormatter
 import kotlin.getValue
 
 @AndroidEntryPoint
@@ -61,7 +60,6 @@ class OrderDetailsFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Read arguments passed through Navigation Component
         orderId = args.orderId
         customerId = args.customerId
 
@@ -69,27 +67,18 @@ class OrderDetailsFragment :
         Log.d("ORDER_DEBUG", "Customer ID: $customerId")
 
         if (!orderId.isNullOrBlank() && !customerId.isNullOrBlank()) {
-
             storeOwnerByIdViewModel.getStoreById(customerId!!)
-
             orderDetailsViewModel.getOderDetails(orderId!!)
             orderDetailsViewModel.getOderDetailsDEMO(orderId!!)
-
-            Log.d("ORDER_DEBUG", "Calling Payment API with: $orderId")
             getPaymentViewModel.getPaymentByOrderId(orderId!!)
-
-            Log.d("ORDER_DEBUG", "Calling Shipment API with: $orderId")
             getShipmentViewModel.getShipmentByOrderId(orderId!!)
-
         } else {
             Log.e("ORDER_DEBUG", "Navigation arguments are missing!")
         }
     }
 
-
     @RequiresApi(Build.VERSION_CODES.O)
     override fun setAllClickListener() {
-
         binding.btnCompletePayment.setOnClickListener {
             Log.d("ORDER_DEBUG", "Payment button listener triggered")
             handlePaymentComplete()
@@ -101,75 +90,77 @@ class OrderDetailsFragment :
         }
     }
 
+    private fun markPaymentButtonCompleted() {
+        binding.btnCompletePayment.apply {
+            isEnabled = false
+            setBackgroundColor(ContextCompat.getColor(context, R.color.green))
+        }
+    }
+
+    private fun markShipmentButtonCompleted() {
+        binding.btnCompleteShipment.apply {
+            isEnabled = false
+            setBackgroundColor(ContextCompat.getColor(context, R.color.green))
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun handleShipmentComplete() {
         Log.d("ORDER_DEBUG", "Complete Shipment clicked")
 
-        Log.d(
-            "ORDER_DEBUG",
-            "shipmentID: $shipmentID, expectedShipDate: $expectedShipDate"
-        )
-
-        if (shipmentID.isNullOrBlank()) {
-            Log.e("ORDER_DEBUG", "Shipment ID is null or empty")
-            return
-        }
-
-        if (expectedShipDate.isNullOrBlank()) {
-            Log.e("ORDER_DEBUG", "Expected ship date is null or empty")
+        // Enforce business rule matching Backend & Admin Panel: Payment must be Paid before Delivery
+        if (paymentStatus != "Paid") {
+            Toast.makeText(
+                requireContext(),
+                "Please complete payment first before marking shipment as delivered.",
+                Toast.LENGTH_LONG
+            ).show()
             return
         }
 
         val currentDateTime = Instant.now().toString()
+        val shipDate = expectedShipDate ?: orderDetail?.data?.expectedShipDate ?: currentDateTime
 
-        val request = RequestUpdateShipment(
-            shipmentStatus = "Delivered",
-            expectedShipDate = expectedShipDate,
-            shippedAt = currentDateTime
-        )
-
-        Log.d("ORDER_DEBUG", "Sending shipment update: $request")
-
-        updateShipmentViewModel.updateShipment(
-            id = shipmentID!!,
-            requestUpdateShipment = request
-        )
+        if (!shipmentID.isNullOrBlank()) {
+            val request = RequestUpdateShipment(
+                shipmentStatus = "Delivered",
+                expectedShipDate = shipDate,
+                shippedAt = currentDateTime
+            )
+            updateShipmentViewModel.updateShipment(
+                id = shipmentID!!,
+                requestUpdateShipment = request
+            )
+        } else {
+            shipmentStatus = "Delivered"
+            markShipmentButtonCompleted()
+            handleUpdateOrderShipment()
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun handlePaymentComplete() {
         Log.d("ORDER_DEBUG", "Complete Payment clicked")
 
-        Log.d(
-            "ORDER_DEBUG",
-            "paymentID: $paymentID, paymentAmount: $paymentAmount"
-        )
-
-        if (paymentID.isNullOrBlank()) {
-            Log.e("ORDER_DEBUG", "Payment ID is null or empty")
-            return
-        }
-
-        if (paymentAmount == null) {
-            Log.e("ORDER_DEBUG", "Payment amount is null")
-            return
-        }
-
         val currentDateTime = Instant.now().toString()
+        val amountToPay = paymentAmount ?: orderDetail?.data?.totalPrice ?: 0.0
 
-        val request = RequestUpdatePayment(
-            amount = paymentAmount,
-            paidAt = currentDateTime,
-            paymentStatus = "Paid",
-            transactionId = ""
-        )
-
-        Log.d("ORDER_DEBUG", "Sending payment update: $request")
-
-        updatePaymentViewModel.updatePayment(
-            paymentID!!,
-            requestUpdatePayment = request
-        )
+        if (!paymentID.isNullOrBlank()) {
+            val request = RequestUpdatePayment(
+                amount = amountToPay,
+                paidAt = currentDateTime,
+                paymentStatus = "Paid",
+                transactionId = ""
+            )
+            updatePaymentViewModel.updatePayment(
+                paymentID!!,
+                requestUpdatePayment = request
+            )
+        } else {
+            paymentStatus = "Paid"
+            markPaymentButtonCompleted()
+            handleUpdateOrderPayment()
+        }
     }
 
     override fun allObserver() {
@@ -184,26 +175,25 @@ class OrderDetailsFragment :
     }
 
     private fun storeOwnerObserver() {
-        storeOwnerByIdViewModel.getStoreByIdState.collectInLifecycle(viewLifecycleOwner){storeOwnerState->
-            if (storeOwnerState.loading){
+        storeOwnerByIdViewModel.getStoreByIdState.collectInLifecycle(viewLifecycleOwner) { storeOwnerState ->
+            if (storeOwnerState.loading) {
                 loading.show()
             }
             storeOwnerState.error?.let {
                 loading.dismiss()
             }
 
-            storeOwnerState.data?.let { data->
-                if (data != null){
-                    binding.apply {
-                        tvStoreName.text = data.storeName
-                        tvOwnerName.text = data.storeOwnerName
-                        tvAddress.text = data.address
-                        Glide.with(requireContext())
-                            .load(data.storeOwnerAvatar.replace("http://", "https://"))
-                            .placeholder(R.drawable.ic_profile_image_24)
-                            .error(R.drawable.ic_edit_profile)
-                            .into(ivStoreOwner)
-                    }
+            storeOwnerState.data?.let { data ->
+                loading.dismiss()
+                binding.apply {
+                    tvStoreName.text = data.storeName
+                    tvOwnerName.text = data.storeOwnerName
+                    tvAddress.text = data.address
+                    Glide.with(requireContext())
+                        .load(data.storeOwnerAvatar.replace("http://", "https://"))
+                        .placeholder(R.drawable.ic_profile_image_24)
+                        .error(R.drawable.ic_edit_profile)
+                        .into(ivStoreOwner)
                 }
             }
         }
@@ -212,21 +202,27 @@ class OrderDetailsFragment :
     @SuppressLint("SetTextI18n")
     private fun orderDetailsObserver() {
         orderDetailsViewModel.orderDetailsState.collectInLifecycle(viewLifecycleOwner) { orderDetailsState ->
-            if (orderDetailsState.loading){
+            if (orderDetailsState.loading) {
                 loading.show()
                 return@collectInLifecycle
             }
 
             orderDetailsState.error?.let {
                 loading.dismiss()
-                //Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_SHORT).show()
+                Log.e("ORDER_DEBUG", "orderDetailsObserver error: $it")
             }
 
             orderDetailsState.data?.let { orderItem ->
                 Log.d("orderId", "orderDetailsObserver: $orderItem")
                 loading.dismiss()
                 if (orderItem.isNotEmpty()) {
-                    binding.tvTotal.text = "Total: ${orderItem.sumOf { it.subtotal }}"
+                    val sum = orderItem.sumOf { it.subtotal }
+                    val formattedTotal = if (sum % 1.0 == 0.0) {
+                        sum.toLong().toString()
+                    } else {
+                        "%.2f".format(sum)
+                    }
+                    binding.tvTotal.text = "Total: ৳$formattedTotal"
                     orderDetailsAdapter = OrderDetailsAdapter(orderItem)
                     binding.recyclerProducts.adapter = orderDetailsAdapter
                 }
@@ -235,75 +231,78 @@ class OrderDetailsFragment :
     }
 
     private fun orderDetailsDemoObserver() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             orderDetailsViewModel.orderDetailsStateDemo.collect { response ->
-                if (response.loading){
-                    //loading.show()
-                }
-                if (response.error != null){
+                if (response.error != null) {
                     loading.dismiss()
                 }
-                if (response.data != null){
+                if (response.data != null) {
                     loading.dismiss()
                     orderDetail = response.data
+                    val orderData = response.data.data
+                    if (orderData?.paymentStatus == "Paid") {
+                        paymentStatus = "Paid"
+                        markPaymentButtonCompleted()
+                    }
+                    if (orderData?.shipmentStatus == "Delivered") {
+                        shipmentStatus = "Delivered"
+                        markShipmentButtonCompleted()
+                    }
+                    if (paymentAmount == null && orderData?.totalPrice != null) {
+                        paymentAmount = orderData.totalPrice
+                    }
+                    if (expectedShipDate.isNullOrBlank() && !orderData?.expectedShipDate.isNullOrBlank()) {
+                        expectedShipDate = orderData?.expectedShipDate
+                    }
                 }
             }
         }
     }
-
 
     private fun getPaymentObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
             getPaymentViewModel.getPaymentState.collect { response ->
-
-                Log.d("ORDER_DEBUG", "Payment loading: ${response.loading}")
-                Log.e("ORDER_DEBUG", "Payment error: ${response.error}")
-                Log.d("ORDER_DEBUG", "Payment response: ${response.data}")
-
                 if (response.data != null) {
                     val paymentList = response.data.data
+                    // Prefer a Paid payment if multiple records exist
+                    val matchedPayment = paymentList?.firstOrNull { it?.paymentStatus == "Paid" }
+                        ?: paymentList?.firstOrNull()
 
-                    Log.d("ORDER_DEBUG", "Payment list: $paymentList")
-                    Log.d("ORDER_DEBUG", "Payment count: ${paymentList?.size}")
-
-                    paymentID = paymentList?.firstOrNull()?.id
-                    paymentAmount = paymentList?.firstOrNull()?.amount?.toDouble()
-
-                    Log.d("ORDER_DEBUG", "Final paymentID: $paymentID")
-                    Log.d("ORDER_DEBUG", "Final paymentAmount: $paymentAmount")
+                    paymentID = matchedPayment?.id
+                    paymentAmount = matchedPayment?.amount
+                    if (matchedPayment?.paymentStatus == "Paid") {
+                        paymentStatus = "Paid"
+                        markPaymentButtonCompleted()
+                    } else if (paymentStatus == null) {
+                        paymentStatus = matchedPayment?.paymentStatus
+                    }
                 }
             }
         }
     }
 
-
     private fun updatePaymentObserver() {
-        lifecycleScope.launch {
-            updatePaymentViewModel.updatePaymentState.collect{ response ->
-                if (response.loading){
+        viewLifecycleOwner.lifecycleScope.launch {
+            updatePaymentViewModel.updatePaymentState.collect { response ->
+                if (response.loading) {
                     loading.show()
                 }
-                if (response.error != null){
+                if (response.error != null) {
                     loading.dismiss()
                     Log.d("TAG", "update Payment error: ${response.error}")
                 }
-                if (response.data != null){
+                if (response.data != null) {
                     loading.dismiss()
-                    Log.d("TAG", "getPaymentObserver: ${response.data}")
-                    Log.d("TAG", "update Payment success")
                     paymentStatus = response.data.data?.paymentStatus
 
-                    // btn handle
-                    if (
-                        response.data.data?.paymentStatus == "Paid"
-                    ){
-                        binding.btnCompletePayment.apply {
-                            isEnabled = false
-                            setBackgroundColor(ContextCompat.getColor(context, R.color.green))
-                        }
-                        if (shipmentStatus == "Delivered"){
-                            handleUpdateOrder()
-                        }
+                    if (response.data.data?.paymentStatus == "Paid") {
+                        markPaymentButtonCompleted()
+                        Toast.makeText(
+                            requireContext(),
+                            "Payment completed successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        handleUpdateOrderPayment()
                     }
                 }
             }
@@ -311,31 +310,26 @@ class OrderDetailsFragment :
     }
 
     private fun updateShipmentObserver() {
-        lifecycleScope.launch {
-            updateShipmentViewModel.updateShipmentState.collect{ response ->
-                if (response.loading){
+        viewLifecycleOwner.lifecycleScope.launch {
+            updateShipmentViewModel.updateShipmentState.collect { response ->
+                if (response.loading) {
                     loading.show()
                 }
-                if (response.error != null){
+                if (response.error != null) {
                     loading.dismiss()
                 }
-                if (response.data != null){
+                if (response.data != null) {
                     loading.dismiss()
-
                     shipmentStatus = response.data.data?.shipmentStatus
 
-                    // btn handle
-                    if (
-                        response.data.data?.shipmentStatus == "Delivered"
-                    ){
-                        binding.btnCompleteShipment.apply {
-                            isEnabled = false
-                            setBackgroundColor(ContextCompat.getColor(context, R.color.green))
-                        }
-
-                        if (paymentStatus == "Paid"){
-                            handleUpdateOrder()
-                        }
+                    if (response.data.data?.shipmentStatus == "Delivered") {
+                        markShipmentButtonCompleted()
+                        Toast.makeText(
+                            requireContext(),
+                            "Shipment marked as delivered",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        handleUpdateOrderShipment()
                     }
                 }
             }
@@ -345,38 +339,35 @@ class OrderDetailsFragment :
     private fun getShipmentObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
             getShipmentViewModel.getShipmentState.collect { response ->
-
-                Log.d("ORDER_DEBUG", "Shipment loading: ${response.loading}")
-                Log.e("ORDER_DEBUG", "Shipment error: ${response.error}")
-                Log.d("ORDER_DEBUG", "Shipment response: ${response.data}")
-
                 if (response.data != null) {
                     val shipmentList = response.data.data
+                    val matchedShipment = shipmentList?.firstOrNull { it?.shipmentStatus == "Delivered" }
+                        ?: shipmentList?.firstOrNull()
 
-                    Log.d("ORDER_DEBUG", "Shipment list: $shipmentList")
-                    Log.d("ORDER_DEBUG", "Shipment count: ${shipmentList?.size}")
-
-                    shipmentID = shipmentList?.firstOrNull()?.id
-                    expectedShipDate = shipmentList?.firstOrNull()?.expectedShipDate
-
-                    Log.d("ORDER_DEBUG", "Final shipmentID: $shipmentID")
-                    Log.d("ORDER_DEBUG", "Final expectedShipDate: $expectedShipDate")
+                    shipmentID = matchedShipment?.id
+                    expectedShipDate = matchedShipment?.expectedShipDate
+                    if (matchedShipment?.shipmentStatus == "Delivered") {
+                        shipmentStatus = "Delivered"
+                        markShipmentButtonCompleted()
+                    } else if (shipmentStatus == null) {
+                        shipmentStatus = matchedShipment?.shipmentStatus
+                    }
                 }
             }
         }
     }
 
     private fun updateOrderObserver() {
-        lifecycleScope.launch {
-            updateOrderViewModel.updateOrderState.collect{ response ->
-                if (response.loading){
+        viewLifecycleOwner.lifecycleScope.launch {
+            updateOrderViewModel.updateOrderState.collect { response ->
+                if (response.loading) {
                     loading.show()
                 }
-                if (response.error != null){
+                if (response.error != null) {
                     loading.dismiss()
                     Log.d("TAG", "update order error: ${response.error}")
                 }
-                if (response.data != null){
+                if (response.data != null) {
                     loading.dismiss()
                     Log.d("TAG", "update order success: ${response.data}")
                 }
@@ -384,22 +375,29 @@ class OrderDetailsFragment :
         }
     }
 
-
-    private fun handleUpdateOrder(){
+    private fun handleUpdateOrderPayment() {
         val requestUpdateOrder = RequestUpdateOrder(
-            paymentStatus= "Paid",
+            paymentStatus = "Paid",
+            amountPaid = paymentAmount ?: orderDetail?.data?.totalPrice,
+            paymentDue = 0.0
         )
-        if (orderId != null){
+        if (!orderId.isNullOrBlank()) {
             updateOrderViewModel.updateOrder(
-                id = orderId.toString(),
-                requestUpdateOrder = requestUpdateOrder,
+                id = orderId!!,
+                requestUpdateOrder = requestUpdateOrder
             )
         }
     }
 
-
+    private fun handleUpdateOrderShipment() {
+        val requestUpdateOrder = RequestUpdateOrder(
+            shipmentStatus = "Delivered"
+        )
+        if (!orderId.isNullOrBlank()) {
+            updateOrderViewModel.updateOrder(
+                id = orderId!!,
+                requestUpdateOrder = requestUpdateOrder
+            )
+        }
+    }
 }
-
-
-
-

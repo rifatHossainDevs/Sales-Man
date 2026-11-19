@@ -7,6 +7,7 @@ import com.wevx.dealershipmanagement.domain.models.LoginModel
 import com.wevx.dealershipmanagement.domain.repository.auth.AuthRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import org.json.JSONObject
 import javax.inject.Inject
 
 class LoginUseCase @Inject constructor(
@@ -25,7 +26,15 @@ class LoginUseCase @Inject constructor(
                     emit(Resource.Error("Login failed: No data received"))
                 }
             } else {
-                emit(Resource.Error("Login failed: ${response.message()}"))
+                val errorMsg = try {
+                    val raw = response.errorBody()?.string()
+                    if (!raw.isNullOrBlank()) {
+                        JSONObject(raw).optString("message").ifBlank { null }
+                    } else null
+                } catch (_: Exception) {
+                    null
+                } ?: response.message().ifBlank { "Invalid email/phone or password" }
+                emit(Resource.Error(errorMsg))
             }
         } catch (e: Exception) {
             emit(Resource.Error("An error occurred: ${e.localizedMessage}"))

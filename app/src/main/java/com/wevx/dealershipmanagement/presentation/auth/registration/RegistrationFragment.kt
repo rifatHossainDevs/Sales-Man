@@ -64,11 +64,16 @@ class RegistrationFragment :
             }
             registrationState.error?.let {
                 loading.dismiss()
+                Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_LONG).show()
             }
 
             registrationState.data?.let {
                 loading.dismiss()
-                Toast.makeText(requireContext(), "Success: $it", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Registration successful! Please wait for admin approval.",
+                    Toast.LENGTH_LONG
+                ).show()
                 bottomSheetDialog.show()
             }
         }
@@ -158,6 +163,18 @@ class RegistrationFragment :
             }
         }
 
+    private fun clearFieldErrors() {
+        binding.apply {
+            etUserNameLayout.error = null
+            etPhoneNumberLayout.error = null
+            etEmailLayout.error = null
+            etNidLayout.error = null
+            etCompanyIdLayout.error = null
+            etPasswordLayout.error = null
+            etConfirmPasswordLayout.error = null
+        }
+    }
+
     private fun checkAllFieldValidity(
         name: String,
         phone: String,
@@ -167,25 +184,27 @@ class RegistrationFragment :
         confirmPassword: String,
         companyId: String
     ): Boolean {
-        val emailPattern = "^[a-z0-9+_.-]+@[a-z.-]{4,7}\\.[a-z]{2,5}$"
+        clearFieldErrors()
+
+        val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
         val passwordPattern =
             "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!@#\$%^&*(),.?\":{}|<>~_-]).{8,}\$"
 
-        if (name == "") {
+        if (name.isBlank()) {
             binding.etUserNameLayout.error = "This field must be filled"
             return false
         }
 
-        if (phone == "") {
+        if (phone.isBlank()) {
             binding.etPhoneNumberLayout.error = "This field must be filled"
             return false
         }
         if (phone.length < 11) {
-            binding.etPhoneNumberLayout.error = "Password Should have at least 11 Digit"
+            binding.etPhoneNumberLayout.error = "Phone number should have at least 11 digits"
             return false
         }
 
-        if (email == "") {
+        if (email.isBlank()) {
             binding.etEmailLayout.error = "This field must be filled"
             return false
         }
@@ -193,7 +212,23 @@ class RegistrationFragment :
             binding.etEmailLayout.error = "Invalid Email Format"
             return false
         }
-        if (password == "") {
+
+        if (nid.isBlank()) {
+            binding.etNidLayout.error = "This field must be filled"
+            return false
+        }
+
+        if (nid.length != 10 && nid.length != 17) {
+            binding.etNidLayout.error = "NID Should have 10 or 17 Digit"
+            return false
+        }
+
+        if (companyId.isBlank()) {
+            binding.etCompanyIdLayout.error = "This field must be filled"
+            return false
+        }
+
+        if (password.isBlank()) {
             binding.etPasswordLayout.error = "This field must be filled"
             return false
         }
@@ -212,21 +247,6 @@ class RegistrationFragment :
             binding.etConfirmPasswordLayout.error = "Password and Confirm Password are not match!"
             return false
         }
-
-        if (nid == "") {
-            binding.etConfirmPasswordLayout.error = "This field must be filled"
-            return false
-        }
-
-        if (nid.length != 10 && nid.length != 17) {
-            binding.etNidLayout.error = "NID Should have 10 or 17 Digit"
-            return false
-        }
-
-        if (companyId == ""){
-            binding.etConfirmPasswordLayout.error = "This field must be filled"
-        }
-
 
         return true
     }

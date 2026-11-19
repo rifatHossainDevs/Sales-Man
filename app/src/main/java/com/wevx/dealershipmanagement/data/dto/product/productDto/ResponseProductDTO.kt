@@ -36,15 +36,15 @@ data class ResponseProductDTO(
         @SerializedName("isActive")
         val isActive: Boolean? = null,
         @SerializedName("offerPrice")
-        val offerPrice: Int? = null,
+        val offerPrice: Double? = null,
         @SerializedName("price")
-        val price: Int? = null,
+        val price: Double? = null,
         @SerializedName("productName")
         val productName: String? = null,
         @SerializedName("sku")
         val sku: String? = null,
         @SerializedName("stockQuantity")
-        val stockQuantity: Int? = null,
+        val stockQuantity: Double? = null,
         @SerializedName("supplierID")
         val supplierID: String? = null,
         @SerializedName("unit")
@@ -62,14 +62,13 @@ fun ResponseProductDTO.Data.toProductModel(): ProductModel {
         productName = this.productName ?: "",
         brandName = this.brandName ?: "",
         description = this.description ?: "",
-        price = this.price?.toDouble() ?: 0.0,
+        price = this.price ?: 0.0,
         unit = this.unit ?: "",
-        offerPrice = this.offerPrice?.toDouble() ?: 0.0,
-        stockQuantity = this.stockQuantity?.toDouble() ?: 0.0,
+        offerPrice = this.offerPrice ?: 0.0,
+        stockQuantity = this.stockQuantity ?: 0.0,
         categoryId = this.categoryId ?: "",
         imageUrl = this.imageUrl?.firstOrNull { !it.isNullOrBlank() } ?: "",
         isActive = this.isActive ?: true
-
     )
 }
 

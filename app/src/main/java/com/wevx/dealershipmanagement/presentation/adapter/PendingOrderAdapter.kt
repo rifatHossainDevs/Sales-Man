@@ -53,6 +53,9 @@ class PendingOrderAdapter(val pendingOrders: List<PendingAndCompleteOrderModel>,
                 root.setOnClickListener {
                     listener.selectPendingOrder(item.id)
                 }
+                btnViewInvoice.setOnClickListener {
+                    listener.selectPendingOrder(item.id)
+                }
             }
 
         }

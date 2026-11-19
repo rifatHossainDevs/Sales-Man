@@ -18,11 +18,11 @@ data class ResponseUpdateOrderDTO(
     @Keep
     data class Data(
         @SerializedName("amountPaid")
-        val amountPaid: Int?,
+        val amountPaid: Double?,
         @SerializedName("createdAt")
         val createdAt: String?,
         @SerializedName("customerId")
-        val customerId: String?,
+        val customerId: Any?,
         @SerializedName("expectedShipDate")
         val expectedShipDate: String?,
         @SerializedName("_id")
@@ -32,15 +32,17 @@ data class ResponseUpdateOrderDTO(
         @SerializedName("orderItems")
         val orderItems: List<OrderItem?>?,
         @SerializedName("paymentDue")
-        val paymentDue: Int?,
+        val paymentDue: Double?,
         @SerializedName("paymentStatus")
         val paymentStatus: String?,
+        @SerializedName("shipmentStatus")
+        val shipmentStatus: String?,
         @SerializedName("salesmanId")
-        val salesmanId: String?,
+        val salesmanId: Any?,
         @SerializedName("shippingAddress")
         val shippingAddress: String?,
         @SerializedName("totalPrice")
-        val totalPrice: Int?,
+        val totalPrice: Double?,
         @SerializedName("updatedAt")
         val updatedAt: String?,
         @SerializedName("__v")
@@ -53,7 +55,7 @@ data class ResponseUpdateOrderDTO(
             @SerializedName("_id")
             val id: String?,
             @SerializedName("priceAtPurchase")
-            val priceAtPurchase: Int?,
+            val priceAtPurchase: Double?,
             @SerializedName("productId")
             val productId: String?,
             @SerializedName("purchaseQuantity")

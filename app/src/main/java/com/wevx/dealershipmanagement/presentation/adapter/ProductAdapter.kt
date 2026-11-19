@@ -7,8 +7,8 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
 import com.bumptech.glide.Glide
 import com.wevx.dealershipmanagement.R
 import com.wevx.dealershipmanagement.databinding.ItemLayoutProductBinding
@@ -36,10 +36,22 @@ class ProductAdapter(
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val cartItem = cartItem[position]
+        val maxStock = cartItem.product.stockQuantity.coerceAtLeast(0.0)
+        val formattedPrice = if (cartItem.product.price % 1.0 == 0.0) {
+            cartItem.product.price.toLong().toString()
+        } else {
+            "%.2f".format(cartItem.product.price)
+        }
+        val formattedStock = if (maxStock % 1.0 == 0.0) {
+            maxStock.toInt().toString()
+        } else {
+            maxStock.toString()
+        }
+
         holder.binding.apply {
             tvProductName.text = cartItem.product.productName
             tvBrandName.text = cartItem.product.brandName
-            tvPrice.text = "Price: ৳${cartItem.product.price}"
+            tvPrice.text = "Price: ৳$formattedPrice"
 
             if (etQuantity.tag is TextWatcher) {
                 etQuantity.removeTextChangedListener(etQuantity.tag as TextWatcher)
@@ -58,7 +70,7 @@ class ProductAdapter(
                 etQuantity.setSelection(etQuantity.text.length)
             }
 
-            tvStock.text = "Stock: ${cartItem.product.stockQuantity} ${cartItem.product.unit}"
+            tvStock.text = "Stock: $formattedStock ${cartItem.product.unit}"
             tvSubtotal.text = "Sub total: ৳%.2f".format(cartItem.subtotal)
 
             var isEditing = false
@@ -79,9 +91,20 @@ class ProductAdapter(
 
                     val entered = s.toString().toDoubleOrNull()
                     if (entered != null) {
-                        cartItem.purchaseQuantity = entered
+                        if (entered > maxStock) {
+                            cartItem.purchaseQuantity = maxStock
+                            val maxStr = if (maxStock % 1.0 == 0.0) maxStock.toInt().toString() else maxStock.toString()
+                            etQuantity.setText(maxStr)
+                            etQuantity.setSelection(etQuantity.text.length)
+                            Toast.makeText(
+                                holder.itemView.context,
+                                "Cannot exceed available stock ($formattedStock ${cartItem.product.unit})",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            cartItem.purchaseQuantity = entered
+                        }
                     } else if (s.isNullOrEmpty()) {
-                        // User cleared EditText - set qty = 0 but do NOT reset EditText text here
                         cartItem.purchaseQuantity = 0.0
                     }
                     tvSubtotal.text = "Sub total: ৳%.2f".format(cartItem.subtotal)
@@ -95,11 +118,19 @@ class ProductAdapter(
             etQuantity.tag = watcher
 
             ivIncrement.setOnClickListener {
-                cartItem.purchaseQuantity += 1
-                etQuantity.setText(cartItem.purchaseQuantity.toInt().toString())
-                etQuantity.setSelection(etQuantity.text.length)
-                tvSubtotal.text = "Sub total: ৳%.2f".format(cartItem.subtotal)
-                listener.onQuantityChangedListener()
+                if (cartItem.purchaseQuantity + 1 <= maxStock) {
+                    cartItem.purchaseQuantity += 1
+                    etQuantity.setText(cartItem.purchaseQuantity.toInt().toString())
+                    etQuantity.setSelection(etQuantity.text.length)
+                    tvSubtotal.text = "Sub total: ৳%.2f".format(cartItem.subtotal)
+                    listener.onQuantityChangedListener()
+                } else {
+                    Toast.makeText(
+                        holder.itemView.context,
+                        "Cannot exceed available stock ($formattedStock ${cartItem.product.unit})",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
 
             ivDecrement.setOnClickListener {
@@ -112,7 +143,6 @@ class ProductAdapter(
                 }
             }
 
-            // Show cursor properly on click
             etQuantity.setOnClickListener {
                 if (!etQuantity.hasFocus()) {
                     etQuantity.requestFocus()
@@ -127,7 +157,6 @@ class ProductAdapter(
             }
         }
     }
-
 
     override fun getItemCount(): Int = cartItem.size
 

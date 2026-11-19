@@ -3,6 +3,7 @@ package com.wevx.dealershipmanagement.data.repository_impl.order
 import com.wevx.dealershipmanagement.data.dto.order.updateOrder.RequestUpdateOrder
 import com.wevx.dealershipmanagement.data.dto.paymentDto.updatePayment.RequestUpdatePayment
 import com.wevx.dealershipmanagement.data.dto.paymentDto.ResponseGetPaymentDTO
+import com.wevx.dealershipmanagement.data.dto.paymentDto.ResponseMonthlyPaymentsDTO
 import com.wevx.dealershipmanagement.data.dto.order.updateOrder.ResponseUpdateOrderDTO
 import com.wevx.dealershipmanagement.data.dto.paymentDto.updatePayment.ResponseUpdatePaymentDTO
 import com.wevx.dealershipmanagement.data.dto.order.createOrderDto.RequestCreateOrderDTO
@@ -17,6 +18,7 @@ import com.wevx.dealershipmanagement.data.dto.shipmentDto.ResponseGetShipmentByO
 import com.wevx.dealershipmanagement.data.dto.shipmentDto.ResponseShipmentDTO
 import com.wevx.dealershipmanagement.data.dto.shipmentDto.ResponseUpdateShipmentDTO
 import com.wevx.dealershipmanagement.data.dto.order.todaysDelivery.ResponseTodaysDelivery
+import com.wevx.dealershipmanagement.data.dto.order.ResponseSalesmanOrdersDTO
 import com.wevx.dealershipmanagement.data.remote.order.OrderApiService
 import com.wevx.dealershipmanagement.domain.repository.order.OrderRepository
 import jakarta.inject.Inject
@@ -51,11 +53,17 @@ class OrderRepositoryImpl @Inject constructor(
         id: String,
         requestUpdateOrder: RequestUpdateOrder
     ): Response<ResponseUpdateOrderDTO> {
-
-        return orderApiService.updateOrder(
-            id = id,
-            requestUpdateOrder = requestUpdateOrder
-        )
+        return if (!requestUpdateOrder.shipmentStatus.isNullOrBlank() && requestUpdateOrder.paymentStatus.isNullOrBlank()) {
+            orderApiService.updateOrderShipmentStatus(
+                id = id,
+                requestUpdateOrder = requestUpdateOrder
+            )
+        } else {
+            orderApiService.updateOrder(
+                id = id,
+                requestUpdateOrder = requestUpdateOrder
+            )
+        }
     }
 
     override suspend fun createPayment(
@@ -89,6 +97,22 @@ class OrderRepositoryImpl @Inject constructor(
         return orderApiService.getSellerPendingOrder(sellerId, paymentStatus)
     }
 
+    override suspend fun getPendingPaymentOrdersBySalesman(
+        sellerId: String
+    ): Response<ResponseTodaysDelivery> {
+        return orderApiService.getPendingPaymentOrdersBySalesman(sellerId)
+    }
+
+    override suspend fun getOrdersByCustomer(
+        customerId: String
+    ): Response<ResponseTodaysDelivery> {
+        return orderApiService.getOrdersByCustomer(customerId)
+    }
+
+    override suspend fun getAllStoresForDelivery(): Response<com.google.gson.JsonObject> {
+        return orderApiService.getAllStoresForDelivery()
+    }
+
     override suspend fun getPaymentByOrderID(id: String): Response<ResponseGetPaymentDTO> {
         return orderApiService.getPaymentByOrderId(id)
     }
@@ -102,5 +126,20 @@ class OrderRepositoryImpl @Inject constructor(
         requestUpdateShipment: RequestUpdateShipment
     ): Response<ResponseUpdateShipmentDTO> {
         return orderApiService.updateShipment(id = id, requestUpdateShipment = requestUpdateShipment)
+    }
+
+    override suspend fun getMonthlyTotalPayments(
+        salesmanId: String,
+        month: String,
+        paymentStatus: String
+    ): Response<ResponseMonthlyPaymentsDTO> {
+        return orderApiService.getMonthlyTotalPayments(salesmanId, month, paymentStatus)
+    }
+
+    override suspend fun getOrdersBySalesman(
+        salesmanId: String,
+        limit: Int
+    ): Response<ResponseSalesmanOrdersDTO> {
+        return orderApiService.getOrdersBySalesman(salesmanId, limit)
     }
 }

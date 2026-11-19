@@ -41,10 +41,17 @@ class PendingOrderOfSellerAdapter(
 
             holder.binding.apply {
                 tvInvoiceNumber.text = "Invoice: ${order.invoiceNumber}"
-                tvPaymentStatus.text = "Status: ${order.paymentStatus}"
+                tvPaymentStatus.text = if (order.orderDate.isNotBlank()) {
+                    "${order.paymentStatus} · ${order.orderDate}"
+                } else {
+                    "Status: ${order.paymentStatus}"
+                }
                 tvShipmentAddress.text = order.address
                 tvTotal.text = "৳${order.total}"
 
+                btnViewInvoice.setOnClickListener {
+                    listener.selectPendingOrder(order.id, order.customerId)
+                }
 
                 root.setOnClickListener {
                     listener.selectPendingOrder(order.id, order.customerId)

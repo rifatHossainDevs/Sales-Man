@@ -38,7 +38,9 @@ class StoreOwnerAdapter(
         holder.binding.apply {
             tvShopName.text = storeOwner.storeName
             tvOwner.text = storeOwner.storeOwnerName
+            tvPhone.text = if (storeOwner.phone.isNotBlank()) "📞 ${storeOwner.phone}" else "No phone"
             tvAddress.text = storeOwner.address
+            tvDistance.text = storeOwner.distance?.let { "${it.toInt()}m away" } ?: "Nearby"
 
             Glide.with(holder.itemView.context)
                 .load(storeOwner.storeImg.replace("http://", "https://"))

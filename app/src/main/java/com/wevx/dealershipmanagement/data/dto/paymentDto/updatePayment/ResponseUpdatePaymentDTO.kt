@@ -18,7 +18,7 @@ data class ResponseUpdatePaymentDTO(
     @Keep
     data class Data(
         @SerializedName("amount")
-        val amount: Int?,
+        val amount: Double?,
         @SerializedName("createdAt")
         val createdAt: String?,
         @SerializedName("_id")

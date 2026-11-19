@@ -413,10 +413,9 @@ class AddCustomerFragment :
     }
 
     private fun resetSpinner(spinner: Spinner, defaultText: String) {
-        val adapter = ArrayAdapter(
-            requireContext(), android.R.layout.simple_spinner_item, listOf(defaultText)
+        val adapter = com.wevx.dealershipmanagement.presentation.adapter.CustomSpinnerAdapter(
+            requireContext(), listOf(defaultText), setOf(defaultText)
         )
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
     }
 

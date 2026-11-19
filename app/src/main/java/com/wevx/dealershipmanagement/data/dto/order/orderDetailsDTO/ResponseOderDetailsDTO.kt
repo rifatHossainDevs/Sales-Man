@@ -1,12 +1,10 @@
 package com.wevx.dealershipmanagement.data.dto.order.orderDetailsDTO
 
-import kotlinx.serialization.Serializable
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 import com.wevx.dealershipmanagement.domain.models.OrderDetailsModel
 
 @Keep
-@Serializable
 data class ResponseOderDetailsDTO(
     @SerializedName("data")
     val `data`: Data? = null,
@@ -18,14 +16,13 @@ data class ResponseOderDetailsDTO(
     val success: Boolean? = null
 ) {
     @Keep
-    @Serializable
     data class Data(
         @SerializedName("amountPaid")
-        val amountPaid: Int? = null,
+        val amountPaid: Double? = null,
         @SerializedName("createdAt")
         val createdAt: String? = null,
         @SerializedName("customerId")
-        val customerId: String? = null,
+        val customerId: Any? = null,
         @SerializedName("expectedShipDate")
         val expectedShipDate: String? = null,
         @SerializedName("_id")
@@ -35,22 +32,23 @@ data class ResponseOderDetailsDTO(
         @SerializedName("orderItems")
         val orderItems: List<OrderItem?>? = null,
         @SerializedName("paymentDue")
-        val paymentDue: Int? = null,
+        val paymentDue: Double? = null,
         @SerializedName("paymentStatus")
         val paymentStatus: String? = null,
+        @SerializedName("shipmentStatus")
+        val shipmentStatus: String? = null,
         @SerializedName("salesmanId")
-        val salesmanId: String? = null,
+        val salesmanId: Any? = null,
         @SerializedName("shippingAddress")
         val shippingAddress: String? = null,
         @SerializedName("totalPrice")
-        val totalPrice: Int? = null,
+        val totalPrice: Double? = null,
         @SerializedName("updatedAt")
         val updatedAt: String? = null,
         @SerializedName("__v")
         val v: Int? = null
     ) {
         @Keep
-        @Serializable
         data class OrderItem(
             @SerializedName("createdAt")
             val createdAt: String? = null,
@@ -59,7 +57,7 @@ data class ResponseOderDetailsDTO(
             val id: String? = null,
 
             @SerializedName("priceAtPurchase")
-            val priceAtPurchase: Int? = null,
+            val priceAtPurchase: Double? = null,
 
             @SerializedName("productId")
             val productId: String? = null,
@@ -82,7 +80,7 @@ fun ResponseOderDetailsDTO.Data.toOrderDetailsModelList(): List<OrderDetailsMode
         ?.filterNotNull()
         ?.map { item ->
             val quantity = item.purchaseQuantity?.toDouble() ?: 0.0
-            val price = item.priceAtPurchase?.toDouble() ?: 0.0
+            val price = item.priceAtPurchase ?: 0.0
 
             OrderDetailsModel(
                 name = item.productName.orEmpty(),
@@ -97,7 +95,7 @@ fun ResponseOderDetailsDTO.Data.toOrderDetailsModelList(): List<OrderDetailsMode
 // Per-item mapping for RecyclerView (total = subtotal = qty * price)
 fun ResponseOderDetailsDTO.Data.OrderItem.toOrderDetailsModel(): OrderDetailsModel {
     val quantity = this.purchaseQuantity?.toDouble() ?: 0.0
-    val price = this.priceAtPurchase?.toDouble() ?: 0.0
+    val price = this.priceAtPurchase ?: 0.0
 
     return OrderDetailsModel(
         name = this.productName.orEmpty(),

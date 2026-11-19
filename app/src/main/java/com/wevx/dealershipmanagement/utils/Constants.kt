@@ -19,8 +19,8 @@ object Constants {
     const val EDIT_PROFILE = "Edit Profile"
     const val CHANGE_PASSWORD = "Change Password"
     const val PAYMENT_HISTORY = "Payment History"
-    const val PAYMENT_COLLECTION = "Payment Collection"
-    const val TODAYS_DELIVERY = "Today's Delivery"
+    const val SALES_SUMMARY = "Sales Summary"
+    const val TODAYS_DELIVERY = "Pending Delivery"
     const val STOCK_AVAILABILITY = "Stock Availability"
     const val HOME = "Home"
 

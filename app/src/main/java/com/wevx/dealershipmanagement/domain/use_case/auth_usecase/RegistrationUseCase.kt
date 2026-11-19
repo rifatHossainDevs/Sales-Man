@@ -7,6 +7,7 @@ import com.wevx.dealershipmanagement.domain.models.RegistrationModel
 import com.wevx.dealershipmanagement.domain.repository.auth.AuthRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import org.json.JSONObject
 import javax.inject.Inject
 
 class RegistrationUseCase @Inject constructor(
@@ -25,7 +26,15 @@ class RegistrationUseCase @Inject constructor(
                     emit(Resource.Error("Registration failed: No data received"))
                 }
             } else {
-                emit(Resource.Error("Registration failed: ${response.message()}"))
+                val errorMsg = try {
+                    val raw = response.errorBody()?.string()
+                    if (!raw.isNullOrBlank()) {
+                        JSONObject(raw).optString("message").ifBlank { null }
+                    } else null
+                } catch (_: Exception) {
+                    null
+                } ?: response.message().ifBlank { "Registration failed" }
+                emit(Resource.Error(errorMsg))
             }
         } catch (e: Exception) {
             emit(Resource.Error("An error occurred: ${e.localizedMessage}"))

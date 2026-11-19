@@ -1,46 +1,42 @@
 package com.wevx.dealershipmanagement.data.dto.paymentDto.createPayment
 
-
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import androidx.annotation.Keep
+import com.google.gson.annotations.SerializedName
 
 @Keep
-@Serializable
 data class ResponsePaymentDTO(
-    @SerialName("data")
+    @SerializedName("data")
     val `data`: Data? = null,
-    @SerialName("message")
+    @SerializedName("message")
     val message: String? = null,
-    @SerialName("statusCode")
+    @SerializedName("statusCode")
     val statusCode: Int? = null,
-    @SerialName("success")
+    @SerializedName("success")
     val success: Boolean? = null
-){
+) {
     @Keep
-    @Serializable
     data class Data(
-        @SerialName("amount")
-        val amount: Int? = null,
-        @SerialName("createdAt")
+        @SerializedName("amount")
+        val amount: Double? = null,
+        @SerializedName("createdAt")
         val createdAt: String? = null,
-        @SerialName("_id")
+        @SerializedName("_id")
         val id: String? = null,
-        @SerialName("orderId")
+        @SerializedName("orderId")
         val orderId: String? = null,
-        @SerialName("paidAt")
+        @SerializedName("paidAt")
         val paidAt: String? = null,
-        @SerialName("paymentMethod")
+        @SerializedName("paymentMethod")
         val paymentMethod: String? = null,
-        @SerialName("paymentStatus")
+        @SerializedName("paymentStatus")
         val paymentStatus: String? = null,
-        @SerialName("salesmanId")
+        @SerializedName("salesmanId")
         val salesmanId: String? = null,
-        @SerialName("transactionId")
+        @SerializedName("transactionId")
         val transactionId: String? = null,
-        @SerialName("updatedAt")
+        @SerializedName("updatedAt")
         val updatedAt: String? = null,
-        @SerialName("__v")
+        @SerializedName("__v")
         val v: Int? = null
     )
 }

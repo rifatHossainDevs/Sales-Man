@@ -25,10 +25,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     private val refreshTokenViewModel: RefreshTokenViewModel by viewModels()
 
     override fun shouldInitialize(): Boolean {
-        refreshTokenObserver()
         val tokenManager = TokenManager(requireContext())
-        val refreshToken = tokenManager.getRefreshToken().toString()
-        refreshTokenViewModel.getRefreshAccessToken(RequestRefreshToken(refreshToken))
+        val refreshToken = tokenManager.getRefreshToken()
+        if (!refreshToken.isNullOrBlank()) {
+            refreshTokenViewModel.getRefreshAccessToken(RequestRefreshToken(refreshToken))
+        }
         return true
     }
 
@@ -52,6 +53,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
             refreshTokenState.error?.let {
                 loading.dismiss()
+                TokenManager(requireContext()).clearTokens()
             }
 
             refreshTokenState.data?.let {
@@ -86,18 +88,29 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                 loading.dismiss()
                 val tokenManager = TokenManager(requireContext())
 
-                tokenManager.saveToken(
-                    "${responseDTO.accessToken}", "${responseDTO.refreshToken}"
-                )
-
-
-                //Toast.makeText(requireContext(), "Login Successful", Toast.LENGTH_SHORT).show()
-
+                if (responseDTO.userType.isNotEmpty() &&
+                    responseDTO.userType.lowercase() != "seller"
+                ) {
+                    tokenManager.clearTokens()
+                    AlertDialog.Builder(requireContext())
+                        .setTitle("Access Denied")
+                        .setMessage("Only Sales Representative (seller) accounts can log into this mobile app.")
+                        .setPositiveButton("Got it") { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        .setCancelable(false)
+                        .show()
+                    return@collectInLifecycle
+                }
 
                 if (responseDTO.isActive) {
+                    tokenManager.saveToken(
+                        "${responseDTO.accessToken}", "${responseDTO.refreshToken}"
+                    )
                     startActivity(Intent(requireContext(), MainActivity::class.java))
                     requireActivity().finish()
                 } else {
+                    tokenManager.clearTokens()
                     AlertDialog.Builder(requireContext())
                         .setTitle("Account Inactive")
                         .setMessage("Your account is not active. Please contact with your company.")

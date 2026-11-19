@@ -21,7 +21,7 @@ data class ResponsePendingAndCompleteOrderDTO(
     @Serializable
     data class Data(
         @SerializedName("amountPaid")
-        val amountPaid: Int? = null,
+        val amountPaid: Double? = null,
         @SerializedName("createdAt")
         val createdAt: String? = null,
         @SerializedName("customerId")
@@ -35,7 +35,7 @@ data class ResponsePendingAndCompleteOrderDTO(
         @SerializedName("orderItems")
         val orderItems: List<OrderItem?>? = null,
         @SerializedName("paymentDue")
-        val paymentDue: Int? = null,
+        val paymentDue: Double? = null,
         @SerializedName("paymentStatus")
         val paymentStatus: String? = null,
         @SerializedName("salesmanId")
@@ -43,7 +43,7 @@ data class ResponsePendingAndCompleteOrderDTO(
         @SerializedName("shippingAddress")
         val shippingAddress: String? = null,
         @SerializedName("totalPrice")
-        val totalPrice: Int? = null,
+        val totalPrice: Double? = null,
         @SerializedName("updatedAt")
         val updatedAt: String? = null,
         @SerializedName("__v")
@@ -57,7 +57,7 @@ data class ResponsePendingAndCompleteOrderDTO(
             @SerializedName("_id")
             val id: String? = null,
             @SerializedName("priceAtPurchase")
-            val priceAtPurchase: Int? = null,
+            val priceAtPurchase: Double? = null,
             @SerializedName("productId")
             val productId: String? = null,
             @SerializedName("purchaseQuantity")
@@ -66,6 +66,11 @@ data class ResponsePendingAndCompleteOrderDTO(
             val updatedAt: String? = null
         )
     }
+}
+
+private fun formatPrice(value: Double?): String {
+    if (value == null) return "0"
+    return if (value % 1.0 == 0.0) value.toLong().toString() else "%.2f".format(value)
 }
 
 fun ResponsePendingAndCompleteOrderDTO.Data.toPendingOrderModel(): PendingAndCompleteOrderModel {
@@ -77,8 +82,8 @@ fun ResponsePendingAndCompleteOrderDTO.Data.toPendingOrderModel(): PendingAndCom
         shipmentDate = expectedShipDate ?: "",
         paymentStatus = paymentStatus ?: "",
         shipmentAddress = shippingAddress ?: "",
-        totalPrice = totalPrice.toString(),
-        due = paymentDue.toString()
+        totalPrice = formatPrice(totalPrice),
+        due = formatPrice(paymentDue)
     )
 }
 

@@ -4,74 +4,90 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/surface_bg"
     tools:context=".presentation.product.ProductsFragment">
 
-    <TextView
-        android:id="@+id/tv_select_products"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_8sdp"
-        android:fontFamily="@font/poppins_semibold"
-        android:text="Select Products"
-        android:textColor="@color/black"
-        android:textSize="@dimen/_20sdp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/btn_continue"
-        android:layout_width="@dimen/_32sdp"
-        android:layout_height="@dimen/_28sdp"
-        android:layout_marginTop="@dimen/_4sdp"
-        android:layout_marginEnd="@dimen/_12sdp"
-        android:background="@drawable/shap_add_bg"
-        android:paddingHorizontal="@dimen/_8sdp"
-        android:paddingVertical="@dimen/_4sdp"
-        android:src="@drawable/ic_tick_24"
-        app:layout_constraintBottom_toBottomOf="@id/tv_select_products"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tv_select_products" />
-
-    <LinearLayout
-        android:id="@+id/categoryLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header_products"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_8sdp"
-        android:layout_marginTop="@dimen/_8sdp"
-        android:background="@drawable/bg_spinner"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_select_products">
+        android:background="@color/card_bg"
+        android:elevation="2dp"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:paddingTop="@dimen/_10sdp"
+        android:paddingBottom="@dimen/_10sdp"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <Spinner
-            android:id="@+id/spinnerCategory"
+        <TextView
+            android:id="@+id/tv_select_products"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:spinnerMode="dropdown" />
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Select Products"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/_16ssp"
+            app:layout_constraintBottom_toBottomOf="@id/btn_continue"
+            app:layout_constraintEnd_toStartOf="@id/btn_continue"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/btn_continue" />
 
         <ImageView
-            android:id="@+id/categoryDropdownIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="8dp"
-            android:src="@drawable/ic_dropdown_24" />
-    </LinearLayout>
+            android:id="@+id/btn_continue"
+            android:layout_width="@dimen/_34sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:background="@drawable/shap_add_bg"
+            android:backgroundTint="@color/primary"
+            android:paddingHorizontal="@dimen/_8sdp"
+            android:paddingVertical="@dimen/_5sdp"
+            android:src="@drawable/ic_tick_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
+
+        <LinearLayout
+            android:id="@+id/categoryLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_36sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:background="@drawable/bg_input_rounded"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/_10sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_select_products">
+
+            <Spinner
+                android:id="@+id/spinnerCategory"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:popupBackground="@drawable/bg_spinner_dropdown"
+                android:spinnerMode="dropdown" />
+
+            <ImageView
+                android:id="@+id/categoryDropdownIcon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_dropdown_24"
+                app:tint="@color/text_secondary" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/productsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/_8sdp"
+        android:clipToPadding="false"
         android:descendantFocusability="beforeDescendants"
+        android:paddingBottom="@dimen/_12sdp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/categoryLayout"
+        app:layout_constraintTop_toBottomOf="@id/header_products"
         tools:listitem="@layout/item_layout_product" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

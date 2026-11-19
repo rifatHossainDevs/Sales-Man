@@ -2,6 +2,7 @@ package com.wevx.dealershipmanagement.data.repository_impl.home
 
 import com.wevx.dealershipmanagement.data.dto.homeDto.areaDTO.ResponseAreaDTO
 import com.wevx.dealershipmanagement.data.dto.homeDto.districtDto.ResponseDisDTO
+import com.wevx.dealershipmanagement.data.dto.homeDto.divisionDto.ResponseDivisionDTO
 import com.wevx.dealershipmanagement.data.dto.homeDto.subDistrictDto.ResponseSubDisDTO
 import com.wevx.dealershipmanagement.data.remote.home.AreaApiService
 import com.wevx.dealershipmanagement.domain.repository.home.AreaRepository
@@ -12,9 +13,12 @@ class AreaRepositoryImpl @Inject constructor(
     private val areaApiService: AreaApiService
 ): AreaRepository {
 
+    override suspend fun getAllDivisions(): Response<ResponseDivisionDTO> {
+        return areaApiService.getAllDivisions()
+    }
+
     override suspend fun getDistrict(divId: Int): Response<ResponseDisDTO> {
         return areaApiService.getDistrict(divId)
-
     }
 
     override suspend fun getSubDistrict(disId: Int): Response<ResponseSubDisDTO> {
@@ -24,6 +28,5 @@ class AreaRepositoryImpl @Inject constructor(
     override suspend fun getArea(subDisId: Int): Response<ResponseAreaDTO> {
         return areaApiService.getArea(subDisId)
     }
-
 
 }

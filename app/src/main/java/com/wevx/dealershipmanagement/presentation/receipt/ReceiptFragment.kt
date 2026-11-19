@@ -4,10 +4,16 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.content.ContentValues
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.Typeface
+import android.graphics.pdf.PdfDocument
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.view.View
 import android.widget.Toast
 import androidx.activity.addCallback
@@ -17,40 +23,48 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.wevx.dealershipmanagement.R
-import com.wevx.dealershipmanagement.utils.SharedData
 import com.wevx.dealershipmanagement.core.common.BaseFragment
 import com.wevx.dealershipmanagement.databinding.FragmentReceiptBinding
 import com.wevx.dealershipmanagement.domain.models.CartItem
 import com.wevx.dealershipmanagement.presentation.auth.profile.GetProfileViewModel
 import com.wevx.dealershipmanagement.presentation.storeOwnerDetails.GetStoreByIdViewModel
+import com.wevx.dealershipmanagement.utils.SharedData
 import com.wevx.dealershipmanagement.utils.TokenManager
 import com.wevx.dealershipmanagement.utils.collectInLifecycle
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.UUID
 import kotlin.getValue
+
 @AndroidEntryPoint
 class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBinding::inflate) {
 
     private val REQUEST_CODE_PERMISSIONS = 1001
     private val storeOwnerViewModel: GetStoreByIdViewModel by viewModels()
     private val getProfileViewModel: GetProfileViewModel by viewModels()
-    private var productList: List<CartItem> = SharedData.selectedProductList
-    private lateinit var salesmanName: String
-    private lateinit var storeName: String
-    private lateinit var customerId: String
-    private lateinit var customerAddress: String
+    private var productList: List<CartItem> = SharedData.selectedProductList.toList()
+    private var salesmanName: String = "Sales Representative"
+    private var storeName: String = "Retail Store"
+    private var customerId: String = ""
+    private var customerAddress: String = "Dhaka"
     private val args: ReceiptFragmentArgs by navArgs()
-
 
     override fun setAllClickListener() {
         customerId = args.id
         val tokenManager = TokenManager(requireContext())
         val token = "Bearer ${tokenManager.getAccessToken()}"
+        receipt()
         storeOwnerViewModel.getStoreById(customerId)
         getProfileViewModel.getProfile(token)
+
+        binding.btnSavePdf.setOnClickListener {
+            saveReceiptAsPdf()
+        }
+
         binding.btnPrintReceipt.setOnClickListener {
             if (areBluetoothPermissionsGranted()) {
                 startPrintingProcess()
@@ -61,7 +75,6 @@ class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBind
     }
 
     override fun allObserver() {
-
         storeOwnerObserver()
         getProfileObserver()
     }
@@ -70,10 +83,12 @@ class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBind
         getProfileViewModel.profileState.collectInLifecycle(viewLifecycleOwner) { profileState ->
             if (profileState.loading) return@collectInLifecycle
             profileState.error?.let {
-
+                receipt()
             }
             profileState.data?.let {
-                salesmanName = it.name
+                if (it.name.isNotBlank()) {
+                    salesmanName = it.name
+                }
                 receipt()
             }
         }
@@ -87,25 +102,99 @@ class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBind
             }
             storeByIdState.error?.let {
                 loading.dismiss()
-
+                receipt()
             }
             storeByIdState.data?.let {
                 loading.dismiss()
-                storeName = it.storeName
-                customerAddress = it.address
-
+                if (it.storeName.isNotBlank()) {
+                    storeName = it.storeName
+                }
+                if (it.address.isNotBlank()) {
+                    customerAddress = it.address
+                }
                 receipt()
             }
         }
     }
 
     private fun receipt() {
-        // Only build receipt if both storeName and salesmanName are initialized
-        if (!::storeName.isInitialized || !::salesmanName.isInitialized) return
-
         val receiptString = buildReceiptText(storeName, customerAddress, salesmanName)
         binding.txtReceiptPreview.text = receiptString
         binding.txtReceiptPreview.typeface = Typeface.MONOSPACE
+    }
+
+    private fun saveReceiptAsPdf() {
+        val receiptText = buildReceiptText(storeName, customerAddress, salesmanName)
+        val lines = receiptText.lines()
+        val safeInvoice = args.invoice.replace(Regex("[^A-Za-z0-9_-]"), "_")
+        val fileName = "Receipt_$safeInvoice.pdf"
+
+        val pdfDocument = PdfDocument()
+        try {
+            val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                typeface = Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL)
+                textSize = 11f
+                color = Color.BLACK
+            }
+
+            val lineHeight = 18f
+            val marginHorizontal = 28f
+            val marginVertical = 36f
+            val pageWidth = 360
+            val pageHeight = (marginVertical * 2 + (lines.size + 2) * lineHeight).toInt().coerceAtLeast(420)
+
+            val pageInfo = PdfDocument.PageInfo.Builder(pageWidth, pageHeight, 1).create()
+            val page = pdfDocument.startPage(pageInfo)
+            val canvas = page.canvas
+
+            canvas.drawColor(Color.WHITE)
+
+            var y = marginVertical
+            for (line in lines) {
+                canvas.drawText(line, marginHorizontal, y, paint)
+                y += lineHeight
+            }
+
+            pdfDocument.finishPage(page)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val resolver = requireContext().contentResolver
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                    put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+                }
+                val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+                    ?: throw IllegalStateException("Could not create PDF file in Downloads")
+                resolver.openOutputStream(uri)?.use { outputStream ->
+                    pdfDocument.writeTo(outputStream)
+                }
+            } else {
+                val downloadsDir =
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                if (!downloadsDir.exists()) {
+                    downloadsDir.mkdirs()
+                }
+                val outFile = File(downloadsDir, fileName)
+                FileOutputStream(outFile).use { outputStream ->
+                    pdfDocument.writeTo(outputStream)
+                }
+            }
+
+            Toast.makeText(
+                requireContext(),
+                "Saved to Downloads: $fileName",
+                Toast.LENGTH_LONG
+            ).show()
+        } catch (e: Exception) {
+            Toast.makeText(
+                requireContext(),
+                "Failed to save PDF: ${e.localizedMessage}",
+                Toast.LENGTH_LONG
+            ).show()
+        } finally {
+            pdfDocument.close()
+        }
     }
 
     private fun areBluetoothPermissionsGranted(): Boolean {
@@ -185,7 +274,7 @@ class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBind
         }
 
         val pairedDevices = bluetoothAdapter.bondedDevices ?: return null
-        return pairedDevices.firstOrNull { it.name.contains("printer", ignoreCase = true) }
+        return pairedDevices.firstOrNull { (it.name ?: "").contains("printer", ignoreCase = true) }
     }
 
     private fun printReceipt(printer: BluetoothDevice) {
@@ -204,6 +293,8 @@ class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBind
             }
         }
 
+        val receiptText = buildReceiptText(storeName, customerAddress, salesmanName)
+
         Thread {
             try {
                 val uuid = printer.uuids?.firstOrNull()?.uuid
@@ -212,32 +303,33 @@ class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBind
                 socket.connect()
 
                 val outputStream = socket.outputStream
-                val receiptText = buildReceiptText(storeName, customerAddress, salesmanName)
-
                 outputStream.write(receiptText.toByteArray(Charsets.UTF_8))
                 outputStream.flush()
                 socket.close()
 
-                requireActivity().runOnUiThread {
-                    Toast.makeText(
-                        requireContext(),
-                        "Receipt printed successfully!",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                activity?.runOnUiThread {
+                    if (isAdded) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Receipt printed successfully!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             } catch (e: Exception) {
-                requireActivity().runOnUiThread {
-                    Toast.makeText(
-                        requireContext(),
-                        "Printing failed: ${e.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
+                activity?.runOnUiThread {
+                    if (isAdded) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Printing failed: ${e.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
             }
         }.start()
     }
 
-    // build the receipt using CartItem from share data
     @SuppressLint("DefaultLocale")
     private fun buildReceiptText(
         storeName: String,
@@ -256,24 +348,21 @@ class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBind
         sb.appendLine(centerText("DEALERSHIP MANAGEMENT", lineWidth))
         sb.appendLine(centerText("Sales Receipt", lineWidth))
         sb.appendLine()
-        val displayAddress = if (customerAddress.length > 26){
+        val displayAddress = if (customerAddress.length > 26) {
             customerAddress.take(25) + "..."
-        }
-        else{
+        } else {
             customerAddress
         }
 
-        val displayStoreName = if (storeName.length > 26){
+        val displayStoreName = if (storeName.length > 26) {
             storeName.take(25) + "..."
-        }
-        else{
+        } else {
             storeName
         }
 
-        val displaySalesmanName = if (salesmanName.length > 26){
+        val displaySalesmanName = if (salesmanName.length > 26) {
             salesmanName.take(25) + "..."
-        }
-        else{
+        } else {
             salesmanName
         }
         val invoiceNumber = args.invoice
@@ -321,7 +410,6 @@ class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBind
         return sb.toString()
     }
 
-    // take text into center
     private fun centerText(text: String, width: Int): String {
         if (text.length >= width) return text
         val padding = (width - text.length) / 2
@@ -331,7 +419,7 @@ class ReceiptFragment : BaseFragment<FragmentReceiptBinding>(FragmentReceiptBind
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-
+            SharedData.selectedProductList = emptyList()
             findNavController().navigate(R.id.action_receiptFragment_to_homeFragment)
         }
     }
